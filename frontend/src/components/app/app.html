@@ -1,5 +1,63 @@
-<div class='container'>
-  <h1>{{ title() }}</h1>
-  <p>Click button to change from 'frontend' to 'backend' and vice versa</p>
-  <button matButton="outlined" (click)="changeTitle()">Example button</button>
+
+<mat-toolbar color="primary" class="mt-5" id="app-toolbar">
+  <div class="container d-flex align-items-center gap-5">
+    <!-- Left side: App name -->
+    <span class="fw-bold fs-1 ">OverEngineered To-Do</span>
+
+    <!-- Right side: Nav links -->
+    <nav class="d-flex gap-5">
+      <button mat-button routerLink="/todo">To-Do List</button>
+      <button mat-button routerLink="/stats">Statistics</button>
+      <button mat-stroked-button color="accent" routerLink="/add">+ Add To-Do</button>
+
+      <!--Dark mode toggle--> 
+      <button mat-icon-button aria-label="Toggle dark mode" (click)="toggleDarkTheme()">
+        <mat-icon>{{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}</mat-icon>
+      </button>
+    </nav>
+  </div>
+</mat-toolbar>
+
+<div class="container" id="home-message">
+  <div class="row justify-content-center">
+    <div class="col-md-9">
+      <mat-card class="p-3 shadow-sm mt-3">
+        <mat-card-title class="mb-3 mt-2" id="home-message-title">Welcome to Your OverEngineered To-Do List</mat-card-title>
+        <mat-card-content>
+          <p class="fs-5 text-muted mt-2" id="home-message-text">
+            Manage tasks, track statistics, and totally overcomplicate your productivity with style.<br>  
+            This is your one-stop shop for unnecessarily advanced task management.
+          </p>
+          <button mat-flat-button color="warn" routerLink="/todo" class="mt-2 " id="home-message-button">Get Started</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>
+
+<div class="container" id="home-features">
+  <div class="row text-center">
+    <div class="col-md-4 mb-4">
+      <mat-icon class="fs-4 text-primary">check_circle</mat-icon>
+      <h5 class="mt-2">Organize Tasks</h5>
+      <p class="text-muted">Easily create, edit, and manage all your to-dos.</p>
+    </div>
+    <div class="col-md-4 mb-4">
+      <mat-icon class="fs-4 text-success">insights</mat-icon>
+      <h5 class="mt-2">Track Statistics</h5>
+      <p class="text-muted">See charts and graphs that are probably overkill.</p>
+    </div>
+    <div class="col-md-4 mb-4">
+      <mat-icon class="fs-4 text-warning">settings</mat-icon>
+      <h5 class="mt-2">Customizable</h5>
+      <p class="text-muted">Tweak settings until you forget why you started.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="bg-light py-4 mt-5 border-top">
+  <div class="container text-center text-muted">
+    © 2025 Goofy little project by a cuple of friends. Built with Angular, Angular Material, Bootstrap, and a sprinkle of over-engineering.
+  </div>
+</footer>
+

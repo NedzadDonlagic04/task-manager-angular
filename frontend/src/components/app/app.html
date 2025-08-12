@@ -11,8 +11,10 @@
       <button mat-stroked-button color="accent" routerLink="/add">+ Add To-Do</button>
 
       <!--Dark mode toggle--> 
-      <button mat-icon-button aria-label="Toggle dark mode" (click)="toggleDarkTheme()">
-        <mat-icon>{{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}</mat-icon>
+      <button mat-icon-button aria-label="Toggle dark mode" (click)="toggleDarkTheme()" class="theme-toggle-button">
+        <mat-icon [class.theme-toggle]="isDarkTheme">
+        {{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}
+      </mat-icon>
       </button>
     </nav>
   </div>

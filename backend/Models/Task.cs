@@ -1,0 +1,14 @@
+namespace Models
+{
+    public class Task
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Title { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public DateTime? Deadline { get; set; }
+        public DateTime Created_At { get; set; } = DateTime.Now;
+        public Guid TaskStateId { get; set; }
+        public TaskState TaskState { get; set; } = null!;
+        public List<Tag> Tags { get; set; } = new();
+    }
+}

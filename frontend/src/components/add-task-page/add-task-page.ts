@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-test1',
+  selector: 'app-add-task-page',
   imports: [],
-  templateUrl: './test1.html',
-  styleUrl: './test1.scss',
+  templateUrl: './add-task-page.html',
+  styleUrl: './add-task-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Test1 {
+export class AddTaskPage {
 
 }

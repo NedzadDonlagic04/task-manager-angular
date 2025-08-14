@@ -5,6 +5,8 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIcon, MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
+import { routes } from "./app.routes";
+import { RouterLink, RouterOutlet } from "@angular/router";
 
 @Component({
     selector: "app-root",
@@ -17,9 +19,12 @@ import { MatCardModule } from "@angular/material/card";
         MatIconModule,
         MatCardModule,
         MatIcon,
+        RouterLink,
+        RouterOutlet,
     ],
 })
 export class App {
+    routerLinks = routes;
     isDarkTheme = false;
 
     toggleDarkTheme() {

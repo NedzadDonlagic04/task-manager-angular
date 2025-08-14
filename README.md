@@ -47,5 +47,5 @@ To get started:
 ### 1. Clone the project
 
 ```bash
-https://github.com/NedzadDonlagic04/task-manager-angular
+git clone git@github.com:NedzadDonlagic04/task-manager-angular.git
 cd task-manager-angular

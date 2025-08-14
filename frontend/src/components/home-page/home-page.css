@@ -1,0 +1,220 @@
+/*Full page CSS*/
+main {
+    flex: 1 0 auto;
+    margin-top: 64px;
+    overflow-y: auto;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/*Home message CSS*/
+
+#home-message {
+    min-height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+#home-message .row {
+    width: 100%;
+    height: 30vh;
+}
+
+#home-message mat-card {
+    width: 100%;
+}
+
+#home-message-title {
+    font-size: 2rem;
+    font-weight: 550;
+    text-align: center;
+}
+
+#home-message-button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20vh;
+}
+
+#home-message-button span.mdc-button__label {
+    color: white;
+}
+
+#home-message-text {
+    font-size: 1.2rem;
+    text-align: center;
+    line-height: 1.15;
+}
+
+/*App toolbar CSS*/
+#app-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/*Home features CSS*/
+
+#home-features {
+    min-height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 7vh;
+}
+
+/* Light mode variables (default) */
+:root {
+    --bg-color: #d4e6f1;
+    --primary-text-color: #212529;
+    --secondary-text-color: #6c757d;
+    --primary-color: #a2c2e0;
+    --accent-color: #b7d9e8;
+    --warning-color: #154af8;
+    --card-bg-color: #e1f0f6;
+}
+
+/* Dark mode variables */
+.dark-theme {
+    --bg-color: #2c2c2c;
+    --primary-text-color: #e4e4e4;
+    --secondary-text-color: #9e9e9e;
+    --primary-color: #9f4646;
+    --accent-color: #ffc1cc;
+    --warning-color: #dc3545;
+    --card-bg-color: #1e1e1e;
+}
+
+/* Use variables throughout your CSS */
+
+body {
+    background-color: var(--bg-color);
+    color: var(--primary-text-color);
+}
+
+.text-muted {
+    color: var(--secondary-text-color) !important;
+}
+
+#app-toolbar {
+    background-color: var(--bg-color);
+    color: var(--bg-color);
+}
+
+mat-card {
+    background-color: var(--card-bg-color) !important;
+    color: var(--primary-text-color);
+}
+
+/* Buttons */
+button[mat-raised-button],
+button[mat-flat-button] {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+}
+
+button[mat-stroked-button] {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+button[mat-raised-button][color="warn"],
+button[mat-flat-button][color="warn"] {
+    background-color: var(--warning-color);
+    color: var(--bg-color);
+}
+
+.mdc-button__label {
+    color: var(--primary-text-color);
+}
+
+/* Regular mat-button in dark theme */
+.dark-theme button[mat-button]:hover {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Stroked button in dark theme */
+.dark-theme button[mat-stroked-button]:hover {
+    border-color: var(--accent-color);
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Icon button in dark theme */
+.dark-theme button[mat-icon-button]:hover {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+.theme-toggle-button:hover {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+/* Some custom stuff */
+
+.mat-icon {
+    color: var(--primary-text-color);
+}
+
+.mat-mdc-icon-button .mat-mdc-button-persistent-ripple {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+}
+
+.fw-bold {
+    color: var(--primary-text-color) !important;
+}
+.container {
+    background-color: var(--bg-color);
+}
+.bg-light {
+    background-color: var(--card-bg-color) !important;
+}
+
+.container.text-center.text-muted {
+    background-color: var(--card-bg-color) !important;
+}
+
+/*Dark theme animation thingy*/
+body,
+mat-card,
+button,
+.container,
+#app-toolbar {
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+mat-icon {
+    transition: transform 0.3s ease;
+}
+
+mat-icon.theme-toggle {
+    transform: rotate(180deg);
+}

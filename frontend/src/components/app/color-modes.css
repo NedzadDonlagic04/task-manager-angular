@@ -15,9 +15,10 @@
   --primary-text-color: #E4E4E4;
   --secondary-text-color: #9e9e9e;
   --primary-color: #9f4646;
-  --accent-color: #FFC1CC;
+  --accent-color: #c43952;
   --warning-color: #dc3545;
   --card-bg-color: #1e1e1e;
+  --bs-table-hover-bg: rgb(173, 67, 67)!important;
 }
 
 /* Use variables throughout your CSS */

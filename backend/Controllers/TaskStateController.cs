@@ -30,7 +30,7 @@ namespace Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TaskStateDTO>> GetTaskStateById(Guid id)
+        public async Task<ActionResult<TaskStateDTO>> GetTaskStateById(int id)
         {
             var taskState = await _context.TaskState.FindAsync(id);
 
@@ -69,7 +69,7 @@ namespace Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTaskState(Guid id, TaskStateDTO taskStateDTO)
+        public async Task<ActionResult> UpdateTaskState(int id, TaskStateDTO taskStateDTO)
         {
             var taskState = await _context.TaskState.FindAsync(id);
 
@@ -87,7 +87,7 @@ namespace Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTaskState(Guid id)
+        public async Task<ActionResult> DeleteTaskState(int id)
         {
             var taskState = await _context.TaskState.FindAsync(id);
 

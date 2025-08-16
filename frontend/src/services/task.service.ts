@@ -16,4 +16,7 @@ export class TaskService {
     createTask(taskData: TaskCreateDTO): Observable<TaskReadDTO> {
         return this.http.post<TaskReadDTO>(this.taskApiUrl, taskData);
     }
+    getTasks(): Observable<TaskReadDTO[]> {
+        return this.http.get<TaskReadDTO[]>(this.taskApiUrl);
+    }
 }

@@ -53,8 +53,8 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("TaskStateId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("TaskStateId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -69,9 +69,8 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Models.TaskState", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -80,6 +79,23 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TaskState");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Pending"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Success"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Fail"
+                        });
                 });
 
             modelBuilder.Entity("Models.TaskTag", b =>
@@ -95,21 +111,6 @@ namespace backend.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("TaskTag");
-                });
-
-            modelBuilder.Entity("TagTask", b =>
-                {
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TasksId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("TagsId", "TasksId");
-
-                    b.HasIndex("TasksId");
-
-                    b.ToTable("TagTask");
                 });
 
             modelBuilder.Entity("Models.Task", b =>
@@ -140,21 +141,6 @@ namespace backend.Migrations
                     b.Navigation("Tag");
 
                     b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("TagTask", b =>
-                {
-                    b.HasOne("Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Task", null)
-                        .WithMany()
-                        .HasForeignKey("TasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

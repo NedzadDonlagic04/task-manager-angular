@@ -75,11 +75,22 @@ export class TaskForm implements OnInit {
         });
     }
 
+    getSelectedTags(): number[] {
+        const tagCheckBoxValues = this.addTaskForm.value.tags!;
+        const tagIds: number[] = [];
+
+        for (let i = 0; i < tagCheckBoxValues.length; ++i) {
+            if (tagCheckBoxValues[i]) {
+                tagIds.push(this.tags[i].id);
+            }
+        }
+
+        return tagIds;
+    }
+
     onSubmit(): void {
         const formData = this.addTaskForm.value;
-        const tagIds = formData
-            .tags!.filter((value: boolean) => value)
-            .map((_, index: number) => this.tags[index].id);
+        const tagIds: number[] = this.getSelectedTags();
 
         const taskData: TaskCreateDTO = {
             title: formData.title ?? "",

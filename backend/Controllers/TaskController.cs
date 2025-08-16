@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DbContexts;
 using DTOs;
+using Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
@@ -60,13 +61,11 @@ namespace Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskReadDTO>> CreateTask(TaskCreateUpdateDTO taskCreateDTO)
+        public async Task<ActionResult<TaskReadDTO>> CreateTask(TaskCreateDTO taskCreateDTO)
         {
-            var taskState = await _context.TaskState.FindAsync(taskCreateDTO.TaskStateId);
-
-            if (taskState == null)
+            if (taskCreateDTO == null)
             {
-                return BadRequest($"TaskState with id {taskCreateDTO.TaskStateId} does not exist");
+                return BadRequest("Task data cannot be null.");
             }
 
             var tags = await _context.Tag.Where(tag => taskCreateDTO.TagIds.Contains(tag.Id)).ToListAsync();
@@ -76,34 +75,37 @@ namespace Controllers
                 return BadRequest("One or more tags do not exist");
             }
 
-            var task = new Models.Task
+            var newTask = new Models.Task
             {
                 Title = taskCreateDTO.Title,
                 Description = taskCreateDTO.Description,
-                Deadline = taskCreateDTO.Deadline,
-                TaskStateId = taskCreateDTO.TaskStateId,
+                Deadline = taskCreateDTO.Deadline?.ToUniversalTime(),
+                TaskStateId = (int)TaskStateEnum.Pending,
                 Tags = tags
             };
 
-            _context.Task.Add(task);
+            _context.Task.Add(newTask);
             await _context.SaveChangesAsync();
+
+            await _context.Entry(newTask).Collection(t => t.Tags).LoadAsync();
+            await _context.Entry(newTask).Reference(t => t.TaskState).LoadAsync();
 
             var result = new TaskReadDTO
             {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                Deadline = task.Deadline,
-                Created_At = task.Created_At,
-                TaskStateName = task.TaskState.Name,
-                TagNames = task.Tags.Select(tag => tag.Name).ToList()
+                Id = newTask.Id,
+                Title = newTask.Title,
+                Description = newTask.Description,
+                Deadline = newTask.Deadline,
+                Created_At = newTask.Created_At,
+                TaskStateName = newTask.TaskState.Name,
+                TagNames = newTask.Tags.Select(tag => tag.Name).ToList()
             };
 
             return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTask(Guid id, TaskCreateUpdateDTO taskUpdateDTO)
+        public async Task<ActionResult> UpdateTask(Guid id, TaskUpdateDTO taskUpdateDTO)
         {
             var taskState = await _context.TaskState.FindAsync(taskUpdateDTO.TaskStateId);
 
@@ -119,20 +121,20 @@ namespace Controllers
                 return BadRequest("One or more tags do not exist");
             }
 
-            var task = await _context.Task.FindAsync(id);
+            var taskToUpdate = await _context.Task.FindAsync(id);
 
-            if (task == null)
+            if (taskToUpdate == null)
             {
                 return NotFound();
             }
 
-            task.Title = taskUpdateDTO.Title;
-            task.Description = taskUpdateDTO.Description;
-            task.Deadline = taskUpdateDTO.Deadline;
-            task.TaskStateId = taskUpdateDTO.TaskStateId;
-            task.Tags = tags;
+            taskToUpdate.Title = taskUpdateDTO.Title;
+            taskToUpdate.Description = taskUpdateDTO.Description;
+            taskToUpdate.Deadline = taskUpdateDTO.Deadline;
+            taskToUpdate.TaskStateId = taskUpdateDTO.TaskStateId;
+            taskToUpdate.Tags = tags;
 
-            _context.Task.Update(task);
+            _context.Task.Update(taskToUpdate);
             await _context.SaveChangesAsync();
 
             return NoContent();

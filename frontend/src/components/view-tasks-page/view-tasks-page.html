@@ -1,1 +1,28 @@
-<p>view-tasks-page works!</p>
+<table class="table table-primary table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Deadline</th>
+            <th scope="col">Created at</th>
+            <th scope="col">Task State</th>
+            <th scope="col">Tags</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (task of tasks; track $index) 
+        {
+            <tr>
+                <th scope="row">{{ $index + 1 }}</th>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                @if(task.deadline==null){<td>Not set</td>} 
+                @else {<td>{{ task.deadline | date:'medium' }}</td>}
+                <td>{{ task.created_At | date:'medium' }}</td>
+                <td>{{task.taskStateName}}</td>
+                <td>{{task.tagNames}}</td>
+            </tr>
+        }
+        
+</table>

@@ -45,7 +45,12 @@
         }
 
         <div class="form-btn-container">
-            <button mat-raised-button color="primary" type="submit">
+            <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="addTaskForm.invalid"
+            >
                 Add Todo
             </button>
         </div>

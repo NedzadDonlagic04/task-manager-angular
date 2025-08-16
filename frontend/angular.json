@@ -10,6 +10,9 @@
                     "style": "scss",
                     "changeDetection": "OnPush",
                     "path": "src/components"
+                },
+                "@schematics/angular:service": {
+                    "path": "src/services"
                 }
             },
             "root": "",

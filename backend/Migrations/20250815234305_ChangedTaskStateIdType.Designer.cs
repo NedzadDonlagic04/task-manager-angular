@@ -3,6 +3,7 @@ using System;
 using DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250815234305_ChangedTaskStateIdType")]
+    partial class ChangedTaskStateIdType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,6 +116,21 @@ namespace backend.Migrations
                     b.ToTable("TaskTag");
                 });
 
+            modelBuilder.Entity("TagTask", b =>
+                {
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TasksId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("TagsId", "TasksId");
+
+                    b.HasIndex("TasksId");
+
+                    b.ToTable("TagTask");
+                });
+
             modelBuilder.Entity("Models.Task", b =>
                 {
                     b.HasOne("Models.TaskState", "TaskState")
@@ -141,6 +159,21 @@ namespace backend.Migrations
                     b.Navigation("Tag");
 
                     b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("TagTask", b =>
+                {
+                    b.HasOne("Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Task", null)
+                        .WithMany()
+                        .HasForeignKey("TasksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

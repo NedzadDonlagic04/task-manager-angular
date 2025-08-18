@@ -46,6 +46,9 @@ namespace Controllers
                 return NotFound();
             }
 
+            await _context.Entry(task).Collection(t => t.Tags).LoadAsync();
+            await _context.Entry(task).Reference(t => t.TaskState).LoadAsync();
+
             var result = new TaskReadDTO
             {
                 Id = task.Id,

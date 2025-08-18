@@ -4,7 +4,7 @@ interface TaskReadDTO {
     description: string;
     deadline: string;
     taskState: string;
-    tagIds: string[];
+    tags: string[];
 }
 
 export default TaskReadDTO;

@@ -3,8 +3,8 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import TaskCreateDTO from "../dtos/task-create.dto";
 import TaskReadDTO from "../dtos/task-read.dto";
-import { environment } from "../environments/environment";
 import TaskUpdateDTO from "../dtos/task-update.dto";
+import { environment } from "../environments/environment";
 
 @Injectable({
     providedIn: "root",

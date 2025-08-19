@@ -61,7 +61,7 @@ export class CreateTaskForm extends TaskFormBase {
                 });
                 this.taskFormGroup.reset();
             },
-            error: (error) =>
+            error: (error: any) =>
                 this.matSnackBar.open("Failed to save task.", "Dismiss", {
                     duration: 5000,
                     panelClass: ["error-snackbar"],

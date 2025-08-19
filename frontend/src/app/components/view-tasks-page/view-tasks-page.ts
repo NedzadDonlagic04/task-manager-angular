@@ -23,7 +23,7 @@ export class ViewTasksPage implements OnInit {
             next: (tasks: TaskReadDTO[]) => {
                 this.tasks = tasks;
             },
-            error: (error) => {
+            error: (error: any) => {
                 console.error("Error fetching tasks:", error);
             },
         });

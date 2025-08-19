@@ -110,6 +110,16 @@ namespace Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateTask(Guid id, TaskUpdateDTO taskUpdateDTO)
         {
+            var taskToUpdate = await _context.Task.FindAsync(id);
+
+            if (taskToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            await _context.Entry(taskToUpdate).Collection(t => t.Tags).LoadAsync();
+            await _context.Entry(taskToUpdate).Reference(t => t.TaskState).LoadAsync();
+
             var taskState = await _context.TaskState.FindAsync(taskUpdateDTO.TaskStateId);
 
             if (taskState == null)
@@ -124,18 +134,16 @@ namespace Controllers
                 return BadRequest("One or more tags do not exist");
             }
 
-            var taskToUpdate = await _context.Task.FindAsync(id);
-
-            if (taskToUpdate == null)
-            {
-                return NotFound();
-            }
-
             taskToUpdate.Title = taskUpdateDTO.Title;
             taskToUpdate.Description = taskUpdateDTO.Description;
             taskToUpdate.Deadline = taskUpdateDTO.Deadline;
             taskToUpdate.TaskStateId = taskUpdateDTO.TaskStateId;
-            taskToUpdate.Tags = tags;
+
+            taskToUpdate.Tags.Clear();
+            foreach (Models.Tag tag in tags)
+            {
+                taskToUpdate.Tags.Add(tag);
+            }
 
             _context.Task.Update(taskToUpdate);
             await _context.SaveChangesAsync();

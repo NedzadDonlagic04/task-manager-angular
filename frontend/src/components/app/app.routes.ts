@@ -12,7 +12,7 @@ export const routes: Routes = [
     { path: "update/:id", title: "Update Task", component: UpdateTaskPage },
     {
         path: "task-statistics",
-        title: "Taks Statistics",
+        title: "Task Statistics",
         component: TaskStatisticsPage,
     },
 ];

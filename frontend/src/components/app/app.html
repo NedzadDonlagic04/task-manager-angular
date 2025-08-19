@@ -6,10 +6,13 @@
         <!-- Right side: Nav links -->
         <nav class="d-flex gap-5 mt-2">
             @for (routerLink of routerLinks; track routerLink.path) {
+            <!-- The solution below is terrible but for the moment it
+                 will skip showing the update route as a part of the navbar -->
+            @if (routerLink.path !== "update/:id") {
             <button mat-stroked-button [routerLink]="'/' + routerLink.path">
                 {{ routerLink.title }}
             </button>
-            }
+            } }
 
             <!--Dark mode toggle-->
             <button

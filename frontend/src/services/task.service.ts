@@ -18,6 +18,10 @@ export class TaskService {
         return this.http.get<TaskReadDTO>(`${this.taskApiUrl}/${taskId}`);
     }
 
+    getTasks(): Observable<TaskReadDTO[]> {
+        return this.http.get<TaskReadDTO[]>(this.taskApiUrl);
+    }
+
     createTask(taskData: TaskCreateDTO): Observable<TaskReadDTO> {
         return this.http.post<TaskReadDTO>(this.taskApiUrl, taskData);
     }

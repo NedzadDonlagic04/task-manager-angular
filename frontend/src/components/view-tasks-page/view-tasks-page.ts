@@ -1,34 +1,35 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import TaskReadDTO from '../../dtos/task-read.dto';
-import { TaskService } from '../../services/task.service';
-import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import TaskReadDTO from "../../dtos/task-read.dto";
+import { TaskService } from "../../services/task.service";
+import { DatePipe } from "@angular/common";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-view-tasks-page',
-  imports: [DatePipe],
-  templateUrl: './view-tasks-page.html',
-  styleUrl: './view-tasks-page.css',
+    selector: "app-view-tasks-page",
+    imports: [DatePipe],
+    templateUrl: "./view-tasks-page.html",
+    styleUrl: "./view-tasks-page.css",
 })
+export class ViewTasksPage implements OnInit {
+    tasks: TaskReadDTO[] = [];
 
-export class ViewTasksPage implements OnInit
-{
- 
-  tasks: TaskReadDTO[]=[];
+    constructor(
+        private TaskService: TaskService,
+        private router: Router,
+    ) {}
 
-  constructor(private TaskService: TaskService) {}
-  
-  ngOnInit(): void 
-  {
-    this.TaskService.getTasks().subscribe({
-      next: (tasks: TaskReadDTO[]) => 
-      {
-        console.log(tasks);
-        this.tasks = tasks;
-      },
-      error: (error) => 
-      {
-        console.error('Error fetching tasks:', error);
-      }
-    });
-  }
+    ngOnInit(): void {
+        this.TaskService.getTasks().subscribe({
+            next: (tasks: TaskReadDTO[]) => {
+                this.tasks = tasks;
+            },
+            error: (error) => {
+                console.error("Error fetching tasks:", error);
+            },
+        });
+    }
+
+    navigatoToUpdatePage(taskId: string): void {
+        this.router.navigate(["/update", taskId]);
+    }
 }

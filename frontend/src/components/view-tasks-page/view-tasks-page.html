@@ -11,18 +11,20 @@
         </tr>
     </thead>
     <tbody>
-        @for (task of tasks; track $index) 
-        {
-            <tr>
-                <th scope="row">{{ $index + 1 }}</th>
-                <td>{{ task.title }}</td>
-                <td>{{ task.description }}</td>
-                @if(task.deadline==null){<td>Not set</td>} 
-                @else {<td>{{ task.deadline | date:'medium' }}</td>}
-                <td>{{ task.created_At | date:'medium' }}</td>
-                <td>{{task.taskStateName}}</td>
-                <td>{{task.tagNames}}</td>
-            </tr>
+        @for (task of tasks; track $index) {
+        <tr (click)="navigatoToUpdatePage(task.id)">
+            <th scope="row">{{ $index + 1 }}</th>
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            @if(task.deadline==null){
+            <td>Not set</td>
+            } @else {
+            <td>{{ task.deadline | date:'medium' }}</td>
+            }
+            <td>{{ task.created_At | date:'medium' }}</td>
+            <td>{{task.taskStateName}}</td>
+            <td>{{task.tagNames}}</td>
+        </tr>
         }
-        
+    </tbody>
 </table>

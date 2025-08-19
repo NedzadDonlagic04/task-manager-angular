@@ -7,4 +7,6 @@ dotnet restore
 dotnet user-secrets init
 dotnet user-secrets set "DATABASE_URL" "your database url goes here"
 dotnet user-secrets set "Cors:AllowedOrigin" "http://localhost:4200" # This is the default server, you can change it however you like
+dotnet dev-certs https
+dotnet dev-certs https --trust
 dotnet run

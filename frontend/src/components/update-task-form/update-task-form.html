@@ -1,6 +1,6 @@
-<form [formGroup]="addTaskForm" (ngSubmit)="onSubmit()" class="task-form">
+<form [formGroup]="taskFormGroup" (ngSubmit)="onSubmit()" class="task-form">
     <mat-card>
-        <mat-card-title>Add New Task</mat-card-title>
+        <mat-card-title>Update Task</mat-card-title>
 
         <mat-form-field appearance="fill">
             <mat-label>Title</mat-label>
@@ -33,6 +33,19 @@
             ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        } @if (taskStates.length === 0) {
+        <p>Loading task states...</p>
+        } @else {
+        <mat-form-field appearance="fill">
+            <mat-label>Task States</mat-label>
+            <mat-select formControlName="taskStates">
+                @for (taskState of taskStates; track taskState.id) {
+                <mat-option [value]="taskState.id">
+                    {{ taskState.name }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
         } @if (tags.length === 0) {
         <p>Loading task tags...</p>
         } @else {
@@ -45,8 +58,13 @@
         }
 
         <div class="form-btn-container">
-            <button mat-raised-button color="primary" type="submit">
-                Add Todo
+            <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="taskFormGroup.invalid"
+            >
+                Update
             </button>
         </div>
     </mat-card>

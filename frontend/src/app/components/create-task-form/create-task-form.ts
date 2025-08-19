@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { TaskFormBase } from "../task-form-base/task-form-base";
-import { TagService } from "../../../services/tag.service";
-import { TaskService } from "../../../services/task.service";
-import TaskCreateDTO from "../../../dtos/task-create.dto";
+import { TagService } from "../../services/tag.service";
+import { TaskService } from "../../services/task.service";
+import TaskCreateDTO from "../../dtos/task-create.dto";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { MatCard, MatCardTitle } from "@angular/material/card";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -61,7 +61,7 @@ export class CreateTaskForm extends TaskFormBase {
                 });
                 this.taskFormGroup.reset();
             },
-            error: (error) =>
+            error: (error: any) =>
                 this.matSnackBar.open("Failed to save task.", "Dismiss", {
                     duration: 5000,
                     panelClass: ["error-snackbar"],

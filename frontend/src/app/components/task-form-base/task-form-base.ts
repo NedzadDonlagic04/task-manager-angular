@@ -5,9 +5,9 @@ import {
     UntypedFormGroup,
     Validators,
 } from "@angular/forms";
-import TagDTO from "../../../dtos/tag.dto";
-import { TagService } from "../../../services/tag.service";
-import { TaskService } from "../../../services/task.service";
+import TagDTO from "../../dtos/tag.dto";
+import { TagService } from "../../services/tag.service";
+import { TaskService } from "../../services/task.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({

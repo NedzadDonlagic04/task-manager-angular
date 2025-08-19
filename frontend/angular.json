@@ -9,7 +9,7 @@
                 "@schematics/angular:component": {
                     "style": "scss",
                     "changeDetection": "OnPush",
-                    "path": "src/components"
+                    "path": "src/app/components"
                 },
                 "@schematics/angular:service": {
                     "path": "src/services"
@@ -35,7 +35,7 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css",
                             "src/custom-theme.scss",
                             "src/styles.css",
-                            "src/components/app/color-modes.css"
+                            "src/app/components/app/color-modes.css"
                         ]
                     },
                     "configurations": {

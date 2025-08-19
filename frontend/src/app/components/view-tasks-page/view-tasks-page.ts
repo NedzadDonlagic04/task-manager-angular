@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import TaskReadDTO from "../../dtos/task-read.dto";
-import { TaskService } from "../../services/task.service";
+import TaskReadDTO from "../../../dtos/task-read.dto";
+import { TaskService } from "../../../services/task.service";
 import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
 

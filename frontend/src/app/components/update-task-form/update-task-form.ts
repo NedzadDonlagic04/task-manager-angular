@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { TaskFormBase } from "../task-form-base/task-form-base";
-import { TagService } from "../../services/tag.service";
-import { TaskService } from "../../services/task.service";
+import { TagService } from "../../../services/tag.service";
+import { TaskService } from "../../../services/task.service";
 import {
     ReactiveFormsModule,
     FormsModule,
@@ -17,12 +17,12 @@ import {
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import TaskStateDTO from "../../dtos/task-state.dto";
+import TaskStateDTO from "../../../dtos/task-state.dto";
 import { MatSelectModule } from "@angular/material/select";
-import { TaskStateService } from "../../services/task-state.service";
+import { TaskStateService } from "../../../services/task-state.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import TaskReadDTO from "../../dtos/task-read.dto";
-import TaskUpdateDTO from "../../dtos/task-update.dto";
+import TaskReadDTO from "../../../dtos/task-read.dto";
+import TaskUpdateDTO from "../../../dtos/task-update.dto";
 
 @Component({
     selector: "update-task-form",

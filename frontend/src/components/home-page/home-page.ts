@@ -3,7 +3,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule, MatIcon } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
     selector: "app-home-page",
@@ -19,4 +19,10 @@ import { RouterLink } from "@angular/router";
     styleUrl: "./home-page.css",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePage {}
+export class HomePage {
+    constructor(private router: Router) {}
+
+    redirectToAddTaskPage() {
+        this.router.navigate(["/add-task"]);
+    }
+}

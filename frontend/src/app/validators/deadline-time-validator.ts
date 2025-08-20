@@ -16,15 +16,8 @@ export const deadlineTimeAheadAnHourValidator = (
 
         const deadline = new Date(control.value);
         const now = new Date();
-        const MINUTES_IN_AN_HOUR = 60;
-        const SECONDS_IN_A_MINUTE = 60;
-        const MILLISECONDS_IN_A_SECOND = 1000;
-        const oneHourFromNow = new Date(
-            now.getTime() +
-                MINUTES_IN_AN_HOUR *
-                    SECONDS_IN_A_MINUTE *
-                    MILLISECONDS_IN_A_SECOND,
-        );
+        const HOUR_IN_MILISECONDS = 3_600_000;
+        const oneHourFromNow = new Date(now.getTime() + HOUR_IN_MILISECONDS);
 
         if (oneHourFromNow <= deadline) {
             return { deadlineTimeAhead: true };

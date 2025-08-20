@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using DbContexts;
 using DTOs;
-using Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
@@ -46,60 +45,6 @@ namespace Controllers
             };
 
             return Ok(result);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<TaskStateDTO>> CreateTaskState(TaskStateDTO taskStateDTO)
-        {
-            var taskState = new TaskState
-            {
-                Name = taskStateDTO.Name
-            };
-
-            _context.TaskState.Add(taskState);
-            await _context.SaveChangesAsync();
-
-            var result = new TaskStateDTO
-            {
-                Id = taskState.Id,
-                Name = taskState.Name
-            };
-
-            return Ok(result);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTaskState(int id, TaskStateDTO taskStateDTO)
-        {
-            var taskState = await _context.TaskState.FindAsync(id);
-
-            if (taskState == null)
-            {
-                return NotFound();
-            }
-
-            taskState.Name = taskStateDTO.Name;
-
-            _context.TaskState.Update(taskState);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTaskState(int id)
-        {
-            var taskState = await _context.TaskState.FindAsync(id);
-
-            if (taskState == null)
-            {
-                return NotFound();
-            }
-
-            _context.TaskState.Remove(taskState);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
     }
 }

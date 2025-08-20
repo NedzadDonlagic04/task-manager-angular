@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using DbContexts;
 using DTOs;
-using Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
@@ -46,60 +45,6 @@ namespace Controllers
             };
 
             return Ok(result);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<TagDTO>> CreateTag(TagDTO tagDTO)
-        {
-            var tag = new Tag
-            {
-                Name = tagDTO.Name
-            };
-
-            _context.Tag.Add(tag);
-            await _context.SaveChangesAsync();
-
-            var result = new TagDTO
-            {
-                Id = tag.Id,
-                Name = tag.Name
-            };
-
-            return Ok(result);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTag(Guid id, TagDTO tagDTO)
-        {
-            var tag = await _context.Tag.FindAsync(id);
-
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            tag.Name = tagDTO.Name;
-
-            _context.Tag.Update(tag);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTag(Guid id)
-        {
-            var tag = await _context.Tag.FindAsync(id);
-
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            _context.Tag.Remove(tag);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
     }
 }

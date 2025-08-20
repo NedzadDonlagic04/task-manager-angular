@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { TaskFormBase } from "../task-form-base/task-form-base";
 import { TagService } from "../../services/tag.service";
 import { TaskService } from "../../services/task.service";
@@ -13,6 +13,7 @@ import {
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatTimepickerModule } from "@angular/material/timepicker";
 
 @Component({
     selector: "create-task-form",
@@ -26,6 +27,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
         MatDatepicker,
         MatDatepickerModule,
         MatCheckboxModule,
+        MatTimepickerModule,
         FormsModule,
     ],
     templateUrl: "./create-task-form.html",
@@ -47,9 +49,11 @@ export class CreateTaskForm extends TaskFormBase {
         const tagIds = this.getSelectedTags();
 
         const taskData: TaskCreateDTO = {
-            title: formData.title ?? "",
-            description: formData.description ?? "",
-            deadline: this.hasDeadline ? (formData.deadline ?? "") : null,
+            title: formData.title?.trim() ?? "",
+            description: formData.description?.trim() ?? "",
+            deadline: formData.hasDeadline
+                ? (this.getDeadlineFromControls()?.toISOString() ?? "")
+                : null,
             tagIds: tagIds,
         };
 
@@ -59,13 +63,15 @@ export class CreateTaskForm extends TaskFormBase {
                     duration: 3000,
                     panelClass: ["success-snackbar"],
                 });
-                this.taskFormGroup.reset();
+                this.taskFormGroup.reset(this.initialFormValues);
             },
-            error: (error: any) =>
+            error: (error: any) => {
                 this.matSnackBar.open("Failed to save task.", "Dismiss", {
                     duration: 5000,
                     panelClass: ["error-snackbar"],
-                }),
+                });
+                console.error(`Error while creating task -> ${error}`);
+            },
         });
     }
 }

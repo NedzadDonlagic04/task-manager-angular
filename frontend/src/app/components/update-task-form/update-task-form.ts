@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { TaskFormBase } from "../task-form-base/task-form-base";
 import { TagService } from "../../services/tag.service";
 import { TaskService } from "../../services/task.service";
@@ -18,11 +18,14 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import TaskStateDTO from "../../dtos/task-state.dto";
-import { MatSelectModule } from "@angular/material/select";
 import { TaskStateService } from "../../services/task-state.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import TaskReadDTO from "../../dtos/task-read.dto";
 import TaskUpdateDTO from "../../dtos/task-update.dto";
+import { MatTimepickerModule } from "@angular/material/timepicker";
+import { MatOption } from "@angular/material/core";
+import { MatSelect } from "@angular/material/select";
+import { findInvalidControls } from "../../utils/find-invalid-controls";
 
 @Component({
     selector: "update-task-form",
@@ -36,8 +39,10 @@ import TaskUpdateDTO from "../../dtos/task-update.dto";
         MatDatepicker,
         MatDatepickerModule,
         MatCheckboxModule,
+        MatTimepickerModule,
+        MatOption,
+        MatSelect,
         FormsModule,
-        MatSelectModule,
     ],
     templateUrl: "./update-task-form.html",
     styleUrl: "./update-task-form.css",
@@ -104,8 +109,11 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         );
 
         if (this.taskToUpdate.deadline !== null) {
-            this.hasDeadline = true;
-            this.taskFormGroup.controls["deadline"].setValue(
+            this.taskFormGroup.controls["hasDeadline"].setValue(true);
+            this.taskFormGroup.controls["deadlineTime"].setValue(
+                this.taskToUpdate.deadline,
+            );
+            this.taskFormGroup.controls["deadlineDate"].setValue(
                 this.taskToUpdate.deadline,
             );
         }
@@ -133,13 +141,20 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
     }
 
     override onSubmit(): void {
+        if (this.taskFormGroup.invalid) {
+            console.log(findInvalidControls(this.taskFormGroup));
+            return;
+        }
+
         const formData = this.taskFormGroup.value;
         const tagIds = this.getSelectedTags();
 
         const taskData: TaskUpdateDTO = {
             title: formData.title ?? "",
             description: formData.description ?? "",
-            deadline: this.hasDeadline ? (formData.deadline ?? "") : null,
+            deadline: formData.hasDeadline
+                ? (this.getDeadlineFromControls()?.toISOString() ?? "")
+                : null,
             taskStateId: formData.taskStates,
             tagIds: tagIds,
         };

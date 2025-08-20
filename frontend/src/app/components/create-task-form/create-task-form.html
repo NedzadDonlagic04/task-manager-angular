@@ -5,33 +5,73 @@
         <mat-form-field appearance="fill">
             <mat-label>Title</mat-label>
             <input matInput formControlName="title" />
+            @if(titleControl?.errors?.['required']) {
+            <mat-error> Title is a required input </mat-error>
+            } @if(titleControl?.errors?.['minlength']) {
+            <mat-error>
+                Title must be at least {{
+                titleControl?.errors?.['minlength'].requiredLength }} characters
+            </mat-error>
+            } @if(titleControl?.errors?.['maxlength']) {
+            <mat-error>
+                Title cannot exceed {{
+                titleControl?.errors?.['maxlength'].requiredLength }} characters
+            </mat-error>
+            }
         </mat-form-field>
 
         <mat-form-field appearance="fill">
             <mat-label>Description</mat-label>
             <textarea matInput formControlName="description"></textarea>
+            @if(descriptionControl?.errors?.['maxlength']) {
+            <mat-error>
+                Description cannot exceed {{
+                descriptionControl?.errors?.['maxlength'].requiredLength }}
+                characters
+            </mat-error>
+            }
         </mat-form-field>
 
-        <mat-checkbox
-            [(ngModel)]="hasDeadline"
-            [ngModelOptions]="{standalone: true}"
-        >
+        <mat-checkbox formControlName="hasDeadline">
             Add deadline?
         </mat-checkbox>
 
-        @if (hasDeadline) {
+        @if(hasDeadlineControl?.value) {
         <mat-form-field appearance="fill">
-            <mat-label>Task deadline</mat-label>
+            <mat-label>Task deadline date</mat-label>
             <input
                 matInput
-                [matDatepicker]="picker"
-                formControlName="deadline"
+                [matDatepicker]="datePicker"
+                formControlName="deadlineDate"
             />
             <mat-datepicker-toggle
                 matSuffix
-                [for]="picker"
+                [for]="datePicker"
             ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-datepicker #datePicker></mat-datepicker>
+            @if(deadlineDateControl?.errors?.['deadlineDateAhead']) {
+            <mat-error>
+                Deadline date has to be today or a future date </mat-error
+            >}
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Task deadline time</mat-label>
+            <input
+                matInput
+                [matTimepicker]="timePicker"
+                formControlName="deadlineTime"
+            />
+            <mat-timepicker-toggle
+                matSuffix
+                [for]="timePicker"
+            ></mat-timepicker-toggle>
+            <mat-timepicker #timePicker></mat-timepicker>
+            @if(deadlineTimeControl?.errors?.['deadlineTimeAhead']) {
+            <mat-error>
+                Deadline time has to be an hour ahead of current time
+            </mat-error>
+            }
         </mat-form-field>
         } @if (tags.length === 0) {
         <p>Loading task tags...</p>
@@ -46,7 +86,7 @@
 
         <div class="form-btn-container">
             <button
-                mat-raised-button
+                matButton="filled"
                 color="primary"
                 type="submit"
                 [disabled]="taskFormGroup.invalid"

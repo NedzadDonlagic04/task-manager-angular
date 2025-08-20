@@ -66,11 +66,6 @@ namespace Controllers
         [HttpPost]
         public async Task<ActionResult<TaskReadDTO>> CreateTask(TaskCreateDTO taskCreateDTO)
         {
-            if (taskCreateDTO == null)
-            {
-                return BadRequest("Task data cannot be null.");
-            }
-
             var tags = await _context.Tag.Where(tag => taskCreateDTO.TagIds.Contains(tag.Id)).ToListAsync();
 
             if (tags.Count != taskCreateDTO.TagIds.Count)

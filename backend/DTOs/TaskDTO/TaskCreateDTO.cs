@@ -9,7 +9,6 @@ namespace DTOs
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Title must be between 3 and 50 characters.")]
         public string Title { get; set; } = null!;
 
-        [Required]
         [StringLength(1_000, ErrorMessage = "Description must be between 0 and 1_000 characters.")]
         public string Description { get; set; } = null!;
 

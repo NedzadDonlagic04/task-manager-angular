@@ -12,7 +12,7 @@ namespace DTOs
         [StringLength(1_000, ErrorMessage = "Description must be between 0 and 1_000 characters.")]
         public string Description { get; set; } = null!;
 
-        [MinimumFutureOffsetAttribute(1)]
+        [MinimumFutureOffset(1)]
         public DateTime? Deadline { get; set; }
 
         [Required]

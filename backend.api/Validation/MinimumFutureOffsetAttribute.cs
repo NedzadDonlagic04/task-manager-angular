@@ -9,6 +9,7 @@ namespace Validation
         public MinimumFutureOffsetAttribute(double hours)
         {
             _hours = hours;
+            ErrorMessage = $"The date must be at least {_hours} hours in the future.";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -17,8 +18,7 @@ namespace Validation
             {
                 return ValidationResult.Success;
             }
-
-            if (value is DateTime dateTimeValue)
+            else if (value is DateTime dateTimeValue)
             {
                 DateTime minimumValidDateTime = DateTime.UtcNow.AddHours(_hours);
 
@@ -28,15 +28,13 @@ namespace Validation
                 }
                 else
                 {
-                    if (ErrorMessage == null)
-                    {
-                        ErrorMessage = "The date must be at least {0} hours in the future.";
-                    }
-                    return new ValidationResult(string.Format(ErrorMessage, _hours));
+                    return new ValidationResult(ErrorMessage);
                 }
             }
 
             return new ValidationResult("Property must be a valid date.");
         }
+
+        public override string FormatErrorMessage(string name) => ErrorMessage!;
     }
 }

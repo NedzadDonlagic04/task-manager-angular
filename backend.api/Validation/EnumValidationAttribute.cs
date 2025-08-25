@@ -14,6 +14,8 @@ namespace Validation
             }
 
             _enumType = enumType;
+
+            ErrorMessage = $"Invalid value for the enum '{_enumType.Name}'. Valid enum values: {string.Join(", ", Enum.GetNames(_enumType))}";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -27,10 +29,9 @@ namespace Validation
                 return ValidationResult.Success;
             }
 
-            var memberNames = string.Join(", ", Enum.GetNames(_enumType));
-            ErrorMessage = $"The value for '{validationContext.DisplayName}' is not valid. Valid values are: {memberNames}.";
-
             return new ValidationResult(ErrorMessage);
         }
+
+        public override string FormatErrorMessage(string name) => ErrorMessage!;
     }
 }

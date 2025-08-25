@@ -3,27 +3,25 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"] ?? throw new Exception("Cors:AllowedOrigin not set");
 builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-        policy.WithOrigins(allowedOrigin)
-              .AllowAnyMethod()
-              .AllowAnyHeader());
-});
+    {
+        options.AddPolicy("AllowFrontend", policy =>
+            policy.WithOrigins(allowedOrigin)
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+    }
+);
 
 var connectionString = builder.Configuration["DATABASE_URL"] ?? throw new Exception("DATABASE_URL not set");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -31,11 +29,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+db.Database.Migrate();
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();

@@ -19,7 +19,7 @@ export const deadlineTimeAheadAnHourValidator = (
         const HOUR_IN_MILISECONDS = 3_600_000;
         const oneHourFromNow = new Date(now.getTime() + HOUR_IN_MILISECONDS);
 
-        if (oneHourFromNow <= deadline) {
+        if (deadline <= oneHourFromNow) {
             return { deadlineTimeAhead: true };
         }
 

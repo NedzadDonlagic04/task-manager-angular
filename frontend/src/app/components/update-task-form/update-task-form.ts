@@ -141,11 +141,6 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
     }
 
     override onSubmit(): void {
-        if (this.taskFormGroup.invalid) {
-            console.log(findInvalidControls(this.taskFormGroup));
-            return;
-        }
-
         const formData = this.taskFormGroup.value;
         const tagIds = this.getSelectedTags();
 

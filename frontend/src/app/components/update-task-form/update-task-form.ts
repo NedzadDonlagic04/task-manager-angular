@@ -28,7 +28,7 @@ import { MatSelect } from "@angular/material/select";
 import { findInvalidControls } from "../../utils/find-invalid-controls";
 
 @Component({
-    selector: "update-task-form",
+    selector: "app-update-task-form",
     imports: [
         ReactiveFormsModule,
         MatFormField,

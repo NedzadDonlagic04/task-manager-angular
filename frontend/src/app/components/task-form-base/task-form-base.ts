@@ -14,7 +14,7 @@ import { deadlineTimeAheadAnHourValidator } from "../../validators/deadline-time
 import { MatButtonModule } from "@angular/material/button";
 
 @Component({
-    selector: "task-form-base",
+    selector: "app-task-form-base",
     imports: [MatButtonModule],
     templateUrl: "./task-form-base.html",
     styleUrl: "./task-form-base.css",

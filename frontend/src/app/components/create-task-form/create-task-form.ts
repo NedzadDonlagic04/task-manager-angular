@@ -16,7 +16,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTimepickerModule } from "@angular/material/timepicker";
 
 @Component({
-    selector: "create-task-form",
+    selector: "app-create-task-form",
     imports: [
         ReactiveFormsModule,
         MatFormField,

@@ -1,0 +1,61 @@
+<mat-table [dataSource]="tasksDataSource">
+    <ng-container matColumnDef="rowNum">
+        <mat-header-cell *matHeaderCellDef> # </mat-header-cell>
+        <mat-cell *matCellDef="let task"> {{ task.rowNum }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Title
+        </mat-header-cell>
+        <mat-cell *matCellDef="let task"> {{ task.title }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+        <mat-cell *matCellDef="let task"> {{ task.description }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="deadline">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Deadline
+        </mat-header-cell>
+        <mat-cell *matCellDef="let task">
+            {{ task.deadline | date:'short' }}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+        <mat-header-cell *matHeaderCellDef> Created At </mat-header-cell>
+        <mat-cell *matCellDef="let task">
+            {{ task.createdAt | date:'short' }}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="taskState">
+        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+        <mat-cell *matCellDef="let task"> {{ task.taskState }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="tagNames">
+        <mat-header-cell *matHeaderCellDef> Tags </mat-header-cell>
+        <mat-cell *matCellDef="let task">
+            @for (tag of task.tagNames; track tag) { {{ tag }} }
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+        <mat-cell *matCellDef="let task">
+            <button mat-icon-button color="primary">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedTasksColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedTasksColumns"></mat-row>
+</mat-table>

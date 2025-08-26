@@ -25,7 +25,6 @@ import TaskUpdateDTO from "../../dtos/task-update.dto";
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
-import { findInvalidControls } from "../../utils/find-invalid-controls";
 
 @Component({
     selector: "app-update-task-form",

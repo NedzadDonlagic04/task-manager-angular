@@ -3,7 +3,7 @@ export default interface TaskReadDTO {
     title: string;
     description: string;
     created_At: string;
-    deadline: string;
+    deadline: string | null;
     taskStateName: string;
     tagNames: string[];
 }

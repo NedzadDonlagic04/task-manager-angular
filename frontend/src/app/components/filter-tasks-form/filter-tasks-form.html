@@ -1,0 +1,87 @@
+<form [formGroup]="filterFormGroup">
+    <mat-form-field appearance="fill">
+        <mat-label>Search for term:</mat-label>
+        <input matInput formControlName="searchTerm" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Deadline start:</mat-label>
+        <input
+            matInput
+            [matDatepicker]="dateStartPicker"
+            formControlName="deadlineStart"
+        />
+        <mat-datepicker-toggle
+            matSuffix
+            [for]="dateStartPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #dateStartPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Deadline end:</mat-label>
+        <input
+            matInput
+            [matDatepicker]="dateEndPicker"
+            formControlName="deadlineEnd"
+        />
+        <mat-datepicker-toggle
+            matSuffix
+            [for]="dateEndPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #dateEndPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Created at start:</mat-label>
+        <input
+            matInput
+            [matDatepicker]="createdAtStartPicker"
+            formControlName="createdAtStart"
+        />
+        <mat-datepicker-toggle
+            matSuffix
+            [for]="createdAtStartPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #createdAtStartPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Created at end:</mat-label>
+        <input
+            matInput
+            [matDatepicker]="createdAtEndPicker"
+            formControlName="createdAtEnd"
+        />
+        <mat-datepicker-toggle
+            matSuffix
+            [for]="createdAtEndPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #createdAtEndPicker></mat-datepicker>
+    </mat-form-field>
+
+    @if (tags.length === 0) {
+    <p>Loading task states...</p>
+    } @else {
+    <mat-form-field appearance="fill">
+        <mat-label>Task States</mat-label>
+        <mat-select formControlName="taskState">
+            <mat-option [value]="''">All States</mat-option>
+            @for (taskState of taskStates; track taskState.id) {
+            <mat-option [value]="taskState.name">
+                {{ taskState.name }}
+            </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    } @if (tags.length === 0) {
+    <p>Loading task tags...</p>
+    } @else {
+    <div formArrayName="tags">
+        <mat-label>Task tags:</mat-label>
+        @for(tag of tags; track tag.id; let i = $index) {
+        <mat-checkbox [formControlName]="i"> {{ tag.name }} </mat-checkbox>
+        }
+    </div>
+    }
+</form>

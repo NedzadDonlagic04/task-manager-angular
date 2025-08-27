@@ -1,11 +1,9 @@
-interface TaskReadDTO {
+export default interface TaskReadDTO {
     id: string;
     title: string;
     description: string;
     created_At: string;
-    deadline: string;
+    deadline: string | null;
     taskStateName: string;
     tagNames: string[];
 }
-
-export default TaskReadDTO;

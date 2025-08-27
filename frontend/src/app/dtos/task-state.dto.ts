@@ -1,6 +1,4 @@
-interface TaskStateDTO {
+export default interface TaskStateDTO {
     id: number;
     name: string;
 }
-
-export default TaskStateDTO;

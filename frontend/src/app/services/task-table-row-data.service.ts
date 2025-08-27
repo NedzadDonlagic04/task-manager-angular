@@ -1,12 +1,16 @@
 import TaskReadDTO from "../dtos/task-read.dto";
 
 export class TaskTableRowData {
-    rowNum: number;
-    private task: TaskReadDTO;
+    readonly rowNum: number;
+    private readonly task: TaskReadDTO;
 
     constructor(rowNum: number, task: TaskReadDTO) {
         this.rowNum = rowNum;
         this.task = task;
+    }
+
+    get id(): string {
+        return this.task.id;
     }
 
     get title(): string {
@@ -17,7 +21,7 @@ export class TaskTableRowData {
         return this.task.description;
     }
 
-    get deadline(): string {
+    get deadline(): string | null {
         return this.task.deadline;
     }
 

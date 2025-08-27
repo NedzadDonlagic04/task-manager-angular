@@ -1,4 +1,27 @@
+<app-filter-tasks-form (onValueChanged)="filterTasks($event)" />
+
 <mat-table [dataSource]="tasksDataSource" matSort>
+    <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef class="w-16">
+            <mat-checkbox
+                (click)="$event? toggleAllRows() : null"
+                [checked]="selectedTasks.hasValue() && areAllRowsSelected()"
+                [indeterminate]="selectedTasks.hasValue() && !areAllRowsSelected()"
+                aria-label="Select all rows"
+            >
+            </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event? selectedTasks.toggle(row) : null"
+                [checked]="selectedTasks.isSelected(row)"
+                aria-label="Select row"
+            >
+            </mat-checkbox>
+        </mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="rowNum">
         <mat-header-cell *matHeaderCellDef mat-sort-header> # </mat-header-cell>
         <mat-cell *matCellDef="let task"> {{ task.rowNum }} </mat-cell>
@@ -6,18 +29,16 @@
 
     <ng-container matColumnDef="title">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
-            Title
+            Task
         </mat-header-cell>
-        <mat-cell *matCellDef="let task"> {{ task.title }} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="description">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-            Description
-        </mat-header-cell>
-        <mat-cell *matCellDef="let task">
-            @if (task.description !== '') { {{ task.description }} } @else { {{
-            NOT_SET_MESSAGE }} }
+        <mat-cell
+            *matCellDef="let task"
+            style="flex-direction: column; align-items: flex-start"
+        >
+            <p style="font-weight: bolder">{{ task.title }}</p>
+            @if (task.description !== '') {
+            <p>{{ task.description }}</p>
+            }
         </mat-cell>
     </ng-container>
 

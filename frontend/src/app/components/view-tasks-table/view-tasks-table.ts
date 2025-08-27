@@ -24,6 +24,12 @@ import { CdkTableModule } from "@angular/cdk/table";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { Router } from "@angular/router";
+import {
+    FilterData,
+    FilterTasksForm,
+} from "../filter-tasks-form/filter-tasks-form";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
     selector: "app-view-tasks-table",
@@ -38,6 +44,8 @@ import { Router } from "@angular/router";
         MatIcon,
         MatPaginatorModule,
         MatSortModule,
+        MatCheckboxModule,
+        FilterTasksForm,
     ],
     templateUrl: "./view-tasks-table.html",
     styleUrl: "./view-tasks-table.css",
@@ -47,16 +55,18 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
     readonly NOT_SET_MESSAGE = "<Not set>";
 
     readonly displayedTasksColumns: string[] = [
+        "select",
         "rowNum",
         "title",
-        "description",
         "deadline",
         "createdAt",
         "taskStateName",
         "tagNames",
         "actions",
     ];
-    readonly tasksDataSource: MatTableDataSource<TaskTableRowData>;
+
+    readonly tasksDataSource = new MatTableDataSource<TaskTableRowData>();
+    readonly selectedTasks = new SelectionModel<TaskTableRowData>(true, []);
 
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -65,7 +75,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         private taskService: TaskService,
         private router: Router,
     ) {
-        this.tasksDataSource = new MatTableDataSource<TaskTableRowData>();
+        this.tasksDataSource.filterPredicate = this.taskTableFilterPredicate;
     }
 
     ngOnInit(): void {
@@ -90,5 +100,105 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
 
     navigatoToUpdatePage(taskId: string): void {
         this.router.navigate(["/update", taskId]);
+    }
+
+    taskTableFilterPredicate(
+        rowData: TaskTableRowData,
+        filter: string,
+    ): boolean {
+        const filterData: FilterData = JSON.parse(filter);
+
+        const searchTerm = filterData.searchTerm.trim().toLocaleLowerCase();
+        const deadlineStartDate = new Date(filterData.deadlineStart);
+        const deadlineEndDate = new Date(filterData.deadlineEnd);
+        const createdAtStartDate = new Date(filterData.createdAtStart);
+        const createdAtEndDate = new Date(filterData.createdAtEnd);
+        const { taskStateName, tagNames } = filterData;
+
+        const createDateWithoutHours = (dateStr: string): Date => {
+            const date = new Date(dateStr);
+            date.setHours(0, 0, 0, 0);
+            return date;
+        };
+
+        const areTagNamesSame = (
+            tagNames1: string[],
+            tagNames2: string[],
+        ): boolean => {
+            if (tagNames1.length !== tagNames2.length) {
+                return false;
+            }
+
+            tagNames1.sort();
+            tagNames2.sort();
+
+            for (let i = 0; i < tagNames1.length; ++i) {
+                if (tagNames1[i] !== tagNames2[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
+        const searchTermValid =
+            searchTerm === "" ||
+            rowData.title.toLocaleLowerCase().includes(searchTerm) ||
+            rowData.description.toLocaleLowerCase().includes(searchTerm);
+
+        const deadlineStartValid =
+            isNaN(deadlineStartDate.getTime()) ||
+            (rowData.deadline !== null &&
+                createDateWithoutHours(rowData.deadline) >= deadlineStartDate);
+
+        const deadlineEndValid =
+            isNaN(deadlineEndDate.getTime()) ||
+            (rowData.deadline !== null &&
+                createDateWithoutHours(rowData.deadline) <= deadlineEndDate);
+
+        const createdAtStartValid =
+            isNaN(createdAtStartDate.getTime()) ||
+            createDateWithoutHours(rowData.createdAt) >= createdAtStartDate;
+
+        const createdAtEndValid =
+            isNaN(createdAtEndDate.getTime()) ||
+            createDateWithoutHours(rowData.createdAt) <= createdAtEndDate;
+
+        const taskStateNameValid =
+            taskStateName === "" || taskStateName === rowData.taskStateName;
+
+        const tagNamesValid =
+            tagNames.length === 0 ||
+            areTagNamesSame(tagNames, rowData.tagNames);
+
+        return (
+            searchTermValid &&
+            deadlineStartValid &&
+            deadlineEndValid &&
+            createdAtStartValid &&
+            createdAtEndValid &&
+            taskStateNameValid &&
+            tagNamesValid
+        );
+    }
+
+    filterTasks(filterObjStr: string): void {
+        this.tasksDataSource.filter = filterObjStr;
+    }
+
+    areAllRowsSelected(): boolean {
+        const numberOfRowsSelected = this.selectedTasks.selected.length;
+        const numberOfRowsInTable = this.tasksDataSource.data.length;
+
+        return numberOfRowsInTable === numberOfRowsSelected;
+    }
+
+    toggleAllRows(): void {
+        if (this.areAllRowsSelected()) {
+            this.selectedTasks.clear();
+            return;
+        }
+
+        this.selectedTasks.select(...this.tasksDataSource.data);
     }
 }

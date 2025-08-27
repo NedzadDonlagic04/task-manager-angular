@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ViewTasksPage } from './view-tasks-page';
 
-describe('ViewTasksPage', () => {
-  let component: ViewTasksPage;
-  let fixture: ComponentFixture<ViewTasksPage>;
+import { YesNoDialog } from './yes-no-dialog';
+
+describe('YesNoDialog', () => {
+  let component: YesNoDialog;
+  let fixture: ComponentFixture<YesNoDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewTasksPage]
+      imports: [YesNoDialog]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ViewTasksPage);
+    fixture = TestBed.createComponent(YesNoDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

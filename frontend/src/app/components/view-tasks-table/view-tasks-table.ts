@@ -30,6 +30,8 @@ import {
 } from "../filter-tasks-form/filter-tasks-form";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { SelectionModel } from "@angular/cdk/collections";
+import { MatDialog } from "@angular/material/dialog";
+import { YesNoDialog } from "../yes-no-dialog/yes-no-dialog";
 
 @Component({
     selector: "app-view-tasks-table",
@@ -74,11 +76,25 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
     constructor(
         private taskService: TaskService,
         private router: Router,
+        private dialog: MatDialog,
     ) {
         this.tasksDataSource.filterPredicate = this.taskTableFilterPredicate;
     }
 
     ngOnInit(): void {
+        this.refreshTasksTable();
+    }
+
+    ngAfterViewInit(): void {
+        this.tasksDataSource.sort = this.sort;
+        this.tasksDataSource.paginator = this.paginator;
+    }
+
+    navigatoToUpdatePage(taskId: string): void {
+        this.router.navigate(["/update", taskId]);
+    }
+
+    refreshTasksTable(): void {
         this.taskService.getTasks().subscribe({
             next: (tasks: TaskReadDTO[]) => {
                 const tasksTableRowData: TaskTableRowData[] = tasks.map(
@@ -93,13 +109,30 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         });
     }
 
-    ngAfterViewInit(): void {
-        this.tasksDataSource.sort = this.sort;
-        this.tasksDataSource.paginator = this.paginator;
+    deleteInstance(taskId: string) {
+        this.taskService.deleteTask(taskId).subscribe({
+            next: () => this.refreshTasksTable(),
+            error: (error: any) => {
+                console.error("Error deleting task:", error);
+            },
+        });
     }
 
-    navigatoToUpdatePage(taskId: string): void {
-        this.router.navigate(["/update", taskId]);
+    showDeleteDialog(taskId: string): void {
+        let dialogRef = this.dialog.open(YesNoDialog, {
+            width: "350px",
+            data: {
+                title: "Delete",
+                message: "Are you sure?",
+                confirmText: "Delete",
+                cancelText: "Cancel",
+            },
+            disableClose: true,
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) this.deleteInstance(taskId);
+        });
     }
 
     taskTableFilterPredicate(

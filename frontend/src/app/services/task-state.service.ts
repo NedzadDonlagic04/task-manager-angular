@@ -8,11 +8,11 @@ import TaskStateDTO from "../dtos/task-state.dto";
     providedIn: "root",
 })
 export class TaskStateService {
-    tagApiUrl = `${environment.apiUrl}/task-state`;
+    private tagApiUrl = `${environment.apiUrl}/task-state`;
 
-    constructor(private http: HttpClient) {}
+    public constructor(private http: HttpClient) {}
 
-    getTaskStates(): Observable<TaskStateDTO[]> {
+    public getTaskStates(): Observable<TaskStateDTO[]> {
         return this.http.get<TaskStateDTO[]>(this.tagApiUrl);
     }
 }

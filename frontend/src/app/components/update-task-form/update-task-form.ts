@@ -47,10 +47,10 @@ import { MatSelect } from "@angular/material/select";
     styleUrl: "./update-task-form.css",
 })
 export class UpdateTaskForm extends TaskFormBase implements OnInit {
-    taskStates: TaskStateDTO[] = [];
-    taskToUpdate!: TaskReadDTO;
+    protected taskStates: TaskStateDTO[] = [];
+    private taskToUpdate!: TaskReadDTO;
 
-    constructor(
+    public constructor(
         tagService: TagService,
         taskService: TaskService,
         matSnackBar: MatSnackBar,
@@ -69,11 +69,11 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         );
     }
 
-    override ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
     }
 
-    override onTagsLoaded(): void {
+    public override onTagsLoaded(): void {
         const taskId = this.route.snapshot.paramMap.get("id");
 
         if (taskId === null) {
@@ -101,7 +101,7 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         });
     }
 
-    loadTaskDataIntoForm(): void {
+    private loadTaskDataIntoForm(): void {
         this.taskFormGroup.controls["title"].setValue(this.taskToUpdate.title);
         this.taskFormGroup.controls["description"].setValue(
             this.taskToUpdate.description,
@@ -139,7 +139,7 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         this.taskFormGroup.controls["taskStates"].setValue(taskState.id);
     }
 
-    override onSubmit(): void {
+    protected override onSubmit(): void {
         const formData = this.taskFormGroup.value;
         const tagIds = this.getSelectedTags();
 

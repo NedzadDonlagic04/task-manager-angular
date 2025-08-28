@@ -22,7 +22,7 @@ import { MatButtonModule } from "@angular/material/button";
 export abstract class TaskFormBase implements OnInit {
     private readonly HOUR_IN_MILISECONDS = 3_600_000;
 
-    readonly initialFormValues = {
+    protected readonly initialFormValues = {
         title: "",
         description: "",
         hasDeadline: false,
@@ -32,9 +32,9 @@ export abstract class TaskFormBase implements OnInit {
         ).toISOString(),
     };
 
-    tags: TagDTO[] = [];
+    protected tags: TagDTO[] = [];
 
-    taskFormGroup = new UntypedFormGroup({
+    protected taskFormGroup = new UntypedFormGroup({
         title: new FormControl(this.initialFormValues.title, {
             validators: [
                 Validators.required,
@@ -60,18 +60,18 @@ export abstract class TaskFormBase implements OnInit {
         }),
     });
 
-    constructor(
+    public constructor(
         protected tagService: TagService,
         protected taskService: TaskService,
         protected matSnackBar: MatSnackBar,
     ) {}
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.startFetchingTags();
         this.attachValueChangedToHasDeadline();
     }
 
-    startFetchingTags(): void {
+    private startFetchingTags(): void {
         this.tagService.getTags().subscribe({
             next: (tags) => {
                 this.tags = tags;
@@ -92,14 +92,14 @@ export abstract class TaskFormBase implements OnInit {
         });
     }
 
-    attachValueChangedToHasDeadline(): void {
+    private attachValueChangedToHasDeadline(): void {
         this.hasDeadlineControl?.valueChanges.subscribe(() => {
             this.deadlineDateControl?.updateValueAndValidity();
             this.deadlineTimeControl?.updateValueAndValidity();
         });
     }
 
-    getSelectedTags(): number[] {
+    protected getSelectedTags(): number[] {
         const tagCheckBoxValues = this.taskFormGroup.value.tags!;
         const tagIds: number[] = [];
 
@@ -112,30 +112,30 @@ export abstract class TaskFormBase implements OnInit {
         return tagIds;
     }
 
-    abstract onTagsLoaded(): void;
-    abstract onSubmit(): void;
+    protected abstract onTagsLoaded(): void;
+    protected abstract onSubmit(): void;
 
-    get titleControl() {
+    public get titleControl() {
         return this.taskFormGroup.get("title");
     }
 
-    get descriptionControl() {
+    public get descriptionControl() {
         return this.taskFormGroup.get("description");
     }
 
-    get hasDeadlineControl() {
+    public get hasDeadlineControl() {
         return this.taskFormGroup.get("hasDeadline");
     }
 
-    get deadlineTimeControl() {
+    public get deadlineTimeControl() {
         return this.taskFormGroup.get("deadlineTime");
     }
 
-    get deadlineDateControl() {
+    public get deadlineDateControl() {
         return this.taskFormGroup.get("deadlineDate");
     }
 
-    getDeadlineFromControls(): Date | null {
+    protected getDeadlineFromControls(): Date | null {
         const dateStr: Date | null = this.deadlineDateControl?.value;
         const timeStr: Date | null = this.deadlineTimeControl?.value;
 

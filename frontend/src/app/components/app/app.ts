@@ -23,14 +23,14 @@ import { StorageService } from "../../services/storage.service";
     ],
 })
 export class App implements OnInit {
-    readonly themeStorageKey = "isDarkTheme";
+    private readonly themeStorageKey = "isDarkTheme";
 
-    routerLinks = routes;
-    isDarkTheme = false;
+    protected routerLinks = routes;
+    protected isDarkTheme = false;
 
-    constructor(private storageService: StorageService) {}
+    public constructor(private storageService: StorageService) {}
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         const themeStorageValue = this.storageService.getItem<boolean>(
             this.themeStorageKey,
         );
@@ -41,14 +41,14 @@ export class App implements OnInit {
         }
     }
 
-    toggleDarkTheme(): void {
+    protected toggleDarkTheme(): void {
         this.isDarkTheme = !this.isDarkTheme;
         this.storageService.setItem(this.themeStorageKey, this.isDarkTheme);
 
         this.applyCSSForTheme();
     }
 
-    applyCSSForTheme(): void {
+    private applyCSSForTheme(): void {
         if (this.isDarkTheme) {
             document.body.classList.add("dark-theme");
         } else {

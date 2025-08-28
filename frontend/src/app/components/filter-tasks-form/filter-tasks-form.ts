@@ -46,7 +46,7 @@ export interface FilterData {
     styleUrl: "./filter-tasks-form.css",
 })
 export class FilterTasksForm implements OnInit {
-    readonly filterFormGroup = new UntypedFormGroup({
+    protected readonly filterFormGroup = new UntypedFormGroup({
         searchTerm: new FormControl(""),
         taskState: new FormControl(""),
         deadlineStart: new FormControl("", { nonNullable: true }),
@@ -55,17 +55,17 @@ export class FilterTasksForm implements OnInit {
         createdAtEnd: new FormControl("", { nonNullable: true }),
     });
 
-    tags: TagDTO[] = [];
-    taskStates: TaskStateDTO[] = [];
+    private tags: TagDTO[] = [];
+    private taskStates: TaskStateDTO[] = [];
 
     @Output() onValueChanged = new EventEmitter<string>();
 
-    constructor(
+    public constructor(
         private tagService: TagService,
         private taskStateService: TaskStateService,
     ) {}
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.taskStateService.getTaskStates().subscribe({
             next: (taskStates) => {
                 this.taskStates = taskStates;

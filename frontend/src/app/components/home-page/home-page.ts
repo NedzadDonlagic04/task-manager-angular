@@ -20,9 +20,9 @@ import { Router, RouterLink } from "@angular/router";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
-    constructor(private router: Router) {}
+    public constructor(private router: Router) {}
 
-    redirectToAddTaskPage() {
+    protected redirectToAddTaskPage() {
         this.router.navigate(["/add-task"]);
     }
 }

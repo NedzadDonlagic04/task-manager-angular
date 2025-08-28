@@ -13,14 +13,12 @@ import {
     MatTable,
     MatTableModule,
     MatTableDataSource,
-    MatHeaderRowDef,
 } from "@angular/material/table";
 import { TaskService } from "../../services/task.service";
 import TaskReadDTO from "../../dtos/task-read.dto";
 import { TaskTableRowData } from "../../services/task-table-row-data.service";
 import { DatePipe } from "@angular/common";
 import { MatIcon } from "@angular/material/icon";
-import { CdkTableModule } from "@angular/cdk/table";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { Router } from "@angular/router";
@@ -54,9 +52,9 @@ import { YesNoDialog } from "../yes-no-dialog/yes-no-dialog";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewTasksTable implements OnInit, AfterViewInit {
-    readonly NOT_SET_MESSAGE = "<Not set>";
+    protected readonly NOT_SET_MESSAGE = "<Not set>";
 
-    readonly displayedTasksColumns: string[] = [
+    protected readonly displayedTasksColumns: string[] = [
         "select",
         "rowNum",
         "title",
@@ -67,13 +65,17 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         "actions",
     ];
 
-    readonly tasksDataSource = new MatTableDataSource<TaskTableRowData>();
-    readonly selectedTasks = new SelectionModel<TaskTableRowData>(true, []);
+    protected readonly tasksDataSource =
+        new MatTableDataSource<TaskTableRowData>();
+    protected readonly selectedTasks = new SelectionModel<TaskTableRowData>(
+        true,
+        [],
+    );
 
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(
+    public constructor(
         private taskService: TaskService,
         private router: Router,
         private dialog: MatDialog,
@@ -81,20 +83,20 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         this.tasksDataSource.filterPredicate = this.taskTableFilterPredicate;
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.refreshTasksTable();
     }
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         this.tasksDataSource.sort = this.sort;
         this.tasksDataSource.paginator = this.paginator;
     }
 
-    navigatoToUpdatePage(taskId: string): void {
+    protected navigatoToUpdatePage(taskId: string): void {
         this.router.navigate(["/update", taskId]);
     }
 
-    refreshTasksTable(): void {
+    private refreshTasksTable(): void {
         this.taskService.getTasks().subscribe({
             next: (tasks: TaskReadDTO[]) => {
                 const tasksTableRowData: TaskTableRowData[] = tasks.map(
@@ -109,7 +111,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         });
     }
 
-    deleteInstance(taskId: string) {
+    private deleteInstance(taskId: string) {
         this.taskService.deleteTask(taskId).subscribe({
             next: () => this.refreshTasksTable(),
             error: (error: any) => {
@@ -118,8 +120,8 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         });
     }
 
-    showDeleteDialog(taskId: string): void {
-        let dialogRef = this.dialog.open(YesNoDialog, {
+    protected showDeleteDialog(taskId: string): void {
+        const dialogRef = this.dialog.open(YesNoDialog, {
             width: "350px",
             data: {
                 title: "Delete",
@@ -135,7 +137,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         });
     }
 
-    taskTableFilterPredicate(
+    private taskTableFilterPredicate(
         rowData: TaskTableRowData,
         filter: string,
     ): boolean {
@@ -215,18 +217,18 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         );
     }
 
-    filterTasks(filterObjStr: string): void {
+    protected filterTasks(filterObjStr: string): void {
         this.tasksDataSource.filter = filterObjStr;
     }
 
-    areAllRowsSelected(): boolean {
+    protected areAllRowsSelected(): boolean {
         const numberOfRowsSelected = this.selectedTasks.selected.length;
         const numberOfRowsInTable = this.tasksDataSource.data.length;
 
         return numberOfRowsInTable === numberOfRowsSelected;
     }
 
-    toggleAllRows(): void {
+    protected toggleAllRows(): void {
         if (this.areAllRowsSelected()) {
             this.selectedTasks.clear();
             return;

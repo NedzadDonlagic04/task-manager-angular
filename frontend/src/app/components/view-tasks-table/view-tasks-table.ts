@@ -13,14 +13,12 @@ import {
     MatTable,
     MatTableModule,
     MatTableDataSource,
-    MatHeaderRowDef,
 } from "@angular/material/table";
 import { TaskService } from "../../services/task.service";
 import TaskReadDTO from "../../dtos/task-read.dto";
 import { TaskTableRowData } from "../../services/task-table-row-data.service";
 import { DatePipe } from "@angular/common";
 import { MatIcon } from "@angular/material/icon";
-import { CdkTableModule } from "@angular/cdk/table";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { Router } from "@angular/router";

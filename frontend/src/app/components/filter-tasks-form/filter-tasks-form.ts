@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, inject, OnInit, Output } from "@angular/core";
 import {
     FormArray,
     FormControl,
@@ -55,15 +55,13 @@ export class FilterTasksForm implements OnInit {
         createdAtEnd: new FormControl("", { nonNullable: true }),
     });
 
-    private tags: TagDTO[] = [];
-    private taskStates: TaskStateDTO[] = [];
+    protected tags: TagDTO[] = [];
+    protected taskStates: TaskStateDTO[] = [];
 
     @Output() onValueChanged = new EventEmitter<string>();
 
-    public constructor(
-        private tagService: TagService,
-        private taskStateService: TaskStateService,
-    ) {}
+    private tagService = inject(TagService);
+    private taskStateService = inject(TaskStateService);
 
     public ngOnInit(): void {
         this.taskStateService.getTaskStates().subscribe({

@@ -11,7 +11,7 @@ import { ConfirmDialog } from "../../interfaces/confirm-dialog.interface";
 })
 export class YesNoDialog {
     public constructor(
-        public dialogRef: MatDialogRef<YesNoDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: ConfirmDialog,
+        protected dialogRef: MatDialogRef<YesNoDialog>,
+        @Inject(MAT_DIALOG_DATA) protected data: ConfirmDialog,
     ) {}
 }

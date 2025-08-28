@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { TaskFormBase } from "../task-form-base/task-form-base";
 import { TagService } from "../../services/tag.service";
 import { TaskService } from "../../services/task.service";
@@ -50,15 +50,12 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
     protected taskStates: TaskStateDTO[] = [];
     private taskToUpdate!: TaskReadDTO;
 
-    public constructor(
-        tagService: TagService,
-        taskService: TaskService,
-        matSnackBar: MatSnackBar,
-        private taskStateService: TaskStateService,
-        private route: ActivatedRoute,
-        private router: Router,
-    ) {
-        super(tagService, taskService, matSnackBar);
+    protected taskStateService = inject(TaskStateService);
+    protected route = inject(ActivatedRoute);
+    protected router = inject(Router);
+
+    public constructor() {
+        super();
 
         this.taskFormGroup.addControl(
             "taskStates",

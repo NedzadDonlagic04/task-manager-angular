@@ -2,6 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    inject,
     OnInit,
     ViewChild,
 } from "@angular/core";
@@ -75,11 +76,11 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    public constructor(
-        private taskService: TaskService,
-        private router: Router,
-        private dialog: MatDialog,
-    ) {
+    protected taskService = inject(TaskService);
+    protected dialog = inject(MatDialog);
+    protected router = inject(Router);
+
+    public constructor() {
         this.tasksDataSource.filterPredicate = this.taskTableFilterPredicate;
     }
 

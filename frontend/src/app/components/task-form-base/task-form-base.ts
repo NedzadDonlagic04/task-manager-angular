@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import {
     FormArray,
     FormControl,
@@ -60,11 +60,9 @@ export abstract class TaskFormBase implements OnInit {
         }),
     });
 
-    public constructor(
-        protected tagService: TagService,
-        protected taskService: TaskService,
-        protected matSnackBar: MatSnackBar,
-    ) {}
+    protected tagService = inject(TagService);
+    protected taskService = inject(TaskService);
+    protected matSnackBar = inject(MatSnackBar);
 
     public ngOnInit(): void {
         this.startFetchingTags();

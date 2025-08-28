@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIcon, MatIconModule } from "@angular/material/icon";
@@ -28,7 +28,7 @@ export class App implements OnInit {
     protected routerLinks = routes;
     protected isDarkTheme = false;
 
-    public constructor(private storageService: StorageService) {}
+    private storageService = inject(StorageService);
 
     public ngOnInit(): void {
         const themeStorageValue = this.storageService.getItem<boolean>(

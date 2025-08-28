@@ -34,17 +34,9 @@ import { MatTimepickerModule } from "@angular/material/timepicker";
     styleUrl: "./create-task-form.css",
 })
 export class CreateTaskForm extends TaskFormBase {
-    constructor(
-        tagService: TagService,
-        taskService: TaskService,
-        matSnackBar: MatSnackBar,
-    ) {
-        super(tagService, taskService, matSnackBar);
-    }
+    protected override onTagsLoaded(): void {}
 
-    override onTagsLoaded(): void {}
-
-    override onSubmit(): void {
+    protected override onSubmit(): void {
         const formData = this.taskFormGroup.value;
         const tagIds = this.getSelectedTags();
 

@@ -8,11 +8,11 @@ import { environment } from "../environments/environment";
     providedIn: "root",
 })
 export class TagService {
-    tagApiUrl = `${environment.apiUrl}/tag`;
+    private tagApiUrl = `${environment.apiUrl}/tag`;
 
-    constructor(private http: HttpClient) {}
+    public constructor(private http: HttpClient) {}
 
-    getTags(): Observable<TagDTO[]> {
+    public getTags(): Observable<TagDTO[]> {
         return this.http.get<TagDTO[]>(this.tagApiUrl);
     }
 }

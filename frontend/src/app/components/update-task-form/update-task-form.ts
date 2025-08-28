@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { TaskFormBase } from "../task-form-base/task-form-base";
 import { TagService } from "../../services/tag.service";
 import { TaskService } from "../../services/task.service";
@@ -47,18 +47,15 @@ import { MatSelect } from "@angular/material/select";
     styleUrl: "./update-task-form.css",
 })
 export class UpdateTaskForm extends TaskFormBase implements OnInit {
-    taskStates: TaskStateDTO[] = [];
-    taskToUpdate!: TaskReadDTO;
+    protected taskStates: TaskStateDTO[] = [];
+    private taskToUpdate!: TaskReadDTO;
 
-    constructor(
-        tagService: TagService,
-        taskService: TaskService,
-        matSnackBar: MatSnackBar,
-        private taskStateService: TaskStateService,
-        private route: ActivatedRoute,
-        private router: Router,
-    ) {
-        super(tagService, taskService, matSnackBar);
+    protected taskStateService = inject(TaskStateService);
+    protected route = inject(ActivatedRoute);
+    protected router = inject(Router);
+
+    public constructor() {
+        super();
 
         this.taskFormGroup.addControl(
             "taskStates",
@@ -69,11 +66,11 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         );
     }
 
-    override ngOnInit() {
+    public override ngOnInit() {
         super.ngOnInit();
     }
 
-    override onTagsLoaded(): void {
+    public override onTagsLoaded(): void {
         const taskId = this.route.snapshot.paramMap.get("id");
 
         if (taskId === null) {
@@ -101,7 +98,7 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         });
     }
 
-    loadTaskDataIntoForm(): void {
+    private loadTaskDataIntoForm(): void {
         this.taskFormGroup.controls["title"].setValue(this.taskToUpdate.title);
         this.taskFormGroup.controls["description"].setValue(
             this.taskToUpdate.description,
@@ -139,7 +136,7 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         this.taskFormGroup.controls["taskStates"].setValue(taskState.id);
     }
 
-    override onSubmit(): void {
+    protected override onSubmit(): void {
         const formData = this.taskFormGroup.value;
         const tagIds = this.getSelectedTags();
 

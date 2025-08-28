@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { CreateTaskForm } from "../create-task-form/create-task-form";
-import { UpdateTaskForm } from "../update-task-form/update-task-form";
 
 @Component({
     selector: "app-add-task-page",

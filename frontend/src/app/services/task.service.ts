@@ -7,30 +7,33 @@ import TaskUpdateDTO from "../dtos/task-update.dto";
 import { environment } from "../environments/environment";
 
 @Injectable({
-	providedIn: "root",
+    providedIn: "root",
 })
 export class TaskService {
-	taskApiUrl = `${environment.apiUrl}/task`;
+    private taskApiUrl = `${environment.apiUrl}/task`;
 
-	constructor(private http: HttpClient) {}
+    public constructor(private http: HttpClient) {}
 
-	getTask(taskId: string): Observable<TaskReadDTO> {
-		return this.http.get<TaskReadDTO>(`${this.taskApiUrl}/${taskId}`);
-	}
+    public getTask(taskId: string): Observable<TaskReadDTO> {
+        return this.http.get<TaskReadDTO>(`${this.taskApiUrl}/${taskId}`);
+    }
 
-	getTasks(): Observable<TaskReadDTO[]> {
-		return this.http.get<TaskReadDTO[]>(this.taskApiUrl);
-	}
+    public getTasks(): Observable<TaskReadDTO[]> {
+        return this.http.get<TaskReadDTO[]>(this.taskApiUrl);
+    }
 
-	createTask(taskData: TaskCreateDTO): Observable<TaskReadDTO> {
-		return this.http.post<TaskReadDTO>(this.taskApiUrl, taskData);
-	}
+    public createTask(taskData: TaskCreateDTO): Observable<TaskReadDTO> {
+        return this.http.post<TaskReadDTO>(this.taskApiUrl, taskData);
+    }
 
-	updateTask(taskId: string, taskData: TaskUpdateDTO): Observable<any> {
-		return this.http.put(`${this.taskApiUrl}/${taskId}`, taskData);
-	}
+    public updateTask(
+        taskId: string,
+        taskData: TaskUpdateDTO,
+    ): Observable<any> {
+        return this.http.put(`${this.taskApiUrl}/${taskId}`, taskData);
+    }
 
-	deleteTask(taskId: string): Observable<any> {
-		return this.http.delete(`${this.taskApiUrl}/${taskId}`);
-	}
+    public deleteTask(taskId: string): Observable<any> {
+        return this.http.delete(`${this.taskApiUrl}/${taskId}`);
+    }
 }

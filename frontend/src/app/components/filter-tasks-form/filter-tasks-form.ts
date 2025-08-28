@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, inject, OnInit, Output } from "@angular/core";
 import {
     FormArray,
     FormControl,
@@ -46,7 +46,7 @@ export interface FilterData {
     styleUrl: "./filter-tasks-form.css",
 })
 export class FilterTasksForm implements OnInit {
-    readonly filterFormGroup = new UntypedFormGroup({
+    protected readonly filterFormGroup = new UntypedFormGroup({
         searchTerm: new FormControl(""),
         taskState: new FormControl(""),
         deadlineStart: new FormControl("", { nonNullable: true }),
@@ -55,17 +55,15 @@ export class FilterTasksForm implements OnInit {
         createdAtEnd: new FormControl("", { nonNullable: true }),
     });
 
-    tags: TagDTO[] = [];
-    taskStates: TaskStateDTO[] = [];
+    protected tags: TagDTO[] = [];
+    protected taskStates: TaskStateDTO[] = [];
 
     @Output() onValueChanged = new EventEmitter<string>();
 
-    constructor(
-        private tagService: TagService,
-        private taskStateService: TaskStateService,
-    ) {}
+    private tagService = inject(TagService);
+    private taskStateService = inject(TaskStateService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.taskStateService.getTaskStates().subscribe({
             next: (taskStates) => {
                 this.taskStates = taskStates;

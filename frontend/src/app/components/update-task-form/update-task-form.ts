@@ -107,10 +107,10 @@ export class UpdateTaskForm extends TaskFormBase implements OnInit {
         if (this.taskToUpdate.deadline !== null) {
             this.taskFormGroup.controls['hasDeadline'].setValue(true);
             this.taskFormGroup.controls['deadlineTime'].setValue(
-                this.taskToUpdate.deadline,
+                new Date(this.taskToUpdate.deadline),
             );
             this.taskFormGroup.controls['deadlineDate'].setValue(
-                this.taskToUpdate.deadline,
+                new Date(this.taskToUpdate.deadline),
             );
         }
 

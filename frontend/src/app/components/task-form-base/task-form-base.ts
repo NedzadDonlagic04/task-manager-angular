@@ -20,16 +20,19 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrl: './task-form-base.css',
 })
 export abstract class TaskFormBase implements OnInit {
+    private readonly FIVE_MINUTES_IN_MILISECONDS = 5 * 60_000;
     private readonly HOUR_IN_MILISECONDS = 3_600_000;
 
     protected readonly initialFormValues = {
         title: '',
         description: '',
         hasDeadline: false,
-        deadlineDate: new Date().toISOString(),
+        deadlineDate: new Date(),
         deadlineTime: new Date(
-            new Date().getTime() + this.HOUR_IN_MILISECONDS,
-        ).toISOString(),
+            new Date().getTime() +
+                this.HOUR_IN_MILISECONDS +
+                this.FIVE_MINUTES_IN_MILISECONDS,
+        ),
     };
 
     protected tags: TagDTO[] = [];
@@ -51,11 +54,15 @@ export abstract class TaskFormBase implements OnInit {
             nonNullable: true,
         }),
         deadlineDate: new FormControl(this.initialFormValues.deadlineDate, {
-            validators: [deadlineDateAheadValidator('hasDeadline')],
+            validators: [
+                deadlineDateAheadValidator('hasDeadline', 'deadlineTime'),
+            ],
             nonNullable: true,
         }),
         deadlineTime: new FormControl(this.initialFormValues.deadlineTime, {
-            validators: [deadlineTimeAheadAnHourValidator('hasDeadline')],
+            validators: [
+                deadlineTimeAheadAnHourValidator('hasDeadline', 'deadlineDate'),
+            ],
             nonNullable: true,
         }),
     });

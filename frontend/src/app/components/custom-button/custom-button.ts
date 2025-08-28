@@ -11,7 +11,7 @@ import { MatIcon } from '@angular/material/icon';
   selector: 'app-custom-button',
   imports: [MatIcon],
   templateUrl: './custom-button.html',
-  styleUrl: './custom-button.scss',
+  styleUrl: './custom-button.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomButton {

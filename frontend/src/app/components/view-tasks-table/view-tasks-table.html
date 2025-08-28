@@ -1,5 +1,11 @@
 <app-filter-tasks-form (onValueChanged)="filterTasks($event)" />
 
+<app-custom-button
+    buttonText="Delete"
+    buttonMatIcon="delete"
+    [isButtonDisabled]="!isAnyRowSelected()">
+</app-custom-button>
+
 <mat-table [dataSource]="tasksDataSource" matSort>
     <ng-container matColumnDef="select">
         <mat-header-cell *matHeaderCellDef class="w-16">

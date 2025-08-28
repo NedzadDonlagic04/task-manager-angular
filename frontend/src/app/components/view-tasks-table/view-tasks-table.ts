@@ -14,22 +14,23 @@ import {
     MatTableModule,
     MatTableDataSource,
 } from "@angular/material/table";
-import { TaskService } from "../../services/task.service";
-import TaskReadDTO from "../../dtos/task-read.dto";
-import { TaskTableRowData } from "../../services/task-table-row-data.service";
 import { DatePipe } from "@angular/common";
 import { MatIcon } from "@angular/material/icon";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { MatSort, MatSortModule } from "@angular/material/sort";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { SelectionModel } from "@angular/cdk/collections";
+import { TaskService } from "../../services/task.service";
+import TaskReadDTO from "../../dtos/task-read.dto";
+import { TaskTableRowData } from "../../services/task-table-row-data.service";
 import {
     FilterData,
     FilterTasksForm,
 } from "../filter-tasks-form/filter-tasks-form";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatDialog } from "@angular/material/dialog";
 import { YesNoDialog } from "../yes-no-dialog/yes-no-dialog";
+import { CustomButton } from "../custom-button/custom-button";
 
 @Component({
     selector: "app-view-tasks-table",
@@ -46,6 +47,7 @@ import { YesNoDialog } from "../yes-no-dialog/yes-no-dialog";
         MatSortModule,
         MatCheckboxModule,
         FilterTasksForm,
+        CustomButton
     ],
     templateUrl: "./view-tasks-table.html",
     styleUrl: "./view-tasks-table.css",
@@ -215,6 +217,10 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
 
     filterTasks(filterObjStr: string): void {
         this.tasksDataSource.filter = filterObjStr;
+    }
+
+    isAnyRowSelected(): boolean {
+        return this.selectedTasks.selected.length > 0;
     }
 
     areAllRowsSelected(): boolean {

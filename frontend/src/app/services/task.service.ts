@@ -1,13 +1,13 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import TaskCreateDTO from "../dtos/task-create.dto";
-import TaskReadDTO from "../dtos/task-read.dto";
-import TaskUpdateDTO from "../dtos/task-update.dto";
-import { environment } from "../environments/environment";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import TaskCreateDTO from '../dtos/task-create.dto';
+import TaskReadDTO from '../dtos/task-read.dto';
+import TaskUpdateDTO from '../dtos/task-update.dto';
+import { environment } from '../environments/environment';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class TaskService {
     private taskApiUrl = `${environment.apiUrl}/task`;

@@ -1,4 +1,4 @@
-import TaskReadDTO from "../dtos/task-read.dto";
+import TaskReadDTO from '../dtos/task-read.dto';
 
 export class TaskTableRowData {
     public readonly rowNum: number;

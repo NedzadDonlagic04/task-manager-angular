@@ -1,4 +1,4 @@
-import { UntypedFormGroup } from "@angular/forms";
+import { UntypedFormGroup } from '@angular/forms';
 
 // Useful fucker for debugging
 export const findInvalidControls = (formGroup: UntypedFormGroup) => {

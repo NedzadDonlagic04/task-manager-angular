@@ -5,7 +5,7 @@ import {
     inject,
     OnInit,
     ViewChild,
-} from "@angular/core";
+} from '@angular/core';
 import {
     MatHeaderCell,
     MatHeaderRow,
@@ -14,26 +14,26 @@ import {
     MatTable,
     MatTableModule,
     MatTableDataSource,
-} from "@angular/material/table";
-import { TaskService } from "../../services/task.service";
-import TaskReadDTO from "../../dtos/task-read.dto";
-import { TaskTableRowData } from "../../services/task-table-row-data.service";
-import { DatePipe } from "@angular/common";
-import { MatIcon } from "@angular/material/icon";
-import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { MatSort, MatSortModule } from "@angular/material/sort";
-import { Router } from "@angular/router";
+} from '@angular/material/table';
+import { TaskService } from '../../services/task.service';
+import TaskReadDTO from '../../dtos/task-read.dto';
+import { TaskTableRowData } from '../../services/task-table-row-data.service';
+import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { Router } from '@angular/router';
 import {
     FilterData,
     FilterTasksForm,
-} from "../filter-tasks-form/filter-tasks-form";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatDialog } from "@angular/material/dialog";
-import { YesNoDialog } from "../yes-no-dialog/yes-no-dialog";
+} from '../filter-tasks-form/filter-tasks-form';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
+import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog';
 
 @Component({
-    selector: "app-view-tasks-table",
+    selector: 'app-view-tasks-table',
     imports: [
         MatHeaderCell,
         MatHeaderRow,
@@ -48,22 +48,22 @@ import { YesNoDialog } from "../yes-no-dialog/yes-no-dialog";
         MatCheckboxModule,
         FilterTasksForm,
     ],
-    templateUrl: "./view-tasks-table.html",
-    styleUrl: "./view-tasks-table.css",
+    templateUrl: './view-tasks-table.html',
+    styleUrl: './view-tasks-table.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewTasksTable implements OnInit, AfterViewInit {
-    protected readonly NOT_SET_MESSAGE = "<Not set>";
+    protected readonly NOT_SET_MESSAGE = '<Not set>';
 
     protected readonly displayedTasksColumns: string[] = [
-        "select",
-        "rowNum",
-        "title",
-        "deadline",
-        "createdAt",
-        "taskStateName",
-        "tagNames",
-        "actions",
+        'select',
+        'rowNum',
+        'title',
+        'deadline',
+        'createdAt',
+        'taskStateName',
+        'tagNames',
+        'actions',
     ];
 
     protected readonly tasksDataSource =
@@ -94,7 +94,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
     }
 
     protected navigatoToUpdatePage(taskId: string): void {
-        this.router.navigate(["/update", taskId]);
+        this.router.navigate(['/update', taskId]);
     }
 
     private refreshTasksTable(): void {
@@ -116,19 +116,19 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         this.taskService.deleteTask(taskId).subscribe({
             next: () => this.refreshTasksTable(),
             error: (error: any) => {
-                console.error("Error deleting task:", error);
+                console.error('Error deleting task:', error);
             },
         });
     }
 
     protected showDeleteDialog(taskId: string): void {
         const dialogRef = this.dialog.open(YesNoDialog, {
-            width: "350px",
+            width: '350px',
             data: {
-                title: "Delete",
-                message: "Are you sure?",
-                confirmText: "Delete",
-                cancelText: "Cancel",
+                title: 'Delete',
+                message: 'Are you sure?',
+                confirmText: 'Delete',
+                cancelText: 'Cancel',
             },
             disableClose: true,
         });
@@ -178,7 +178,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         };
 
         const searchTermValid =
-            searchTerm === "" ||
+            searchTerm === '' ||
             rowData.title.toLocaleLowerCase().includes(searchTerm) ||
             rowData.description.toLocaleLowerCase().includes(searchTerm);
 
@@ -201,7 +201,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
             createDateWithoutHours(rowData.createdAt) <= createdAtEndDate;
 
         const taskStateNameValid =
-            taskStateName === "" || taskStateName === rowData.taskStateName;
+            taskStateName === '' || taskStateName === rowData.taskStateName;
 
         const tagNamesValid =
             tagNames.length === 0 ||

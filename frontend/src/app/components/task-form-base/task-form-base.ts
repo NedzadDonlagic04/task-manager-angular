@@ -1,30 +1,30 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from '@angular/core';
 import {
     FormArray,
     FormControl,
     UntypedFormGroup,
     Validators,
-} from "@angular/forms";
-import TagDTO from "../../dtos/tag.dto";
-import { TagService } from "../../services/tag.service";
-import { TaskService } from "../../services/task.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { deadlineDateAheadValidator } from "../../validators/deadline-date-validator";
-import { deadlineTimeAheadAnHourValidator } from "../../validators/deadline-time-validator";
-import { MatButtonModule } from "@angular/material/button";
+} from '@angular/forms';
+import TagDTO from '../../dtos/tag.dto';
+import { TagService } from '../../services/tag.service';
+import { TaskService } from '../../services/task.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { deadlineDateAheadValidator } from '../../validators/deadline-date-validator';
+import { deadlineTimeAheadAnHourValidator } from '../../validators/deadline-time-validator';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: "app-task-form-base",
+    selector: 'app-task-form-base',
     imports: [MatButtonModule],
-    templateUrl: "./task-form-base.html",
-    styleUrl: "./task-form-base.css",
+    templateUrl: './task-form-base.html',
+    styleUrl: './task-form-base.css',
 })
 export abstract class TaskFormBase implements OnInit {
     private readonly HOUR_IN_MILISECONDS = 3_600_000;
 
     protected readonly initialFormValues = {
-        title: "",
-        description: "",
+        title: '',
+        description: '',
         hasDeadline: false,
         deadlineDate: new Date().toISOString(),
         deadlineTime: new Date(
@@ -51,11 +51,11 @@ export abstract class TaskFormBase implements OnInit {
             nonNullable: true,
         }),
         deadlineDate: new FormControl(this.initialFormValues.deadlineDate, {
-            validators: [deadlineDateAheadValidator("hasDeadline")],
+            validators: [deadlineDateAheadValidator('hasDeadline')],
             nonNullable: true,
         }),
         deadlineTime: new FormControl(this.initialFormValues.deadlineTime, {
-            validators: [deadlineTimeAheadAnHourValidator("hasDeadline")],
+            validators: [deadlineTimeAheadAnHourValidator('hasDeadline')],
             nonNullable: true,
         }),
     });
@@ -79,7 +79,7 @@ export abstract class TaskFormBase implements OnInit {
                 );
 
                 this.taskFormGroup.addControl(
-                    "tags",
+                    'tags',
                     new FormArray(tagControls),
                 );
 
@@ -114,23 +114,23 @@ export abstract class TaskFormBase implements OnInit {
     protected abstract onSubmit(): void;
 
     public get titleControl() {
-        return this.taskFormGroup.get("title");
+        return this.taskFormGroup.get('title');
     }
 
     public get descriptionControl() {
-        return this.taskFormGroup.get("description");
+        return this.taskFormGroup.get('description');
     }
 
     public get hasDeadlineControl() {
-        return this.taskFormGroup.get("hasDeadline");
+        return this.taskFormGroup.get('hasDeadline');
     }
 
     public get deadlineTimeControl() {
-        return this.taskFormGroup.get("deadlineTime");
+        return this.taskFormGroup.get('deadlineTime');
     }
 
     public get deadlineDateControl() {
-        return this.taskFormGroup.get("deadlineDate");
+        return this.taskFormGroup.get('deadlineDate');
     }
 
     protected getDeadlineFromControls(): Date | null {

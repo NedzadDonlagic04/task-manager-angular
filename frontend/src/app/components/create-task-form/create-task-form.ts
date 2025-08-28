@@ -1,22 +1,22 @@
-import { Component } from "@angular/core";
-import { TaskFormBase } from "../task-form-base/task-form-base";
-import { TagService } from "../../services/tag.service";
-import { TaskService } from "../../services/task.service";
-import TaskCreateDTO from "../../dtos/task-create.dto";
-import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { MatCard, MatCardTitle } from "@angular/material/card";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { Component } from '@angular/core';
+import { TaskFormBase } from '../task-form-base/task-form-base';
+import { TagService } from '../../services/tag.service';
+import { TaskService } from '../../services/task.service';
+import TaskCreateDTO from '../../dtos/task-create.dto';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatCard, MatCardTitle } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
     MatDatepicker,
     MatDatepickerModule,
-} from "@angular/material/datepicker";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTimepickerModule } from "@angular/material/timepicker";
+} from '@angular/material/datepicker';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 
 @Component({
-    selector: "app-create-task-form",
+    selector: 'app-create-task-form',
     imports: [
         ReactiveFormsModule,
         MatFormField,
@@ -30,8 +30,8 @@ import { MatTimepickerModule } from "@angular/material/timepicker";
         MatTimepickerModule,
         FormsModule,
     ],
-    templateUrl: "./create-task-form.html",
-    styleUrl: "./create-task-form.css",
+    templateUrl: './create-task-form.html',
+    styleUrl: './create-task-form.css',
 })
 export class CreateTaskForm extends TaskFormBase {
     protected override onTagsLoaded(): void {}
@@ -41,26 +41,26 @@ export class CreateTaskForm extends TaskFormBase {
         const tagIds = this.getSelectedTags();
 
         const taskData: TaskCreateDTO = {
-            title: formData.title?.trim() ?? "",
-            description: formData.description?.trim() ?? "",
+            title: formData.title?.trim() ?? '',
+            description: formData.description?.trim() ?? '',
             deadline: formData.hasDeadline
-                ? (this.getDeadlineFromControls()?.toISOString() ?? "")
+                ? (this.getDeadlineFromControls()?.toISOString() ?? '')
                 : null,
             tagIds: tagIds,
         };
 
         this.taskService.createTask(taskData).subscribe({
             next: () => {
-                this.matSnackBar.open("Task saved successfully!", "Dismiss", {
+                this.matSnackBar.open('Task saved successfully!', 'Dismiss', {
                     duration: 3000,
-                    panelClass: ["success-snackbar"],
+                    panelClass: ['success-snackbar'],
                 });
                 this.taskFormGroup.reset(this.initialFormValues);
             },
             error: (error: any) => {
-                this.matSnackBar.open("Failed to save task.", "Dismiss", {
+                this.matSnackBar.open('Failed to save task.', 'Dismiss', {
                     duration: 5000,
-                    panelClass: ["error-snackbar"],
+                    panelClass: ['error-snackbar'],
                 });
                 console.error(`Error while creating task -> ${error}`);
             },

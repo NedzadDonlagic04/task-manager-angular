@@ -1,0 +1,13 @@
+@use '@angular/material' as mat;
+@use './theme-variables' as *; // Adjust path if needed
+
+// Include Material core styles
+@include mat.core();
+
+// Light theme applied globally (default)
+@include mat.all-component-themes($light-theme);
+
+// Scoped dark theme, applies only inside `.dark-theme`
+.dark-theme {
+    @include mat.all-component-colors($dark-theme);
+}

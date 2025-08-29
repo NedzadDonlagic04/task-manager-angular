@@ -1,0 +1,163 @@
+@use '@angular/material' as mat;
+@use 'sass:color';
+@use './../../../theme-variables' as *;
+
+// === Theme colors ===
+$light-bg: mat.m2-get-color-from-palette($light-primary, 50);
+$light-toolbar-bg: mat.m2-get-color-from-palette($light-primary, 500);
+$light-toolbar-text: #fff;
+$light-footer-bg: $light-toolbar-bg;
+$light-footer-text: $light-bg;
+$light-button-bg: $light-toolbar-bg;
+$light-button-text: #fff;
+$light-button-border-hover: #fff;
+
+$dark-bg: mat.m2-get-color-from-palette($dark-primary, 500);
+$dark-toolbar-bg: $dark-bg;
+$dark-toolbar-text: #fff;
+$dark-footer-bg: $dark-bg;
+$dark-footer-text: #ccc;
+$dark-button-bg: $dark-bg;
+$dark-button-text: #fff;
+$dark-button-border-hover: mat.m2-get-color-from-palette($dark-accent, 500);
+$light-shadow: rgba(0, 0, 0, 0.1);
+$dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
+
+// === Layout wrapper ===
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    background-color: $light-bg;
+}
+
+:host-context(.dark-theme) {
+    background-color: $dark-bg;
+}
+
+// === Toolbar ===
+.app-toolbar {
+    background-color: $light-toolbar-bg;
+    color: $light-toolbar-text;
+    box-shadow: 0 2px 6px $light-shadow;
+}
+
+:host-context(.dark-theme) .app-toolbar {
+    background-color: $dark-toolbar-bg;
+    color: $dark-toolbar-text;
+    box-shadow: 0 2px 6px $dark-shadow;
+}
+
+.toolbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; // fix spacing of title and buttons
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .app-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+        white-space: nowrap;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 0.5rem;
+
+        button.nav-btn {
+            text-transform: none;
+        }
+
+        .theme-toggle {
+            margin-left: 0.5rem;
+        }
+    }
+}
+
+// === Main Content ===
+.main-content {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+}
+
+// === Footer ===
+
+.app-footer {
+    background-color: $light-footer-bg;
+    color: $light-footer-text;
+    box-shadow: 0 -2px 6px $light-shadow;
+}
+
+:host-context(.dark-theme) .app-footer {
+    background-color: $dark-footer-bg;
+    color: $dark-footer-text;
+    box-shadow: 0 -2px 6px $dark-shadow;
+}
+
+// === Button styles ===
+.button-custom-style {
+    border-radius: 1.5rem !important;
+    font-weight: 600;
+    border: 2px solid;
+    transition:
+        box-shadow 0.3s ease,
+        border-color 0.3s ease,
+        background-color 0.3s ease;
+    position: relative;
+
+    // Light theme (default)
+    background-color: $light-button-bg !important;
+    color: $light-button-text !important;
+
+    &:hover {
+        border-color: $light-button-border-hover !important;
+        box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
+        background-color: lighten($light-button-bg, 5%) !important;
+        color: $light-button-text !important;
+    }
+
+    &:focus-visible {
+        outline: none;
+        border-color: $light-button-border-hover !important;
+        box-shadow: 0 0 6px 3px rgba(255, 255, 255, 0.7);
+    }
+}
+
+// Dark theme overrides using :host-context
+:host-context(.dark-theme) .button-custom-style {
+    background-color: $dark-button-bg !important;
+    color: $dark-button-text !important;
+    border-color: $dark-button-border-hover !important;
+
+    &:hover {
+        border-color: mat.m2-get-color-from-palette(
+            $dark-accent,
+            700
+        ) !important;
+        box-shadow: 0 0 8px 3px mat.m2-get-color-from-palette($dark-accent, 700);
+        background-color: color.change(
+            mat.m2-get-color-from-palette($dark-accent, 500),
+            $alpha: 0.1
+        ) !important;
+        color: $dark-button-text !important;
+    }
+
+    &:focus-visible {
+        border-color: color.scale(
+            mat.m2-get-color-from-palette($dark-accent, 700),
+            $lightness: -10%
+        ) !important;
+        box-shadow: 0 0 6px 2px
+            color.scale(
+                mat.m2-get-color-from-palette($dark-accent, 700),
+                $lightness: -10%
+            );
+    }
+}

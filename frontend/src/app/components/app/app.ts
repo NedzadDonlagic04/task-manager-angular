@@ -11,7 +11,7 @@ import { StorageService } from '../../services/storage.service';
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.html',
-    styleUrls: ['./app.css'],
+    styleUrls: ['./app.scss'],
     imports: [
         MatButtonModule,
         MatToolbarModule,

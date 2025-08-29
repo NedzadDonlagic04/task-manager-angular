@@ -3,21 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CreateTaskForm } from './create-task-form';
 
 describe('CreateTaskForm', () => {
-  let component: CreateTaskForm;
-  let fixture: ComponentFixture<CreateTaskForm>;
+    let component: CreateTaskForm;
+    let fixture: ComponentFixture<CreateTaskForm>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CreateTaskForm]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [CreateTaskForm],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateTaskForm);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(CreateTaskForm);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

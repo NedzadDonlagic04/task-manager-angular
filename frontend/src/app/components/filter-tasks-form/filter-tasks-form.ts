@@ -1,23 +1,24 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
     FormArray,
     FormControl,
     ReactiveFormsModule,
     UntypedFormGroup,
-} from "@angular/forms";
+} from '@angular/forms';
 import {
     MatDatepicker,
     MatDatepickerModule,
-} from "@angular/material/datepicker";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import TagDTO from "../../dtos/tag.dto";
-import { TagService } from "../../services/tag.service";
-import { TaskStateService } from "../../services/task-state.service";
-import TaskStateDTO from "../../dtos/task-state.dto";
-import { MatOption } from "@angular/material/core";
-import { MatSelect } from "@angular/material/select";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+} from '@angular/material/datepicker';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import TagDTO from '../../dtos/tag.dto';
+import { TagService } from '../../services/tag.service';
+import { TaskStateService } from '../../services/task-state.service';
+import TaskStateDTO from '../../dtos/task-state.dto';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { startDateBeforeEndDateValidator } from '../../validators/start-date-before-end-date.validator';
 
 export interface FilterData {
     searchTerm: string;
@@ -30,7 +31,7 @@ export interface FilterData {
 }
 
 @Component({
-    selector: "app-filter-tasks-form",
+    selector: 'app-filter-tasks-form',
     imports: [
         ReactiveFormsModule,
         MatFormField,
@@ -42,30 +43,45 @@ export interface FilterData {
         MatSelect,
         MatCheckboxModule,
     ],
-    templateUrl: "./filter-tasks-form.html",
-    styleUrl: "./filter-tasks-form.css",
+    templateUrl: './filter-tasks-form.html',
+    styleUrl: './filter-tasks-form.css',
 })
 export class FilterTasksForm implements OnInit {
-    readonly filterFormGroup = new UntypedFormGroup({
-        searchTerm: new FormControl(""),
-        taskState: new FormControl(""),
-        deadlineStart: new FormControl("", { nonNullable: true }),
-        deadlineEnd: new FormControl("", { nonNullable: true }),
-        createdAtStart: new FormControl("", { nonNullable: true }),
-        createdAtEnd: new FormControl("", { nonNullable: true }),
+    protected readonly filterFormGroup = new UntypedFormGroup({
+        searchTerm: new FormControl(''),
+        taskState: new FormControl(''),
+        deadlineStart: new FormControl('', {
+            nonNullable: true,
+            validators: [
+                startDateBeforeEndDateValidator('deadlineStart', 'deadlineEnd'),
+            ],
+        }),
+        deadlineEnd: new FormControl('', {
+            nonNullable: true,
+        }),
+        createdAtStart: new FormControl('', {
+            nonNullable: true,
+            validators: [
+                startDateBeforeEndDateValidator(
+                    'createdAtStart',
+                    'createdAtEnd',
+                ),
+            ],
+        }),
+        createdAtEnd: new FormControl('', {
+            nonNullable: true,
+        }),
     });
 
-    tags: TagDTO[] = [];
-    taskStates: TaskStateDTO[] = [];
+    protected tags: TagDTO[] = [];
+    protected taskStates: TaskStateDTO[] = [];
 
     @Output() onValueChanged = new EventEmitter<string>();
 
-    constructor(
-        private tagService: TagService,
-        private taskStateService: TaskStateService,
-    ) {}
+    private tagService = inject(TagService);
+    private taskStateService = inject(TaskStateService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.taskStateService.getTaskStates().subscribe({
             next: (taskStates) => {
                 this.taskStates = taskStates;
@@ -83,7 +99,7 @@ export class FilterTasksForm implements OnInit {
                 );
 
                 this.filterFormGroup.addControl(
-                    "tags",
+                    'tags',
                     new FormArray(tagControls),
                 );
             },
@@ -104,10 +120,10 @@ export class FilterTasksForm implements OnInit {
                 const filterData: FilterData = {
                     ...filterObj,
                     taskStateName: filterObj.taskState,
-                    deadlineStart: filterObj.deadlineStart ?? "",
-                    deadlineEnd: filterObj.deadlineEnd ?? "",
-                    createdAtStart: filterObj.createdAtStart ?? "",
-                    createdAtEnd: filterObj.createdAtEnd ?? "",
+                    deadlineStart: filterObj.deadlineStart ?? '',
+                    deadlineEnd: filterObj.deadlineEnd ?? '',
+                    createdAtStart: filterObj.createdAtStart ?? '',
+                    createdAtEnd: filterObj.createdAtEnd ?? '',
                     tagNames: tagNames,
                 };
 
@@ -115,6 +131,16 @@ export class FilterTasksForm implements OnInit {
             },
             error: (error: any) =>
                 console.error(`Filter form value changed error -> ${error}`),
+        });
+
+        this.filterFormGroup.get('deadlineEnd')?.valueChanges.subscribe(() => {
+            this.filterFormGroup.get('deadlineStart')?.updateValueAndValidity();
+        });
+
+        this.filterFormGroup.get('createdAtEnd')?.valueChanges.subscribe(() => {
+            this.filterFormGroup
+                .get('createdAtStart')
+                ?.updateValueAndValidity();
         });
     }
 }

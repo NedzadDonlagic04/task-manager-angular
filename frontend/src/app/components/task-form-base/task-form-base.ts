@@ -1,40 +1,43 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from '@angular/core';
 import {
     FormArray,
     FormControl,
     UntypedFormGroup,
     Validators,
-} from "@angular/forms";
-import TagDTO from "../../dtos/tag.dto";
-import { TagService } from "../../services/tag.service";
-import { TaskService } from "../../services/task.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { deadlineDateAheadValidator } from "../../validators/deadline-date-validator";
-import { deadlineTimeAheadAnHourValidator } from "../../validators/deadline-time-validator";
-import { MatButtonModule } from "@angular/material/button";
+} from '@angular/forms';
+import TagDTO from '../../dtos/tag.dto';
+import { TagService } from '../../services/tag.service';
+import { TaskService } from '../../services/task.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { deadlineDateAheadValidator } from '../../validators/deadline-date-validator';
+import { deadlineTimeAheadAnHourValidator } from '../../validators/deadline-time-validator';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: "app-task-form-base",
+    selector: 'app-task-form-base',
     imports: [MatButtonModule],
-    templateUrl: "./task-form-base.html",
-    styleUrl: "./task-form-base.css",
+    templateUrl: './task-form-base.html',
+    styleUrl: './task-form-base.css',
 })
 export abstract class TaskFormBase implements OnInit {
+    private readonly FIVE_MINUTES_IN_MILISECONDS = 5 * 60_000;
     private readonly HOUR_IN_MILISECONDS = 3_600_000;
 
-    readonly initialFormValues = {
-        title: "",
-        description: "",
+    protected readonly initialFormValues = {
+        title: '',
+        description: '',
         hasDeadline: false,
-        deadlineDate: new Date().toISOString(),
+        deadlineDate: new Date(),
         deadlineTime: new Date(
-            new Date().getTime() + this.HOUR_IN_MILISECONDS,
-        ).toISOString(),
+            new Date().getTime() +
+                this.HOUR_IN_MILISECONDS +
+                this.FIVE_MINUTES_IN_MILISECONDS,
+        ),
     };
 
-    tags: TagDTO[] = [];
+    protected tags: TagDTO[] = [];
 
-    taskFormGroup = new UntypedFormGroup({
+    protected taskFormGroup = new UntypedFormGroup({
         title: new FormControl(this.initialFormValues.title, {
             validators: [
                 Validators.required,
@@ -51,27 +54,29 @@ export abstract class TaskFormBase implements OnInit {
             nonNullable: true,
         }),
         deadlineDate: new FormControl(this.initialFormValues.deadlineDate, {
-            validators: [deadlineDateAheadValidator("hasDeadline")],
+            validators: [
+                deadlineDateAheadValidator('hasDeadline', 'deadlineTime'),
+            ],
             nonNullable: true,
         }),
         deadlineTime: new FormControl(this.initialFormValues.deadlineTime, {
-            validators: [deadlineTimeAheadAnHourValidator("hasDeadline")],
+            validators: [
+                deadlineTimeAheadAnHourValidator('hasDeadline', 'deadlineDate'),
+            ],
             nonNullable: true,
         }),
     });
 
-    constructor(
-        protected tagService: TagService,
-        protected taskService: TaskService,
-        protected matSnackBar: MatSnackBar,
-    ) {}
+    protected tagService = inject(TagService);
+    protected taskService = inject(TaskService);
+    protected matSnackBar = inject(MatSnackBar);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.startFetchingTags();
         this.attachValueChangedToHasDeadline();
     }
 
-    startFetchingTags(): void {
+    private startFetchingTags(): void {
         this.tagService.getTags().subscribe({
             next: (tags) => {
                 this.tags = tags;
@@ -81,7 +86,7 @@ export abstract class TaskFormBase implements OnInit {
                 );
 
                 this.taskFormGroup.addControl(
-                    "tags",
+                    'tags',
                     new FormArray(tagControls),
                 );
 
@@ -92,14 +97,14 @@ export abstract class TaskFormBase implements OnInit {
         });
     }
 
-    attachValueChangedToHasDeadline(): void {
+    private attachValueChangedToHasDeadline(): void {
         this.hasDeadlineControl?.valueChanges.subscribe(() => {
             this.deadlineDateControl?.updateValueAndValidity();
             this.deadlineTimeControl?.updateValueAndValidity();
         });
     }
 
-    getSelectedTags(): number[] {
+    protected getSelectedTags(): number[] {
         const tagCheckBoxValues = this.taskFormGroup.value.tags!;
         const tagIds: number[] = [];
 
@@ -112,30 +117,30 @@ export abstract class TaskFormBase implements OnInit {
         return tagIds;
     }
 
-    abstract onTagsLoaded(): void;
-    abstract onSubmit(): void;
+    protected abstract onTagsLoaded(): void;
+    protected abstract onSubmit(): void;
 
-    get titleControl() {
-        return this.taskFormGroup.get("title");
+    public get titleControl() {
+        return this.taskFormGroup.get('title');
     }
 
-    get descriptionControl() {
-        return this.taskFormGroup.get("description");
+    public get descriptionControl() {
+        return this.taskFormGroup.get('description');
     }
 
-    get hasDeadlineControl() {
-        return this.taskFormGroup.get("hasDeadline");
+    public get hasDeadlineControl() {
+        return this.taskFormGroup.get('hasDeadline');
     }
 
-    get deadlineTimeControl() {
-        return this.taskFormGroup.get("deadlineTime");
+    public get deadlineTimeControl() {
+        return this.taskFormGroup.get('deadlineTime');
     }
 
-    get deadlineDateControl() {
-        return this.taskFormGroup.get("deadlineDate");
+    public get deadlineDateControl() {
+        return this.taskFormGroup.get('deadlineDate');
     }
 
-    getDeadlineFromControls(): Date | null {
+    protected getDeadlineFromControls(): Date | null {
         const dateStr: Date | null = this.deadlineDateControl?.value;
         const timeStr: Date | null = this.deadlineTimeControl?.value;
 

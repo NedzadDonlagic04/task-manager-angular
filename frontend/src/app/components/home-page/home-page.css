@@ -144,8 +144,8 @@ button[mat-stroked-button] {
     color: var(--accent-color);
 }
 
-button[mat-raised-button][color="warn"],
-button[mat-flat-button][color="warn"] {
+button[mat-raised-button][color='warn'],
+button[mat-flat-button][color='warn'] {
     background-color: var(--warning-color);
     color: var(--bg-color);
 }

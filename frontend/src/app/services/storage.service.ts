@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: "root",
+    providedIn: 'root',
 })
 export class StorageService {
-    setItem(key: string, item: any): void {
+    public setItem(key: string, item: any): void {
         try {
             localStorage.setItem(key, JSON.stringify(item));
         } catch (error) {
@@ -12,7 +12,7 @@ export class StorageService {
         }
     }
 
-    getItem<T>(key: string): T | null {
+    public getItem<T>(key: string): T | null {
         try {
             const item = localStorage.getItem(key);
             if (item) {
@@ -25,7 +25,7 @@ export class StorageService {
         }
     }
 
-    removeItem(key: string): void {
+    public removeItem(key: string): void {
         try {
             localStorage.removeItem(key);
         } catch (error) {
@@ -33,7 +33,7 @@ export class StorageService {
         }
     }
 
-    clearItems(): void {
+    public clearItems(): void {
         try {
             localStorage.clear();
         } catch (error) {

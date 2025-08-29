@@ -1,11 +1,10 @@
-import { Component } from "@angular/core";
-import { CreateTaskForm } from "../create-task-form/create-task-form";
-import { UpdateTaskForm } from "../update-task-form/update-task-form";
+import { Component } from '@angular/core';
+import { CreateTaskForm } from '../create-task-form/create-task-form';
 
 @Component({
-    selector: "app-add-task-page",
+    selector: 'app-add-task-page',
     imports: [CreateTaskForm],
-    templateUrl: "./add-task-page.html",
-    styleUrl: "./add-task-page.css",
+    templateUrl: './add-task-page.html',
+    styleUrl: './add-task-page.css',
 })
 export class AddTaskPage {}

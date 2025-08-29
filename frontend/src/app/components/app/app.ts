@@ -1,17 +1,17 @@
-import { Component, OnInit } from "@angular/core";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIcon, MatIconModule } from "@angular/material/icon";
-import { MatCardModule } from "@angular/material/card";
-import { routes } from "./app.routes";
-import { RouterLink, RouterOutlet } from "@angular/router";
-import { StorageService } from "../../services/storage.service";
+import { Component, inject, OnInit } from '@angular/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { routes } from './app.routes';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
-    selector: "app-root",
+    selector: 'app-root',
     standalone: true,
-    templateUrl: "./app.html",
-    styleUrls: ["./app.css"],
+    templateUrl: './app.html',
+    styleUrls: ['./app.css'],
     imports: [
         MatButtonModule,
         MatToolbarModule,
@@ -23,14 +23,14 @@ import { StorageService } from "../../services/storage.service";
     ],
 })
 export class App implements OnInit {
-    readonly themeStorageKey = "isDarkTheme";
+    private readonly themeStorageKey = 'isDarkTheme';
 
-    routerLinks = routes;
-    isDarkTheme = false;
+    protected routerLinks = routes;
+    protected isDarkTheme = false;
 
-    constructor(private storageService: StorageService) {}
+    private storageService = inject(StorageService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         const themeStorageValue = this.storageService.getItem<boolean>(
             this.themeStorageKey,
         );
@@ -41,18 +41,18 @@ export class App implements OnInit {
         }
     }
 
-    toggleDarkTheme(): void {
+    protected toggleDarkTheme(): void {
         this.isDarkTheme = !this.isDarkTheme;
         this.storageService.setItem(this.themeStorageKey, this.isDarkTheme);
 
         this.applyCSSForTheme();
     }
 
-    applyCSSForTheme(): void {
+    private applyCSSForTheme(): void {
         if (this.isDarkTheme) {
-            document.body.classList.add("dark-theme");
+            document.body.classList.add('dark-theme');
         } else {
-            document.body.classList.remove("dark-theme");
+            document.body.classList.remove('dark-theme');
         }
     }
 }

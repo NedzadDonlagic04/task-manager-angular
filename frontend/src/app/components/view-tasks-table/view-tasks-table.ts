@@ -110,9 +110,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
   deleteInstance(taskId: string) {
     this.taskService.deleteTask(taskId).subscribe({
       next: () => this.refreshTasksTable(),
-      error: (error: any) => {
-        console.error('Error deleting task:', error);
-      },
+      error: (error: any) => console.error('Error while deleting task:', error),
     });
   }
 
@@ -138,7 +136,23 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
     });
   }
 
-  batchDelete(): void {}
+  batchDelete(): void {
+    const tasksToDelete: string[] = [];
+    this.selectedTasks.selected.forEach((task) => tasksToDelete.push(task.id));
+
+    this.taskService.deleteMultipleTasks(tasksToDelete).subscribe({
+      next: () => {
+        this.selectedTasks.deselect(
+          ...this.selectedTasks.selected.filter((task) =>
+            tasksToDelete.includes(task.id),
+          ),
+        );
+        this.refreshTasksTable();
+      },
+      error: (error: any) =>
+        console.error('Error while deleting tasks:', error),
+    });
+  }
 
   taskTableFilterPredicate(rowData: TaskTableRowData, filter: string): boolean {
     const filterData: FilterData = JSON.parse(filter);

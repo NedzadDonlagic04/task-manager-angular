@@ -33,4 +33,8 @@ export class TaskService {
 	deleteTask(taskId: string): Observable<any> {
 		return this.http.delete(`${this.taskApiUrl}/${taskId}`);
 	}
+
+    deleteMultipleTasks(taskIdList: string[]): Observable<any> {
+        return this.http.put(this.taskApiUrl, taskIdList)
+    }
 }

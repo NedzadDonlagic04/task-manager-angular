@@ -1,10 +1,10 @@
-<mat-toolbar color="primary" class="mt-5" id="app-toolbar">
-    <div class="container d-flex align-items-center gap-5">
+<mat-toolbar id="app-toolbar">
+    <div>
         <!-- Left side: App name -->
-        <span class="fw-bold fs-1">OverEngineered Task Manager</span>
+        <span>OverEngineered Task Manager</span>
 
         <!-- Right side: Nav links -->
-        <nav class="d-flex gap-5 mt-2">
+        <nav>
             @for (routerLink of routerLinks; track routerLink.path) {
             <!-- The solution below is terrible but for the moment it
                  will skip showing the update route as a part of the navbar -->
@@ -19,9 +19,8 @@
                 mat-icon-button
                 aria-label="Toggle dark mode"
                 (click)="toggleDarkTheme()"
-                class="theme-toggle-button"
             >
-                <mat-icon [class.theme-toggle]="isDarkTheme">
+                <mat-icon>
                     {{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}
                 </mat-icon>
             </button>
@@ -31,8 +30,8 @@
 
 <router-outlet />
 
-<footer class="bg-light py-4 mt-5 border-top">
-    <div class="container text-center text-muted">
+<footer>
+    <div>
         © 2025 Goofy little project by a cuple of friends. Built with Angular,
         Angular Material, Bootstrap, and a sprinkle of over-engineering.
     </div>

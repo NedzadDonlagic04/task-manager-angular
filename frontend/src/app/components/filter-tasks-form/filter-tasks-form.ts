@@ -18,6 +18,7 @@ import TaskStateDTO from '../../dtos/task-state.dto';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { startDateBeforeEndDateValidator } from '../../validators/start-date-before-end-date.validator';
 
 export interface FilterData {
     searchTerm: string;
@@ -49,10 +50,27 @@ export class FilterTasksForm implements OnInit {
     protected readonly filterFormGroup = new UntypedFormGroup({
         searchTerm: new FormControl(''),
         taskState: new FormControl(''),
-        deadlineStart: new FormControl('', { nonNullable: true }),
-        deadlineEnd: new FormControl('', { nonNullable: true }),
-        createdAtStart: new FormControl('', { nonNullable: true }),
-        createdAtEnd: new FormControl('', { nonNullable: true }),
+        deadlineStart: new FormControl('', {
+            nonNullable: true,
+            validators: [
+                startDateBeforeEndDateValidator('deadlineStart', 'deadlineEnd'),
+            ],
+        }),
+        deadlineEnd: new FormControl('', {
+            nonNullable: true,
+        }),
+        createdAtStart: new FormControl('', {
+            nonNullable: true,
+            validators: [
+                startDateBeforeEndDateValidator(
+                    'createdAtStart',
+                    'createdAtEnd',
+                ),
+            ],
+        }),
+        createdAtEnd: new FormControl('', {
+            nonNullable: true,
+        }),
     });
 
     protected tags: TagDTO[] = [];
@@ -113,6 +131,16 @@ export class FilterTasksForm implements OnInit {
             },
             error: (error: any) =>
                 console.error(`Filter form value changed error -> ${error}`),
+        });
+
+        this.filterFormGroup.get('deadlineEnd')?.valueChanges.subscribe(() => {
+            this.filterFormGroup.get('deadlineStart')?.updateValueAndValidity();
+        });
+
+        this.filterFormGroup.get('createdAtEnd')?.valueChanges.subscribe(() => {
+            this.filterFormGroup
+                .get('createdAtStart')
+                ?.updateValueAndValidity();
         });
     }
 }

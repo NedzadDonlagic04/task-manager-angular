@@ -12,7 +12,9 @@ export const deadlineTimeAheadAnHourValidator = (
         const hasDeadlineControl = control.parent.get(hasDeadlineControlName);
         const deadlineDateControl = control.parent.get(deadlineDateControlName);
 
-        if (hasDeadlineControl && !hasDeadlineControl.value) {
+        if (!hasDeadlineControl || !deadlineDateControl) {
+            throw new Error('Invalid control names passed to form validator');
+        } else if (hasDeadlineControl && !hasDeadlineControl.value) {
             return null;
         }
 

@@ -23,10 +23,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import {
-    FilterData,
-    FilterTasksForm,
-} from '../filter-tasks-form/filter-tasks-form';
+import { FilterData } from '../filter-tasks-form/filter-tasks-form';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,7 +43,6 @@ import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog';
         MatPaginatorModule,
         MatSortModule,
         MatCheckboxModule,
-        FilterTasksForm,
         NgClass,
     ],
     templateUrl: './view-tasks-table.html',
@@ -218,7 +214,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         );
     }
 
-    protected filterTasks(filterObjStr: string): void {
+    public filterTasks(filterObjStr: string): void {
         this.tasksDataSource.filter = filterObjStr;
     }
 

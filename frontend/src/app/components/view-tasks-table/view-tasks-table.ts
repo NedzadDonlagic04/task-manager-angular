@@ -49,7 +49,7 @@ import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog';
         FilterTasksForm,
     ],
     templateUrl: './view-tasks-table.html',
-    styleUrl: './view-tasks-table.css',
+    styleUrl: './view-tasks-table.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewTasksTable implements OnInit, AfterViewInit {
@@ -57,7 +57,6 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
 
     protected readonly displayedTasksColumns: string[] = [
         'select',
-        'rowNum',
         'title',
         'deadline',
         'createdAt',

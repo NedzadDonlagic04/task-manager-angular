@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { TaskFormBase } from '../task-form-base/task-form-base';
-import { TagService } from '../../services/tag.service';
-import { TaskService } from '../../services/task.service';
 import TaskCreateDTO from '../../dtos/task-create.dto';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatCard, MatCardTitle } from '@angular/material/card';
@@ -12,7 +10,6 @@ import {
 } from '@angular/material/datepicker';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 
 @Component({

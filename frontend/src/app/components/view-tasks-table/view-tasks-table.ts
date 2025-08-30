@@ -28,6 +28,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-view-tasks-table',
@@ -74,6 +75,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
 
     protected taskService = inject(TaskService);
     protected dialog = inject(MatDialog);
+    protected matSnackBar = inject(MatSnackBar);
     protected router = inject(Router);
 
     public constructor() {
@@ -104,15 +106,6 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
             },
             error: (error: any) =>
                 console.error(`Error while loading tags -> ${error}`),
-        });
-    }
-
-    private deleteInstance(taskId: string) {
-        this.taskService.deleteTask(taskId).subscribe({
-            next: () => this.refreshTasksTable(),
-            error: (error: any) => {
-                console.error('Error deleting task:', error);
-            },
         });
     }
 
@@ -256,9 +249,41 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
                     ),
                 );
                 this.refreshTasksTable();
+                this.matSnackBar.open(
+                    'Tasks deleted successfully!',
+                    'Dismiss',
+                    {
+                        duration: 3000,
+                        panelClass: ['success-snackbar'],
+                    },
+                );
             },
-            error: (error: any) =>
-                console.error('Error while deleting tasks:', error),
+            error: (error: any) => {
+                this.matSnackBar.open('Failed to delete tasks.', 'Dismiss', {
+                    duration: 5000,
+                    panelClass: ['error-snackbar'],
+                });
+                console.error('Error while deleting tasks -> ', error);
+            },
+        });
+    }
+
+    private deleteInstance(taskId: string) {
+        this.taskService.deleteTask(taskId).subscribe({
+            next: () => {
+                this.refreshTasksTable();
+                this.matSnackBar.open('Task deleted successfully!', 'Dismiss', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar'],
+                });
+            },
+            error: (error: any) => {
+                this.matSnackBar.open('Failed to delete task.', 'Dismiss', {
+                    duration: 5000,
+                    panelClass: ['error-snackbar'],
+                });
+                console.error('Error while deleting tasks -> ', error);
+            },
         });
     }
 }

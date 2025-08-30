@@ -27,9 +27,9 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
 :host {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    /* Removed height and overflow to allow window scrolling */
     background-color: $light-bg;
+    min-height: 100vh; // ensure full height
 }
 
 :host-context(.dark-theme) {
@@ -38,6 +38,12 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
 
 // === Toolbar ===
 .app-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px; // standard Angular Material toolbar height
+    z-index: 1000;
     background-color: $light-toolbar-bg;
     color: $light-toolbar-text;
     box-shadow: 0 2px 6px $light-shadow;
@@ -84,7 +90,9 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    overflow: hidden;
+    padding-top: 64px; // push content below fixed toolbar
+    box-sizing: border-box;
+    overflow: visible; // allow normal scrolling on window, not clipped
 }
 
 // === Footer ===
@@ -159,5 +167,26 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
                 mat.m2-get-color-from-palette($dark-accent, 700),
                 $lightness: -10%
             );
+    }
+}
+
+@media (max-width: 768px) {
+    .toolbar-content {
+        flex-wrap: wrap;
+        .app-title {
+            font-size: 1rem;
+        }
+    }
+
+    .main-content {
+        padding-top: 64px; // same offset on mobile
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-buttons {
+        display: none !important;
     }
 }

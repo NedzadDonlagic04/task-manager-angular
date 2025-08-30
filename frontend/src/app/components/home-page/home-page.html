@@ -1,44 +1,39 @@
-<div>
-    <div>
-        <div>
-            <mat-card>
-                <mat-card-title
-                    >Welcome to Your OverEngineered Task Manager</mat-card-title
+<div class="home-container">
+    <div class="welcome-card">
+        <mat-card>
+            <mat-card-title>
+                Welcome to Your OverEngineered Task Manager
+            </mat-card-title>
+            <mat-card-content>
+                <p>
+                    Manage tasks, track statistics, and totally overcomplicate
+                    your productivity with style. This is your one-stop shop for
+                    unnecessarily advanced task management.
+                </p>
+                <button
+                    mat-flat-button
+                    color="primary"
+                    (click)="redirectToAddTaskPage()"
                 >
-                <mat-card-content>
-                    <p>
-                        Manage tasks, track statistics, and totally
-                        overcomplicate your productivity with style.<br />
-                        This is your one-stop shop for unnecessarily advanced
-                        task management.
-                    </p>
-                    <button
-                        mat-flat-button
-                        routerLink="/todo"
-                        (click)="redirectToAddTaskPage()"
-                    >
-                        Get Started
-                    </button>
-                </mat-card-content>
-            </mat-card>
-        </div>
+                    Get Started
+                </button>
+            </mat-card-content>
+        </mat-card>
     </div>
-</div>
 
-<div>
-    <div>
-        <div>
-            <mat-icon>check_circle</mat-icon>
+    <div class="features-grid">
+        <div class="feature-item">
+            <mat-icon class="feature-icon">check_circle</mat-icon>
             <h5>Organize Tasks</h5>
             <p>Easily create, edit, and manage all your tasks.</p>
         </div>
-        <div>
-            <mat-icon>insights</mat-icon>
+        <div class="feature-item">
+            <mat-icon class="feature-icon">insights</mat-icon>
             <h5>Track Statistics</h5>
             <p>See charts and graphs that are probably overkill.</p>
         </div>
-        <div>
-            <mat-icon>settings</mat-icon>
+        <div class="feature-item">
+            <mat-icon class="feature-icon">settings</mat-icon>
             <h5>Customizable</h5>
             <p>Tweak settings until you forget why you started.</p>
         </div>

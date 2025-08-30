@@ -161,5 +161,20 @@ namespace Controllers
 
             return NoContent();
         }
+
+        [HttpPut]
+        public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> idList) {
+            var tasks = await _context.Task.Where(task => idList.Contains(task.Id)).ToListAsync();
+
+            if (tasks == null)
+            {
+                return NotFound();
+            }
+
+            _context.Task.RemoveRange(tasks);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

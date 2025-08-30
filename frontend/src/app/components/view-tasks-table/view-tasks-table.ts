@@ -100,7 +100,6 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
                     (task: TaskReadDTO, index: number) =>
                         new TaskTableRowData(index + 1, task),
                 );
-
                 this.tasksDataSource.data = tasksTableRowData;
             },
             error: (error: any) =>
@@ -117,12 +116,16 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         });
     }
 
-    protected showDeleteDialog(taskId: string): void {
+    protected showDeleteDialog(taskId?: string): void {
+        const isBatchDelete: boolean = this.isAnyRowSelected();
+
         const dialogRef = this.dialog.open(YesNoDialog, {
             width: '350px',
             data: {
                 title: 'Delete',
-                message: 'Are you sure?',
+                message: isBatchDelete
+                    ? `Are you sure you want to delete ${this.selectedTasks.selected.length} ${this.selectedTasks.selected.length === 1 ? 'task' : 'tasks'}?`
+                    : 'Are you sure you want to delete selected task?',
                 confirmText: 'Delete',
                 cancelText: 'Cancel',
             },
@@ -130,7 +133,8 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            if (result) this.deleteInstance(taskId);
+            if (result && isBatchDelete) this.batchDelete();
+            else if (result) this.deleteInstance(taskId!);
         });
     }
 
@@ -218,6 +222,10 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         this.tasksDataSource.filter = filterObjStr;
     }
 
+    protected isAnyRowSelected(): boolean {
+        return this.selectedTasks.selected.length > 0;
+    }
+
     protected areAllRowsSelected(): boolean {
         const numberOfRowsSelected = this.selectedTasks.selected.length;
         const numberOfRowsInTable = this.tasksDataSource.data.length;
@@ -232,5 +240,25 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         }
 
         this.selectedTasks.select(...this.tasksDataSource.data);
+    }
+
+    protected batchDelete(): void {
+        const tasksToDelete: string[] = [];
+        this.selectedTasks.selected.forEach((task) =>
+            tasksToDelete.push(task.id),
+        );
+
+        this.taskService.deleteMultipleTasks(tasksToDelete).subscribe({
+            next: () => {
+                this.selectedTasks.deselect(
+                    ...this.selectedTasks.selected.filter((task) =>
+                        tasksToDelete.includes(task.id),
+                    ),
+                );
+                this.refreshTasksTable();
+            },
+            error: (error: any) =>
+                console.error('Error while deleting tasks:', error),
+        });
     }
 }

@@ -18,7 +18,7 @@ import {
 import { TaskService } from '../../services/task.service';
 import TaskReadDTO from '../../dtos/task-read.dto';
 import { TaskTableRowData } from '../../services/task-table-row-data.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -47,6 +47,7 @@ import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog';
         MatSortModule,
         MatCheckboxModule,
         FilterTasksForm,
+        NgClass,
     ],
     templateUrl: './view-tasks-table.html',
     styleUrl: './view-tasks-table.scss',

@@ -66,32 +66,47 @@
             </mat-cell>
         </ng-container>
 
+        <!-- Task State Column -->
         <ng-container matColumnDef="taskStateName">
             <mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header
                 class="hide-on-mobile"
-                >Task State</mat-header-cell
             >
+                Task State
+            </mat-header-cell>
             <mat-cell *matCellDef="let task" class="hide-on-mobile">
-                {{ task.taskStateName }}
+                <span
+                    class="badge badge-state"
+                    [ngClass]="'task-state-' + task.taskStateName.toLowerCase()"
+                    >{{ task.taskStateName }}</span
+                >
             </mat-cell>
         </ng-container>
 
+        <!-- Tags Column -->
         <ng-container matColumnDef="tagNames">
             <mat-header-cell *matHeaderCellDef class="hide-on-mobile"
                 >Tags</mat-header-cell
             >
-            <mat-cell *matCellDef="let task" class="hide-on-mobile">
+            <mat-cell *matCellDef="let task" class="column-tags hide-on-mobile">
                 @if (task.tagNames.length !== 0) { @for (tag of task.tagNames;
-                track tag) { {{ tag }} } } @else { {{ NOT_SET_MESSAGE }} }
+                track tag) {
+                <span
+                    class="badge badge-tag"
+                    [ngClass]="'task-tag-' + tag.toLowerCase()"
+                    >{{ tag }}</span
+                >
+                } } @else {
+                <span class="badge badge-empty">{{ NOT_SET_MESSAGE }}</span>
+                }
             </mat-cell>
         </ng-container>
 
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-            <mat-cell *matCellDef="let task">
+            <mat-cell *matCellDef="let task" class="column-actions">
                 <button
                     mat-icon-button
                     color="primary"

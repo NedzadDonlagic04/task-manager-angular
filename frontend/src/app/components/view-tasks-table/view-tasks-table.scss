@@ -82,7 +82,7 @@
         }
     }
 
-    // === Actions Column (fit-content) ===
+    // === Actions Column (fit-content + spacing) ===
     mat-header-cell.column-actions,
     mat-cell.column-actions {
         white-space: nowrap;
@@ -91,7 +91,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        gap: 0.25rem;
+        gap: 0.5rem; // Ensures spacing between buttons
 
         button[mat-icon-button] {
             padding: 0.5rem;
@@ -107,6 +107,15 @@
                 justify-content: center;
             }
         }
+    }
+
+    // === Tag/State Badge Containers ===
+    mat-cell.column-tags,
+    mat-cell.column-state {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        align-items: center;
     }
 
     // === LIGHT THEME ===
@@ -193,4 +202,64 @@
             }
         }
     }
+}
+
+// === Badge Styles ===
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1;
+    border-radius: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    margin: 0 0.25rem 0.25rem 0;
+
+    &.badge-empty {
+        background-color: #f2f2f2;
+        color: #888;
+    }
+}
+
+:host-context(body.dark-theme) {
+    .badge.badge-empty {
+        background-color: #444;
+        color: #bbb;
+    }
+}
+
+.badge-state.task-state-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-state.task-state-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-state.task-state-fail {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.badge-tag.task-tag-job {
+    background-color: #f44336;
+    color: white;
+}
+
+.badge-tag.task-tag-school {
+    background-color: #90caf9;
+    color: #0d47a1;
+}
+
+.badge-tag.task-tag-hobby {
+    background-color: #81c784;
+    color: #1b5e20;
+}
+
+.badge-tag.task-tag-house {
+    background-color: #fef7f0;
+    color: #7b4f1d;
+    border: 1px solid #e0c6a7;
 }

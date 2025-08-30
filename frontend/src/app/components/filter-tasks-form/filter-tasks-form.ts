@@ -44,7 +44,7 @@ export interface FilterData {
         MatCheckboxModule,
     ],
     templateUrl: './filter-tasks-form.html',
-    styleUrl: './filter-tasks-form.css',
+    styleUrl: './filter-tasks-form.scss',
 })
 export class FilterTasksForm implements OnInit {
     protected readonly filterFormGroup = new UntypedFormGroup({
@@ -142,5 +142,13 @@ export class FilterTasksForm implements OnInit {
                 .get('createdAtStart')
                 ?.updateValueAndValidity();
         });
+    }
+
+    public get deadlineStartControl() {
+        return this.filterFormGroup.get('deadlineStart');
+    }
+
+    public get createdAtStartControl() {
+        return this.filterFormGroup.get('createdAtStart');
     }
 }

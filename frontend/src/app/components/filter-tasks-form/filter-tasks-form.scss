@@ -1,0 +1,80 @@
+@use '@angular/material' as mat;
+@use './../../../theme-variables' as *;
+
+:host {
+    display: block;
+    margin-bottom: 2rem;
+
+    form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
+
+        mat-form-field {
+            flex: 1 1 auto;
+            min-width: 180px;
+        }
+
+        .tags-section {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 100%;
+            min-width: 220px;
+
+            .tags-label {
+                font-weight: 500;
+                font-size: 0.875rem;
+                color: mat.m2-get-color-from-palette($light-primary, 900);
+                margin-bottom: 0.5rem;
+            }
+
+            .tags-checkbox-group {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+
+                mat-checkbox {
+                    flex: 0 1 auto;
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        // Responsive layout
+        @media (max-width: 768px) {
+            flex-direction: column;
+
+            mat-form-field {
+                width: 100%;
+            }
+
+            .tags-section {
+                width: 100%;
+            }
+        }
+    }
+
+    mat-label {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        display: inline-block;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: mat.m2-get-color-from-palette($light-primary, 600);
+    }
+
+    // === Dark Theme Support ===
+    :host-context(body.dark-theme) {
+        .tags-section .tags-label {
+            color: #fff;
+        }
+
+        p {
+            color: mat.m2-get-color-from-palette($dark-primary, 200);
+        }
+    }
+}

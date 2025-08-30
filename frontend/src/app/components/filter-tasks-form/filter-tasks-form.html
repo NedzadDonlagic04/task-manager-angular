@@ -16,6 +16,9 @@
             [for]="dateStartPicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #dateStartPicker></mat-datepicker>
+        @if(deadlineStartControl?.errors?.['startDateBeforeEndDate']) {
+        <mat-error> Deadline start date can't be after end date </mat-error>
+        }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -44,6 +47,9 @@
             [for]="createdAtStartPicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #createdAtStartPicker></mat-datepicker>
+        @if(createdAtStartControl?.errors?.['startDateBeforeEndDate']) {
+        <mat-error> Createdt at start date can't be after end date </mat-error>
+        }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -77,11 +83,15 @@
     } @if (tags.length === 0) {
     <p>Loading task tags...</p>
     } @else {
-    <div formArrayName="tags">
-        <mat-label>Task tags:</mat-label>
-        @for(tag of tags; track tag.id; let i = $index) {
-        <mat-checkbox [formControlName]="i"> {{ tag.name }} </mat-checkbox>
-        }
+
+    <div class="tags-section" formArrayName="tags">
+        <div class="tags-label">Tags:</div>
+        <div class="tags-checkbox-group">
+            @for(tag of tags; track tag.id; let i = $index) {
+            <mat-checkbox [formControlName]="i"> {{ tag.name }} </mat-checkbox>
+            }
+        </div>
     </div>
+
     }
 </form>

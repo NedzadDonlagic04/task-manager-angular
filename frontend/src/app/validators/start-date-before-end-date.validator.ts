@@ -25,7 +25,7 @@ export const startDateBeforeEndDateValidator = (
         const endDate: Date = endDateControl.value;
 
         if (startDate > endDate) {
-            return { deadlineTimeAhead: true };
+            return { startDateBeforeEndDate: true };
         }
 
         return null;

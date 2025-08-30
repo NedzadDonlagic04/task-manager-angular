@@ -6,7 +6,7 @@ import { ConfirmDialog } from '../../interfaces/confirm-dialog.interface';
     selector: 'app-yes-no-dialog',
     imports: [],
     templateUrl: './yes-no-dialog.html',
-    styleUrl: './yes-no-dialog.css',
+    styleUrl: './yes-no-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YesNoDialog {

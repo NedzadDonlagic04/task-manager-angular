@@ -2,8 +2,8 @@
 <div mat-dialog-content>
     <p>{{ data.message }}</p>
 </div>
-<div mat-dialog-actions align="center">
-    <button mat-raised-button color="warn" (click)="dialogRef.close(false)">
+<div mat-dialog-actions>
+    <button mat-raised-button (click)="dialogRef.close(false)">
         {{ data.cancelText }}
     </button>
     <button

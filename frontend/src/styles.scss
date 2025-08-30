@@ -1,0 +1,107 @@
+@use '@angular/material' as mat;
+@use './theme-variables' as *; // Adjust path if needed
+
+// === Material core and themes ===
+@include mat.core();
+@include mat.all-component-themes($light-theme);
+
+.dark-theme {
+    @include mat.all-component-colors($dark-theme);
+}
+
+// === Light Theme Mobile Menu ===
+.cdk-overlay-container .mobile-menu.mat-mdc-menu-panel {
+    background-color: #fff;
+    box-shadow: 0 0 10px 3px $light-primary-color;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.cdk-overlay-container .mobile-menu.mat-mdc-menu-panel .mat-mdc-menu-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+}
+
+.cdk-overlay-container .mobile-menu.mat-mdc-menu-panel .mat-mdc-menu-item {
+    color: mat.m2-get-color-from-palette($light-primary, 900);
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+}
+
+// === Dark Theme Mobile Menu ===
+.dark-theme .cdk-overlay-container .mobile-menu.mat-mdc-menu-panel {
+    background-color: mat.m2-get-color-from-palette($dark-primary, 700);
+    box-shadow: 0 0 10px 3px $dark-accent-color;
+}
+
+.dark-theme
+    .cdk-overlay-container
+    .mobile-menu.mat-mdc-menu-panel
+    .mat-mdc-menu-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+}
+
+.dark-theme
+    .cdk-overlay-container
+    .mobile-menu.mat-mdc-menu-panel
+    .mat-mdc-menu-item {
+    color: mat.m2-get-color-from-palette($dark-primary, 100);
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+}
+
+// === Base Styles for All Menu Buttons ===
+.cdk-overlay-container .mat-mdc-menu-content button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+// === Light Theme Button Styles ===
+.cdk-overlay-container .mat-mdc-menu-content button {
+    color: mat.m2-get-color-from-palette($light-primary, 900);
+
+    &:hover {
+        background-color: rgba(
+            mat.m2-get-color-from-palette($light-accent, 200),
+            0.2
+        );
+        color: mat.m2-get-color-from-palette($light-accent, 700);
+    }
+
+    mat-icon {
+        color: mat.m2-get-color-from-palette($light-primary, 700);
+    }
+}
+
+// === Dark Theme Button Styles ===
+.dark-theme .cdk-overlay-container .mat-mdc-menu-content button {
+    color: mat.m2-get-color-from-palette($dark-primary, 100);
+
+    &:hover {
+        background-color: rgba(
+            mat.m2-get-color-from-palette($dark-accent, 200),
+            0.15
+        );
+        color: mat.m2-get-color-from-palette($dark-accent, 200);
+    }
+
+    mat-icon {
+        color: mat.m2-get-color-from-palette($dark-accent, 200);
+    }
+}

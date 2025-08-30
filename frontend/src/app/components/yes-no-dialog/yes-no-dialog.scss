@@ -1,0 +1,88 @@
+@use '@angular/material' as mat;
+@use './../../../theme-variables' as *;
+
+:host {
+    display: block;
+    padding: 1rem;
+
+    h1[mat-dialog-title] {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: mat.m2-get-color-from-palette($light-primary, 900);
+    }
+
+    div[mat-dialog-content] {
+        font-size: 1rem;
+        color: #444;
+        margin-bottom: 1.5rem;
+    }
+
+    div[mat-dialog-actions] {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+
+        button[mat-raised-button] {
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+            border-radius: 4px;
+            text-transform: none;
+        }
+    }
+
+    // Dark theme adjustments
+    :host-context(body.dark-theme) {
+        h1[mat-dialog-title] {
+            color: mat.m2-get-color-from-palette($dark-primary, 100);
+        }
+
+        div[mat-dialog-content] {
+            color: mat.m2-get-color-from-palette($dark-primary, 50);
+        }
+
+        div[mat-dialog-actions] {
+            button[mat-raised-button] {
+                background-color: mat.m2-get-color-from-palette(
+                    $dark-primary,
+                    600
+                );
+                color: #fff;
+
+                &:hover {
+                    background-color: mat.m2-get-color-from-palette(
+                        $dark-primary,
+                        500
+                    );
+                }
+
+                &[color='primary'] {
+                    background-color: mat.m2-get-color-from-palette(
+                        $dark-accent,
+                        A200
+                    );
+                    color: #000;
+
+                    &:hover {
+                        background-color: mat.m2-get-color-from-palette(
+                            $dark-accent,
+                            A100
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    // Responsive tweaks (optional)
+    @media (max-width: 480px) {
+        div[mat-dialog-actions] {
+            flex-direction: column;
+            align-items: stretch;
+
+            button[mat-raised-button] {
+                width: 100%;
+            }
+        }
+    }
+}

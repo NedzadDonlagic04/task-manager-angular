@@ -6,12 +6,13 @@ import { MatCardModule } from '@angular/material/card';
 import { routes } from './app.routes';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { StorageService } from '../../services/storage.service';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.html',
-    styleUrls: ['./app.css'],
+    styleUrls: ['./app.scss'],
     imports: [
         MatButtonModule,
         MatToolbarModule,
@@ -20,6 +21,8 @@ import { StorageService } from '../../services/storage.service';
         MatIcon,
         RouterLink,
         RouterOutlet,
+        MatMenu,
+        MatMenuTrigger,
     ],
 })
 export class App implements OnInit {

@@ -1,0 +1,315 @@
+@use '@angular/material' as mat;
+@use './../../../theme-variables' as *;
+
+:host {
+    display: block;
+
+    // === Wrapper enables horizontal scroll on small screens ===
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+
+        mat-table {
+            min-width: 768px; // prevents column collapse
+        }
+    }
+
+    mat-table {
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        table-layout: auto;
+    }
+
+    mat-header-cell,
+    mat-cell {
+        padding: 1rem;
+        font-size: 0.95rem;
+        transition:
+            background-color 0.3s ease,
+            color 0.3s ease;
+    }
+
+    mat-header-row {
+        font-weight: bold;
+    }
+
+    mat-row:hover {
+        transition: background-color 0.2s ease;
+    }
+
+    // === Checkbox Column (minimal) ===
+    mat-header-cell.checkbox-column,
+    mat-cell.checkbox-column {
+        width: 48px;
+        min-width: 48px;
+        max-width: 48px;
+        text-align: center;
+
+        mat-checkbox {
+            margin: auto;
+        }
+    }
+
+    // === Task Column Styling (wide) ===
+    mat-header-cell.column-title,
+    mat-cell.column-title {
+        width: 100%;
+        max-width: 600px;
+        word-wrap: break-word;
+
+        .task-cell-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+
+        .task-title {
+            font-weight: 600;
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .task-desc {
+            margin: 0;
+            font-size: 0.875rem;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+    }
+
+    // === Actions Column (fit-content + spacing) ===
+    mat-header-cell.column-actions,
+    mat-cell.column-actions {
+        white-space: nowrap;
+        width: auto;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0.5rem; // Ensures spacing between buttons
+
+        button[mat-icon-button] {
+            padding: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            mat-icon {
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+
+    // === Tag/State Badge Containers ===
+    mat-cell.column-tags,
+    mat-cell.column-state {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    // === LIGHT THEME ===
+    :host-context(body) {
+        mat-table {
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        mat-header-cell {
+            background-color: mat.m2-get-color-from-palette(
+                $light-primary,
+                100
+            );
+            color: mat.m2-get-color-from-palette($light-primary, 900);
+        }
+
+        mat-cell {
+            color: #333;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        mat-row:hover {
+            background-color: rgba(
+                mat.m2-get-color-from-palette($light-accent, 100),
+                0.2
+            );
+        }
+
+        mat-cell button[mat-icon-button] {
+            background-color: rgba(
+                mat.m2-get-color-from-palette($light-accent, 200),
+                0.15
+            );
+            color: mat.m2-get-color-from-palette($light-primary, 700);
+
+            &:hover {
+                background-color: rgba(
+                    mat.m2-get-color-from-palette($light-accent, 200),
+                    0.3
+                );
+                color: mat.m2-get-color-from-palette($light-accent, 700);
+            }
+        }
+    }
+
+    // === DARK THEME ===
+    :host-context(body.dark-theme) {
+        mat-table {
+            background-color: mat.m2-get-color-from-palette($dark-primary, 700);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        mat-header-cell {
+            background-color: mat.m2-get-color-from-palette($dark-primary, 600);
+            color: mat.m2-get-color-from-palette($dark-primary, 100);
+        }
+
+        mat-cell {
+            color: mat.m2-get-color-from-palette($dark-primary, 50);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        mat-row:hover {
+            background-color: rgba(
+                mat.m2-get-color-from-palette($dark-accent, 200),
+                0.1
+            );
+        }
+
+        mat-cell button[mat-icon-button] {
+            background-color: rgba(
+                mat.m2-get-color-from-palette($dark-accent, 200),
+                0.1
+            );
+            color: mat.m2-get-color-from-palette($dark-accent, 200);
+
+            &:hover {
+                background-color: rgba(
+                    mat.m2-get-color-from-palette($dark-accent, 200),
+                    0.25
+                );
+                color: mat.m2-get-color-from-palette($dark-accent, A400);
+            }
+        }
+    }
+}
+
+// === Badge Styles ===
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1;
+    border-radius: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    margin: 0 0.25rem 0.25rem 0;
+
+    &.badge-empty {
+        background-color: #f2f2f2;
+        color: #888;
+    }
+}
+
+:host-context(body.dark-theme) {
+    .badge.badge-empty {
+        background-color: #444;
+        color: #bbb;
+    }
+}
+
+.badge-state.task-state-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-state.task-state-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-state.task-state-fail {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.badge-tag.task-tag-job {
+    background-color: #f44336;
+    color: white;
+}
+
+.badge-tag.task-tag-school {
+    background-color: #90caf9;
+    color: #0d47a1;
+}
+
+.badge-tag.task-tag-hobby {
+    background-color: #81c784;
+    color: #1b5e20;
+}
+
+.badge-tag.task-tag-house {
+    background-color: #fef7f0;
+    color: #7b4f1d;
+    border: 1px solid #e0c6a7;
+}
+
+// Reusable button style for actions like Add, Update, Delete
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: $light-primary-color;
+    color: #fff;
+    text-transform: none;
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
+    margin-bottom: 15px;
+
+    mat-icon {
+        font-size: 20px;
+    }
+
+    &:hover {
+        background-color: darken($light-primary-color, 10%);
+    }
+
+    &:disabled {
+        background-color: rgba($light-primary-color, 0.3);
+        color: #eee;
+        cursor: not-allowed;
+    }
+}
+
+// Dark theme overrides
+:host-context(.dark-theme) {
+    .action-button {
+        background-color: $dark-accent-color;
+        color: #fff;
+
+        &:hover {
+            background-color: lighten($dark-accent-color, 5%);
+        }
+
+        &:disabled {
+            background-color: rgba($dark-accent-color, 0.3);
+            color: #aaa;
+        }
+    }
+}

@@ -1,110 +1,147 @@
-<app-filter-tasks-form (onValueChanged)="filterTasks($event)" />
-
-<button matFab extended [disabled]="!isAnyRowSelected()" (click)="showDeleteDialog()">
+<button
+    mat-fab
+    extended
+    class="action-button"
+    [disabled]="!isAnyRowSelected()"
+    (click)="showDeleteDialog()"
+>
     <mat-icon>delete</mat-icon>
     Delete
 </button>
 
-<mat-table [dataSource]="tasksDataSource" matSort>
-    <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef class="w-16">
-            <mat-checkbox
-                (click)="$event? toggleAllRows() : null"
-                [checked]="selectedTasks.hasValue() && areAllRowsSelected()"
-                [indeterminate]="selectedTasks.hasValue() && !areAllRowsSelected()"
-                aria-label="Select all rows"
+<div class="table-wrapper">
+    <mat-table [dataSource]="tasksDataSource" matSort>
+        <!-- Select Checkbox Column -->
+        <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef class="checkbox-column">
+                <mat-checkbox
+                    (click)="$event ? toggleAllRows() : null"
+                    [checked]="selectedTasks.hasValue() && areAllRowsSelected()"
+                    [indeterminate]="selectedTasks.hasValue() && !areAllRowsSelected()"
+                    aria-label="Select all rows"
+                ></mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" class="checkbox-column">
+                <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selectedTasks.toggle(row) : null"
+                    [checked]="selectedTasks.isSelected(row)"
+                    aria-label="Select row"
+                ></mat-checkbox>
+            </mat-cell>
+        </ng-container>
+
+        <!-- Task Title & Description Column -->
+        <ng-container matColumnDef="title">
+            <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="column-title"
             >
-            </mat-checkbox>
-        </mat-header-cell>
-        <mat-cell *matCellDef="let row">
-            <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event? selectedTasks.toggle(row) : null"
-                [checked]="selectedTasks.isSelected(row)"
-                aria-label="Select row"
+                Task
+            </mat-header-cell>
+            <mat-cell *matCellDef="let task" class="column-title">
+                <div class="task-cell-content">
+                    <p class="task-title">{{ task.title }}</p>
+                    @if (task.description !== '') {
+                    <p class="task-desc">{{ task.description }}</p>
+                    }
+                </div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="deadline">
+            <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="hide-on-mobile"
+                >Deadline</mat-header-cell
             >
-            </mat-checkbox>
-        </mat-cell>
-    </ng-container>
+            <mat-cell *matCellDef="let task" class="hide-on-mobile">
+                @if (task.deadline !== null) { {{ task.deadline | date:'short'
+                }} } @else { {{ NOT_SET_MESSAGE }} }
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="rowNum">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> # </mat-header-cell>
-        <mat-cell *matCellDef="let task"> {{ task.rowNum }} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="title">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-            Task
-        </mat-header-cell>
-        <mat-cell
-            *matCellDef="let task"
-            style="flex-direction: column; align-items: flex-start"
-        >
-            <p style="font-weight: bolder">{{ task.title }}</p>
-            @if (task.description !== '') {
-            <p>{{ task.description }}</p>
-            }
-        </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="deadline">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-            Deadline
-        </mat-header-cell>
-        <mat-cell *matCellDef="let task">
-            @if (task.deadline !== null) { {{ task.deadline | date:'short' }} }
-            @else { {{ NOT_SET_MESSAGE }} }
-        </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="createdAt">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-            Created At
-        </mat-header-cell>
-        <mat-cell *matCellDef="let task">
-            {{ task.createdAt | date:'short' }}
-        </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="taskStateName">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-            Task State
-        </mat-header-cell>
-        <mat-cell *matCellDef="let task"> {{ task.taskStateName }} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="tagNames">
-        <mat-header-cell *matHeaderCellDef> Tags </mat-header-cell>
-        <mat-cell *matCellDef="let task">
-            @if (task.tagNames.length !== 0) { @for (tag of task.tagNames; track
-            tag) { {{ tag }} } } @else { {{ NOT_SET_MESSAGE }} }
-        </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-        <mat-cell *matCellDef="let task">
-            <button
-                mat-icon-button
-                color="primary"
-                (click)="navigatoToUpdatePage(task.id)"
+        <ng-container matColumnDef="createdAt">
+            <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="hide-on-mobile"
+                >Created At</mat-header-cell
             >
-                <mat-icon>edit</mat-icon>
-            </button>
-            <button
-                mat-icon-button
-                color="warn"
-                (click)="showDeleteDialog(task.id)"
+            <mat-cell *matCellDef="let task" class="hide-on-mobile">
+                {{ task.createdAt | date:'short' }}
+            </mat-cell>
+        </ng-container>
+
+        <!-- Task State Column -->
+        <ng-container matColumnDef="taskStateName">
+            <mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="hide-on-mobile"
             >
-                <mat-icon>delete</mat-icon>
-            </button>
-        </mat-cell>
-    </ng-container>
+                Task State
+            </mat-header-cell>
+            <mat-cell *matCellDef="let task" class="hide-on-mobile">
+                <span
+                    class="badge badge-state"
+                    [ngClass]="'task-state-' + task.taskStateName.toLowerCase()"
+                    >{{ task.taskStateName }}</span
+                >
+            </mat-cell>
+        </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedTasksColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedTasksColumns"></mat-row>
-</mat-table>
+        <!-- Tags Column -->
+        <ng-container matColumnDef="tagNames">
+            <mat-header-cell *matHeaderCellDef class="hide-on-mobile"
+                >Tags</mat-header-cell
+            >
+            <mat-cell *matCellDef="let task" class="column-tags hide-on-mobile">
+                @if (task.tagNames.length !== 0) { @for (tag of task.tagNames;
+                track tag) {
+                <span
+                    class="badge badge-tag"
+                    [ngClass]="'task-tag-' + tag.toLowerCase()"
+                    >{{ tag }}</span
+                >
+                } } @else {
+                <span class="badge badge-empty">{{ NOT_SET_MESSAGE }}</span>
+                }
+            </mat-cell>
+        </ng-container>
 
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let task" class="column-actions">
+                <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="navigatoToUpdatePage(task.id)"
+                >
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="showDeleteDialog(task.id)"
+                >
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <!-- Header & Row Definitions -->
+        <mat-header-row
+            *matHeaderRowDef="displayedTasksColumns"
+        ></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedTasksColumns"></mat-row>
+    </mat-table>
+</div>
+
+<!-- Paginator -->
 <mat-paginator
     [pageSizeOptions]="[5, 10, 25, 100]"
     aria-label="Select page of users"

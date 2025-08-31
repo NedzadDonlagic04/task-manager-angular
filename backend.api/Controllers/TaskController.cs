@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using DbContexts;
+using Services;
 using DTOs;
-using Enums;
-using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
 {
@@ -10,169 +8,87 @@ namespace Controllers
     [Route("api/task")]
     public class TaskController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private ITaskService _taskService;
 
-        public TaskController(AppDbContext context) => _context = context;
+        public TaskController(ITaskService taskService) {
+            _taskService = taskService;
+        }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TaskReadDTO>>> GetTasks()
         {
-            var tasks = await _context
-                            .Task
-                            .Include(task => task.Tags)
-                            .Include(task => task.TaskState)
-                            .Select(task => new TaskReadDTO
-                            {
-                                Id = task.Id,
-                                Title = task.Title,
-                                Description = task.Description,
-                                Deadline = task.Deadline,
-                                Created_At = task.Created_At,
-                                TaskStateName = task.TaskState.Name,
-                                TagNames = task.Tags.Select(tag => tag.Name).ToList()
-                            })
-                            .ToListAsync();
+            var tasks = await _taskService.GetTasksAsync();
 
             return Ok(tasks);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TagDTO>> GetTaskById(Guid id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<TagDTO>> GetTaskById([FromRoute] Guid id)
         {
-            var task = await _context.Task.FindAsync(id);
+            var task = await _taskService.GetTaskByIdAsync(id);
 
             if (task == null)
             {
                 return NotFound();
             }
 
-            await _context.Entry(task).Collection(t => t.Tags).LoadAsync();
-            await _context.Entry(task).Reference(t => t.TaskState).LoadAsync();
-
-            var result = new TaskReadDTO
-            {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                Deadline = task.Deadline,
-                Created_At = task.Created_At,
-                TaskStateName = task.TaskState.Name,
-                TagNames = task.Tags.Select(tag => tag.Name).ToList()
-            };
-
-            return Ok(result);
+            return Ok(task);
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskReadDTO>> CreateTask(TaskCreateDTO taskCreateDTO)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TaskReadDTO>> CreateTask([FromBody] TaskCreateDTO taskCreateDTO)
         {
-            var tags = await _context.Tag.Where(tag => taskCreateDTO.TagIds.Contains(tag.Id)).ToListAsync();
+            var createdTask = await _taskService.CreateTaskAsync(taskCreateDTO);
 
-            if (tags.Count != taskCreateDTO.TagIds.Count)
-            {
-                return BadRequest("One or more tags do not exist");
+            if (createdTask.IsFailure) {
+                return BadRequest(createdTask.Errors);
             }
 
-            var newTask = new Models.Task
-            {
-                Title = taskCreateDTO.Title,
-                Description = taskCreateDTO.Description,
-                Deadline = taskCreateDTO.Deadline?.ToUniversalTime(),
-                TaskStateId = (int)TaskStateEnum.Pending,
-                Tags = tags
-            };
-
-            _context.Task.Add(newTask);
-            await _context.SaveChangesAsync();
-
-            await _context.Entry(newTask).Collection(t => t.Tags).LoadAsync();
-            await _context.Entry(newTask).Reference(t => t.TaskState).LoadAsync();
-
-            var result = new TaskReadDTO
-            {
-                Id = newTask.Id,
-                Title = newTask.Title,
-                Description = newTask.Description,
-                Deadline = newTask.Deadline,
-                Created_At = newTask.Created_At,
-                TaskStateName = newTask.TaskState.Name,
-                TagNames = newTask.Tags.Select(tag => tag.Name).ToList()
-            };
-
-            return Ok(result);
+            return Ok(createdTask.Value);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTask(Guid id, TaskUpdateDTO taskUpdateDTO)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UpdateTask([FromRoute] Guid id, [FromBody] TaskUpdateDTO taskUpdateDTO)
         {
-            var taskToUpdate = await _context.Task.FindAsync(id);
+            var updatedTask = await _taskService.UpdateTaskAsync(id, taskUpdateDTO);
 
-            if (taskToUpdate == null)
-            {
-                return NotFound();
+            if (updatedTask.IsFailure) {
+                return BadRequest(updatedTask.Errors);
             }
-
-            await _context.Entry(taskToUpdate).Collection(t => t.Tags).LoadAsync();
-            await _context.Entry(taskToUpdate).Reference(t => t.TaskState).LoadAsync();
-
-            var taskState = await _context.TaskState.FindAsync(taskUpdateDTO.TaskStateId);
-
-            if (taskState == null)
-            {
-                return BadRequest($"TaskState with id {taskUpdateDTO.TaskStateId} does not exist");
-            }
-
-            var tags = await _context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync();
-
-            if (tags.Count != taskUpdateDTO.TagIds.Count)
-            {
-                return BadRequest("One or more tags do not exist");
-            }
-
-            taskToUpdate.Title = taskUpdateDTO.Title;
-            taskToUpdate.Description = taskUpdateDTO.Description;
-            taskToUpdate.Deadline = taskUpdateDTO.Deadline;
-            taskToUpdate.TaskStateId = taskUpdateDTO.TaskStateId;
-
-            taskToUpdate.Tags.Clear();
-            foreach (Models.Tag tag in tags)
-            {
-                taskToUpdate.Tags.Add(tag);
-            }
-
-            _context.Task.Update(taskToUpdate);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTask(Guid id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteTask([FromRoute] Guid id)
         {
-            var task = await _context.Task.FindAsync(id);
+            var result = await _taskService.DeleteTask(id);
 
-            if (task == null)
-            {
-                return NotFound();
+            if (result.IsFailure) {
+                return BadRequest(result.Errors);
             }
-
-            _context.Task.Remove(task);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         [HttpPut]
-        public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> idList) {
-            var tasks = await _context.Task.Where(task => idList.Contains(task.Id)).ToListAsync();
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> ids) {
+            var result = await _taskService.DeleteTasks(ids);
 
-            if (tasks == null)
-            {
-                return NotFound();
+            if (result.IsFailure) {
+                return BadRequest(result.Errors);
             }
-
-            _context.Task.RemoveRange(tasks);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }

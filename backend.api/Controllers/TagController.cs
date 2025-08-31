@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using DbContexts;
 using DTOs;
-using Microsoft.EntityFrameworkCore;
+using Services;
 
 namespace Controllers
 {
@@ -9,42 +8,35 @@ namespace Controllers
     [Route("api/tag")]
     public class TagController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private ITagService _tagService;
 
-        public TagController(AppDbContext context) => _context = context;
+        public TagController(ITagService tagService)
+        {
+            _tagService = tagService;
+        }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TagDTO>>> GetTags()
         {
-            var tags = await _context
-                            .Tag
-                            .Select(tag => new TagDTO
-                            {
-                                Id = tag.Id,
-                                Name = tag.Name
-                            })
-                            .ToListAsync();
+            var tags = await _tagService.GetTagsAsync();
 
             return Ok(tags);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TagDTO>> GetTagById(Guid id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<TagDTO>> GetTagById([FromRoute] Guid id)
         {
-            var tag = await _context.Tag.FindAsync(id);
+            var tag = await _tagService.GetTagByIdAsync(id);
 
             if (tag == null)
             {
                 return NotFound();
             }
 
-            var result = new TagDTO
-            {
-                Id = tag.Id,
-                Name = tag.Name
-            };
-
-            return Ok(result);
+            return Ok(tag);
         }
     }
 }

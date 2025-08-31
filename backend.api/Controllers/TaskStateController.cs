@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using DbContexts;
+using Services;
 using DTOs;
-using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
 {
@@ -9,42 +8,34 @@ namespace Controllers
     [Route("api/task-state")]
     public class TaskStateController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private ITaskStateService _taskStateService;
 
-        public TaskStateController(AppDbContext context) => _context = context;
+        public TaskStateController(ITaskStateService taskStateService) {
+            _taskStateService = taskStateService;
+        }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TaskStateDTO>>> GetTaskStates()
         {
-            var taskStates = await _context
-                                    .TaskState
-                                    .Select(taskState => new TaskStateDTO
-                                    {
-                                        Id = taskState.Id,
-                                        Name = taskState.Name
-                                    })
-                                    .ToListAsync();
+            var taskStates = await _taskStateService.GetTaskStatesAsync();
 
             return Ok(taskStates);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TaskStateDTO>> GetTaskStateById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<TaskStateDTO>> GetTaskStateById([FromRoute] int id)
         {
-            var taskState = await _context.TaskState.FindAsync(id);
+            var taskState = await _taskStateService.GetTaskStateByIdAsync(id);
 
             if (taskState == null)
             {
                 return NotFound();
             }
 
-            var result = new TaskStateDTO
-            {
-                Id = taskState.Id,
-                Name = taskState.Name
-            };
-
-            return Ok(result);
+            return Ok(taskState);
         }
     }
 }

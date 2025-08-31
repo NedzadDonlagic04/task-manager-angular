@@ -1,5 +1,6 @@
 using DbContexts;
 using Microsoft.EntityFrameworkCore;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,10 @@ builder.Services.AddCors(options =>
 
 var connectionString = builder.Configuration["DATABASE_URL"] ?? throw new Exception("DATABASE_URL not set");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<ITaskStateService, TaskStateService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 var app = builder.Build();
 

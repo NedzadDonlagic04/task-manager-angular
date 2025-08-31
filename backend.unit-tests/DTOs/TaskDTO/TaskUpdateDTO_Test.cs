@@ -3,7 +3,7 @@ using DTOs;
 using Enums;
 using Validation;
 
-namespace Test.DTOs
+namespace UnitTest.DTOs
 {
     public class TaskUpdateDTO_Test
     {

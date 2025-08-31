@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using DTOs;
 using Validation;
 
-namespace Test.DTOs
+namespace UnitTest.DTOs
 {
     public class TaskCreateDTO_Test
     {

@@ -14,6 +14,7 @@ namespace Controllers
         public TagController(AppDbContext context) => _context = context;
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Staus404NotFound)]
         public async Task<ActionResult<IEnumerable<TagDTO>>> GetTags()
         {
             var tags = await _context

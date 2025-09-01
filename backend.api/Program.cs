@@ -24,6 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITaskStateService, TaskStateService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddHostedService<TaskDeadlineMonitorService>();
 
 var app = builder.Build();
 

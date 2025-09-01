@@ -33,15 +33,16 @@ namespace Services {
         }
 
         public async Task<TaskReadDTO?> GetTaskByIdAsync(Guid id) {
-            var task = await _context.Task.FindAsync(id);
+            var task = await _context
+                            .Task
+                            .Include(task => task.Tags)
+                            .Include(task => task.TaskState)
+                            .FirstOrDefaultAsync(task => task.Id == id);
 
             if (task == null)
             {
                 return null;
             }
-
-            await _context.Entry(task).Collection(t => t.Tags).LoadAsync();
-            await _context.Entry(task).Reference(t => t.TaskState).LoadAsync();
 
             var result = new TaskReadDTO
             {
@@ -81,9 +82,6 @@ namespace Services {
             _context.Task.Add(newTask);
             await _context.SaveChangesAsync();
 
-            await _context.Entry(newTask).Collection(t => t.Tags).LoadAsync();
-            await _context.Entry(newTask).Reference(t => t.TaskState).LoadAsync();
-
             var result = new TaskReadDTO
             {
                 Id = newTask.Id,
@@ -102,21 +100,13 @@ namespace Services {
         {
             var taskToUpdate = await _context
                                     .Task
-                                    .FindAsync(id);
+                                    .Include(task => task.Tags)
+                                    .Include(task => task.TaskState)
+                                    .FirstOrDefaultAsync(task => task.Id == id);
 
             if (taskToUpdate == null)
             {
                 return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
-            }
-
-            await _context.Entry(taskToUpdate).Collection(t => t.Tags).LoadAsync();
-            await _context.Entry(taskToUpdate).Reference(t => t.TaskState).LoadAsync();
-
-            var taskState = await _context.TaskState.FindAsync(taskUpdateDTO.TaskStateId);
-
-            if (taskState == null)
-            {
-                return Result<TaskReadDTO>.Failure($"TaskState with id {taskUpdateDTO.TaskStateId} does not exist");
             }
 
             var tags = await _context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync();
@@ -137,7 +127,6 @@ namespace Services {
                 taskToUpdate.Tags.Add(tag);
             }
 
-            _context.Task.Update(taskToUpdate);
             await _context.SaveChangesAsync();
 
             var updatedTask = new TaskReadDTO()

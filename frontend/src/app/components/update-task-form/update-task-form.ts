@@ -45,6 +45,7 @@ import { MatSelect } from '@angular/material/select';
     ],
     templateUrl: './update-task-form.html',
     styleUrl: './update-task-form.scss',
+    standalone: true,
 })
 export class UpdateTaskForm extends TaskFormBase implements OnInit {
     protected taskStates: TaskStateDTO[] = [];

@@ -49,6 +49,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     templateUrl: './view-tasks-table.html',
     styleUrl: './view-tasks-table.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class ViewTasksTable implements OnInit, AfterViewInit {
     protected readonly NOT_SET_MESSAGE = '<Not set>';

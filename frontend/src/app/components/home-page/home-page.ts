@@ -17,6 +17,7 @@ import { Router, RouterLink } from '@angular/router';
     templateUrl: './home-page.html',
     styleUrl: './home-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class HomePage {
     private router = inject(Router);

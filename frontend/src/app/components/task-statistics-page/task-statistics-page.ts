@@ -14,6 +14,7 @@ import TaskReadDTO from '../../dtos/task-read.dto';
     templateUrl: './task-statistics-page.html',
     styleUrl: './task-statistics-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class TaskStatisticsPage implements AfterViewInit {
     protected taskService = inject(TaskService);

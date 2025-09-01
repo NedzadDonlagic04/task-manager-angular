@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
     imports: [MatButtonModule],
     templateUrl: './task-form-base.html',
     styleUrl: './task-form-base.css',
+    standalone: true,
 })
 export abstract class TaskFormBase implements OnInit {
     private readonly FIVE_MINUTES_IN_MILISECONDS = 5 * 60_000;

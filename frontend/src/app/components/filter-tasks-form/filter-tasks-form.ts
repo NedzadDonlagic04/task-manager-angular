@@ -45,6 +45,7 @@ export interface FilterData {
     ],
     templateUrl: './filter-tasks-form.html',
     styleUrl: './filter-tasks-form.scss',
+    standalone: true,
 })
 export class FilterTasksForm implements OnInit {
     protected readonly filterFormGroup = new UntypedFormGroup({

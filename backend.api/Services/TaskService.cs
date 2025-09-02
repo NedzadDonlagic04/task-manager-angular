@@ -81,6 +81,8 @@ namespace Services {
 
             _context.Task.Add(newTask);
             await _context.SaveChangesAsync();
+            await _context.Entry(newTask).Reference(task => task.TaskState).LoadAsync();
+            await _context.Entry(newTask).Collection(task => task.Tags).LoadAsync();
 
             var result = new TaskReadDTO
             {

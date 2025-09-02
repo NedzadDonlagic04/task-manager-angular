@@ -3,7 +3,7 @@ WORKDIR /src
 COPY ./package*.json ./
 RUN npm install
 COPY ./ ./
-RUN npm run build --omit=dev
+RUN npm run build -- --configuration=docker
 
 FROM nginx:alpine AS app
 WORKDIR /app

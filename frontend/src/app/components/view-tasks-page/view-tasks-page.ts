@@ -7,5 +7,6 @@ import { FilterTasksForm } from '../filter-tasks-form/filter-tasks-form';
     imports: [ViewTasksTable, FilterTasksForm],
     templateUrl: './view-tasks-page.html',
     styleUrl: './view-tasks-page.scss',
+    standalone: true,
 })
 export class ViewTasksPage {}

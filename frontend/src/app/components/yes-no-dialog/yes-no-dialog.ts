@@ -8,6 +8,7 @@ import { ConfirmDialog } from '../../interfaces/confirm-dialog.interface';
     templateUrl: './yes-no-dialog.html',
     styleUrl: './yes-no-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class YesNoDialog {
     public constructor(

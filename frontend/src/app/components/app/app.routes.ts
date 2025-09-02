@@ -1,18 +1,38 @@
 import { Routes } from '@angular/router';
-import { ViewTasksPage } from '../view-tasks-page/view-tasks-page';
-import { AddTaskPage } from '../add-task-page/add-task-page';
-import { TaskStatisticsPage } from '../task-statistics-page/task-statistics-page';
 import { HomePage } from '../home-page/home-page';
-import { UpdateTaskPage } from '../update-task-page/update-task-page';
 
 export const routes: Routes = [
     { path: '', title: 'Home', component: HomePage },
-    { path: 'add-task', title: 'Add Task', component: AddTaskPage },
-    { path: 'view-tasks', title: 'View Tasks', component: ViewTasksPage },
-    { path: 'update/:id', title: 'Update Task', component: UpdateTaskPage },
+    {
+        path: 'add-task',
+        title: 'Add Task',
+        loadComponent: () =>
+            import('../add-task-page/add-task-page').then(
+                (module) => module.AddTaskPage,
+            ),
+    },
+    {
+        path: 'view-tasks',
+        title: 'View Tasks',
+        loadComponent: () =>
+            import('../view-tasks-page/view-tasks-page').then(
+                (module) => module.ViewTasksPage,
+            ),
+    },
+    {
+        path: 'update/:id',
+        title: 'Update Task',
+        loadComponent: () =>
+            import('../update-task-page/update-task-page').then(
+                (module) => module.UpdateTaskPage,
+            ),
+    },
     {
         path: 'task-statistics',
         title: 'Task Statistics',
-        component: TaskStatisticsPage,
+        loadComponent: () =>
+            import('../task-statistics-page/task-statistics-page').then(
+                (module) => module.TaskStatisticsPage,
+            ),
     },
 ];

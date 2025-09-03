@@ -70,27 +70,37 @@ After you setup the projects in the aforementioned folders you should be able to
 
 ## Docker Compose Setup
 
-Create a **.env.db** file in the root of the project, and define the following environment variables inside of it:
+This project uses Docker Compose to run the entire application stack.
+
+### 1. Configure Environment Variables
+
+Before you start, you need to provide the credentials for the PostgreSQL database. For security, these are managed using an environment file.
+
+Create a file named **.env.db** in the root directory of the project. If you change the name of this file make sure you **DO NOT COMMIT THIS FILE TO GIT.**
+
+Contents of the file should be in this format:
 
 ```
-DB_USER=
-DB_PASS=
-DB_PORT=
-DB_NAME=
+DB_USER=your_db_username
+DB_PASS=your_db_password
+DB_PORT=5432
+DB_NAME=your_db_name
 ```
 
-After this is done, make sure you followed the same setup for the [frontend](./frontend) and [backend](./backend.api) projects.
+### 2. Run the Application
 
-Run the command below and the app should be up and running:
+If you have a local PostgreSQL instance running, you may need to stop it to avoid port conflicts.
 
-```
-docker compose --env-file .env.db up
-```
-
-In case you named your environment file **.env** you can exclude the **--env-file .env.db** flag and argument pass.
-
-Also you may have to stop your postgresql instance, there's a few ways to do it, I will put a command for one approach below:
-
-```
+```bash
+# Example for a Linux system
 sudo systemctl stop postgresql
+```
+
+After configuring your environment variables, build and run the entire application with a single command.
+
+The `--env-file` flag is necessary because your environment variables are stored in a file with a custom name.
+If you leave the name just ass **.env** you don't need to pass it like this to the command.
+
+```bash
+docker compose --env-file .env.db up --build
 ```

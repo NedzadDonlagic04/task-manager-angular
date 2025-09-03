@@ -57,7 +57,7 @@ There's no authentication or user system, just a clean CRUD implementation to pr
 
 ## 📋Getting Started
 
-This repo contains a [frontend]('./frontend') and a [backend]('./backend.api') folder, each with its own `README.md` containing specific setup instructions.
+This repo contains a [frontend](./frontend) and a [backend](./backend.api) folder, each with its own `README.md` containing specific setup instructions.
 
 To get started clone the repo:
 

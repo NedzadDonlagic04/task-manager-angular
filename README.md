@@ -59,9 +59,7 @@ There's no authentication or user system, just a clean CRUD implementation to pr
 
 This repo contains a [frontend]('./frontend') and a [backend]('./backend.api') folder, each with its own `README.md` containing specific setup instructions.
 
-To get started:
-
-### 1. Clone the project
+To get started clone the repo:
 
 ```bash
 git clone git@github.com:NedzadDonlagic04/task-manager-angular.git

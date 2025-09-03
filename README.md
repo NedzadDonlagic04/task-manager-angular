@@ -57,7 +57,7 @@ There's no authentication or user system, just a clean CRUD implementation to pr
 
 ## 📋Getting Started
 
-This repo contains a [frontend](./frontend) and a [backend](./backend.api) folder, each with its own `README.md` containing specific setup instructions.
+This repo contains a [frontend](./frontend) and a [backend.api](./backend.api) folder, each with its own `README.md` containing specific setup instructions.
 
 To get started clone the repo:
 
@@ -71,6 +71,10 @@ After you setup the projects in the aforementioned folders you should be able to
 ## Docker Compose Setup
 
 This project uses Docker Compose to run the entire application stack.
+
+### Configure Frontend and Backend
+
+Follow the setup in these 2 projects before continuing.
 
 ### Configure Environment Variables
 

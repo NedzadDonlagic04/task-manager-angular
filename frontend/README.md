@@ -2,8 +2,15 @@
 
 Once the repository is cloned and you're inside the **frontend** directory, run the commands below:
 
+## Restore dependencies:
+
 ```bash
 npm install
+```
+
+## Run the application:
+
+```bash
 npm run start # or alternatively ng serve
 ```
 

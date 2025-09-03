@@ -72,7 +72,7 @@ After you setup the projects in the aforementioned folders you should be able to
 
 This project uses Docker Compose to run the entire application stack.
 
-### 1. Configure Environment Variables
+### Configure Environment Variables
 
 Before you start, you need to provide the credentials for the PostgreSQL database. For security, these are managed using an environment file.
 
@@ -87,7 +87,7 @@ DB_PORT=5432
 DB_NAME=your_db_name
 ```
 
-### 2. Run the Application
+### Run the Application
 
 If you have a local PostgreSQL instance running, you may need to stop it to avoid port conflicts.
 

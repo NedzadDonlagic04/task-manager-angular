@@ -6,3 +6,7 @@ Once the repository is cloned and you're inside the **frontend** directory, run 
 npm install
 npm run start # or alternatively ng serve
 ```
+
+# Docker Setup
+
+There is no additional work needed to use **docker-compose** to run the frontend service. The **docker-compose.yaml** file will build the Docker image and start the container for you automatically.

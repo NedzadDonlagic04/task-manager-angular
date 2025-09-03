@@ -65,3 +65,7 @@ To get started clone the repo:
 git clone git@github.com:NedzadDonlagic04/task-manager-angular.git
 cd task-manager-angular
 ```
+
+After you setup the projects in the aforementioned folders you should be able to run everything without issue.
+
+## Docker Compose Setup

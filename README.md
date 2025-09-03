@@ -25,16 +25,35 @@ Not all tools were strictly necessary, some were included to explore best practi
 
 ---
 
-## 🛠️Features
+## 🚀 Application Features
 
-- ✅ Add tasks
-- 📝 Edit tasks
-- ❌ Delete tasks
-- 📌 Mark tasks as complete or incomplete
+This project is a clean, full-stack implementation designed to showcase core development concepts.
 
-There’s no authentication or user system, just a clean CRUD implementation to practice full-stack architecture and collaboration.
+It includes the following features organized by page:
 
----
+🏠 Home Page
+
+    A clear landing page with a brief overview of the project and a "Getting Started" section.
+
+📝 Task Management
+
+    ✅ Create & Save: Add new tasks.
+
+    📝 View & Edit: A table view where you can see all tasks, with a dedicated page to edit an individual task.
+
+    ❌ Delete: Remove one or more tasks from the database.
+
+    🔍 Filtering & Sorting: Easily search, organize, and find tasks.
+
+    ➡️ Pagination: Navigate through tasks with a paging system for a clean user experience.
+
+    📌 Mark Fail: Tasks are automatically marked as failed if deadline passes.
+
+📊 Statistics
+
+    A simple statistics page with a single chart, demonstrating data visualization with Chart.js.
+
+There's no authentication or user system, just a clean CRUD implementation to practice full-stack architecture and collaboration.
 
 ## 📋Getting Started
 

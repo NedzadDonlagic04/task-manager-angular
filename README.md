@@ -69,3 +69,28 @@ cd task-manager-angular
 After you setup the projects in the aforementioned folders you should be able to run everything without issue.
 
 ## Docker Compose Setup
+
+Create a **.env.db** file in the root of the project, and define the following environment variables inside of it:
+
+```
+DB_USER=
+DB_PASS=
+DB_PORT=
+DB_NAME=
+```
+
+After this is done, make sure you followed the same setup for the [frontend](./frontend) and [backend](./backend.api) projects.
+
+Run the command below and the app should be up and running:
+
+```
+docker compose --env-file .env.db up
+```
+
+In case you named your environment file **.env** you can exclude the **--env-file .env.db** flag and argument pass.
+
+Also you may have to stop your postgresql instance, there's a few ways to do it, I will put a command for one approach below:
+
+```
+sudo systemctl stop postgresql
+```

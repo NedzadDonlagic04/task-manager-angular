@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
     }
 );
 
-var connectionString = builder.Configuration["Database_Url"] ?? throw new Exception("DATABASE_URL not set");
+var connectionString = builder.Configuration["Database_Url"] ?? throw new Exception("Database_Url not set");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<ITagService, TagService>();

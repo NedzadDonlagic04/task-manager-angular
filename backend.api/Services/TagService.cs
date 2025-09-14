@@ -13,7 +13,8 @@ namespace Services {
         public async Task<IEnumerable<TagDTO>> GetTagsAsync() {
             var results = await _context
                                 .Tag
-                                .Select(tag => new TagDTO()
+                                .AsNoTracking()
+                                .Select(tag => new TagDTO
                                 {
                                     Id = tag.Id,
                                     Name = tag.Name
@@ -24,19 +25,17 @@ namespace Services {
         }
 
         public async Task<TagDTO?> GetTagByIdAsync(Guid id) {
-            var tag = await _context.Tag.FindAsync(id);
+            var tag = await _context
+                            .Tag
+                            .AsNoTracking()
+                            .Select(tag => new TagDTO
+                            {
+                                Id = tag.Id,
+                                Name = tag.Name
+                            })
+                            .FirstOrDefaultAsync(tag => tag.Id == id);
 
-            if (tag == null) {
-                return null;
-            }
-
-            var result = new TagDTO()
-            {
-                Id = tag.Id,
-                Name = tag.Name
-            };
-
-            return result;
+            return tag;
         }
     }
 }

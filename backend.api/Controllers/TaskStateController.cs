@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Services;
 using DTOs;
+
+using Microsoft.AspNetCore.Mvc;
+
+using Services;
 
 namespace Controllers
 {
@@ -8,9 +10,10 @@ namespace Controllers
     [Route("api/task-state")]
     public class TaskStateController : ControllerBase
     {
-        private ITaskStateService _taskStateService;
+        private readonly ITaskStateService _taskStateService;
 
-        public TaskStateController(ITaskStateService taskStateService) {
+        public TaskStateController(ITaskStateService taskStateService)
+        {
             _taskStateService = taskStateService;
         }
 

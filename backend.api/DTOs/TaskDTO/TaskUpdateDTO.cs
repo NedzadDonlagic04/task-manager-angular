@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+
 using Enums;
+
 using Validation;
 
 namespace DTOs

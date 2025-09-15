@@ -1,17 +1,24 @@
-using DTOs;
-using Utils;
 using DbContexts;
+
+using DTOs;
+
 using Microsoft.EntityFrameworkCore;
 
-namespace Services {
-    public class TaskStateService : ITaskStateService {
+using Utils;
+
+namespace Services
+{
+    public class TaskStateService : ITaskStateService
+    {
         private readonly AppDbContext _context;
 
-        public TaskStateService(AppDbContext context) {
+        public TaskStateService(AppDbContext context)
+        {
             _context = context;
         }
 
-        public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync() {
+        public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync()
+        {
             var results = await _context
                                 .TaskState
                                 .AsNoTracking()
@@ -25,7 +32,8 @@ namespace Services {
             return results;
         }
 
-        public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id) {
+        public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id)
+        {
             var taskState = await _context
                                    .TaskState
                                    .AsNoTracking()
@@ -36,7 +44,8 @@ namespace Services {
                                    })
                                    .FirstOrDefaultAsync(taskState => taskState.Id == id);
 
-            if (taskState == null) {
+            if (taskState == null)
+            {
                 return Result<TaskStateDTO>.Failure("Task state not found");
             }
 

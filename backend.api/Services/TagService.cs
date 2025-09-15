@@ -1,17 +1,24 @@
-using DTOs;
-using Utils;
 using DbContexts;
+
+using DTOs;
+
 using Microsoft.EntityFrameworkCore;
 
-namespace Services {
-    public class TagService : ITagService {
+using Utils;
+
+namespace Services
+{
+    public class TagService : ITagService
+    {
         private readonly AppDbContext _context;
 
-        public TagService(AppDbContext context) {
+        public TagService(AppDbContext context)
+        {
             _context = context;
         }
 
-        public async Task<IEnumerable<TagDTO>> GetTagsAsync() {
+        public async Task<IEnumerable<TagDTO>> GetTagsAsync()
+        {
             var results = await _context
                                 .Tag
                                 .AsNoTracking()
@@ -25,7 +32,8 @@ namespace Services {
             return results;
         }
 
-        public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id) {
+        public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id)
+        {
             var tag = await _context
                             .Tag
                             .AsNoTracking()
@@ -36,7 +44,8 @@ namespace Services {
                             })
                             .FirstOrDefaultAsync(tag => tag.Id == id);
 
-            if (tag == null) {
+            if (tag == null)
+            {
                 return Result<TagDTO>.Failure("Tag not found");
             }
 

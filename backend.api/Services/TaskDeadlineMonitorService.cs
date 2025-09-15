@@ -1,9 +1,13 @@
 using DbContexts;
+
 using Enums;
+
 using Microsoft.EntityFrameworkCore;
 
-namespace Services {
-    public class TaskDeadlineMonitorService : BackgroundService {
+namespace Services
+{
+    public class TaskDeadlineMonitorService : BackgroundService
+    {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<TaskDeadlineMonitorService> _logger;
 

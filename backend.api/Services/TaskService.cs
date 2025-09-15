@@ -125,7 +125,7 @@ namespace Services {
                 taskToUpdate.Tags.Add(tag);
             }
 
-            await _context.Entry(taskToUpdate.TaskState).ReloadAsync();
+            await _context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync();
             await _context.SaveChangesAsync();
 
             var updatedTask = new TaskReadDTO()

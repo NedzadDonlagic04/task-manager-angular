@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Services;
 using DTOs;
+
+using Microsoft.AspNetCore.Mvc;
+
+using Services;
 
 namespace Controllers
 {
@@ -8,9 +10,10 @@ namespace Controllers
     [Route("api/task")]
     public class TaskController : ControllerBase
     {
-        private ITaskService _taskService;
+        private readonly ITaskService _taskService;
 
-        public TaskController(ITaskService taskService) {
+        public TaskController(ITaskService taskService)
+        {
             _taskService = taskService;
         }
 
@@ -45,7 +48,8 @@ namespace Controllers
         {
             var createdTask = await _taskService.CreateTaskAsync(taskCreateDTO);
 
-            if (createdTask.IsFailure) {
+            if (createdTask.IsFailure)
+            {
                 return BadRequest(createdTask.Errors);
             }
 
@@ -59,7 +63,8 @@ namespace Controllers
         {
             var updatedTask = await _taskService.UpdateTaskAsync(id, taskUpdateDTO);
 
-            if (updatedTask.IsFailure) {
+            if (updatedTask.IsFailure)
+            {
                 return BadRequest(updatedTask.Errors);
             }
 
@@ -73,7 +78,8 @@ namespace Controllers
         {
             var result = await _taskService.DeleteTask(id);
 
-            if (result.IsFailure) {
+            if (result.IsFailure)
+            {
                 return BadRequest(result.Errors);
             }
 
@@ -83,10 +89,12 @@ namespace Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> ids) {
+        public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> ids)
+        {
             var result = await _taskService.DeleteTasks(ids);
 
-            if (result.IsFailure) {
+            if (result.IsFailure)
+            {
                 return BadRequest(result.Errors);
             }
 

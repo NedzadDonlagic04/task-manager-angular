@@ -1,18 +1,26 @@
-using DTOs;
 using DbContexts;
-using Microsoft.EntityFrameworkCore;
-using Utils;
+
+using DTOs;
+
 using Enums;
 
-namespace Services {
-    public class TaskService : ITaskService {
+using Microsoft.EntityFrameworkCore;
+
+using Utils;
+
+namespace Services
+{
+    public class TaskService : ITaskService
+    {
         private readonly AppDbContext _context;
 
-        public TaskService(AppDbContext context) {
+        public TaskService(AppDbContext context)
+        {
             _context = context;
         }
 
-        public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync() {
+        public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync()
+        {
             var results = await _context
                                 .Task
                                 .AsNoTracking()
@@ -33,7 +41,8 @@ namespace Services {
             return results;
         }
 
-        public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id) {
+        public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id)
+        {
             var task = await _context
                             .Task
                             .AsNoTracking()
@@ -51,7 +60,8 @@ namespace Services {
                             })
                             .FirstOrDefaultAsync(task => task.Id == id);
 
-            if (task == null) {
+            if (task == null)
+            {
                 return Result<TaskReadDTO>.Failure("Task not found");
             }
 
@@ -146,7 +156,8 @@ namespace Services {
             return Result<TaskReadDTO>.Success(updatedTask);
         }
 
-        public async Task<Result> DeleteTask(Guid id) {
+        public async Task<Result> DeleteTask(Guid id)
+        {
             var task = await _context
                             .Task
                             .FindAsync(id);
@@ -162,7 +173,8 @@ namespace Services {
             return Result.Success();
         }
 
-        public async Task<Result> DeleteTasks(List<Guid> ids) {
+        public async Task<Result> DeleteTasks(List<Guid> ids)
+        {
             var tasks = await _context
                             .Task
                             .Where(task => ids.Contains(task.Id))

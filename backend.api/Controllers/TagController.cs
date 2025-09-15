@@ -1,5 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using DTOs;
+
+using Microsoft.AspNetCore.Mvc;
+
 using Services;
 
 namespace Controllers
@@ -8,7 +10,7 @@ namespace Controllers
     [Route("api/tag")]
     public class TagController : ControllerBase
     {
-        private ITagService _tagService;
+        private readonly ITagService _tagService;
 
         public TagController(ITagService tagService)
         {

@@ -1,8 +1,11 @@
 using DTOs;
+
 using Utils;
 
-namespace Services {
-    public interface ITaskService {
+namespace Services
+{
+    public interface ITaskService
+    {
         Task<IEnumerable<TaskReadDTO>> GetTasksAsync();
         Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id);
         Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateDTO taskCreateDTO);

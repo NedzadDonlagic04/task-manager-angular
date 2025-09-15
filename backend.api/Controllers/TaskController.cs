@@ -26,16 +26,16 @@ namespace Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TagDTO>> GetTaskById([FromRoute] Guid id)
+        public async Task<ActionResult<TaskReadDTO>> GetTaskById([FromRoute] Guid id)
         {
             var task = await _taskService.GetTaskByIdAsync(id);
 
-            if (task == null)
+            if (task.IsFailure)
             {
                 return NotFound();
             }
 
-            return Ok(task);
+            return Ok(task.Value);
         }
 
         [HttpPost]

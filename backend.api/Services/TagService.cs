@@ -1,4 +1,5 @@
 using DTOs;
+using Utils;
 using DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ namespace Services {
             return results;
         }
 
-        public async Task<TagDTO?> GetTagByIdAsync(Guid id) {
+        public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id) {
             var tag = await _context
                             .Tag
                             .AsNoTracking()
@@ -35,7 +36,11 @@ namespace Services {
                             })
                             .FirstOrDefaultAsync(tag => tag.Id == id);
 
-            return tag;
+            if (tag == null) {
+                return Result<TagDTO>.Failure("Tag not found");
+            }
+
+            return Result<TagDTO>.Success(tag);
         }
     }
 }

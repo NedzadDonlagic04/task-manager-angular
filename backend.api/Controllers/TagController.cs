@@ -31,12 +31,12 @@ namespace Controllers
         {
             var tag = await _tagService.GetTagByIdAsync(id);
 
-            if (tag == null)
+            if (tag.IsFailure)
             {
                 return NotFound();
             }
 
-            return Ok(tag);
+            return Ok(tag.Value);
         }
     }
 }

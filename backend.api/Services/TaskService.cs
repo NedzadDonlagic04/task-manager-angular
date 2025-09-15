@@ -33,7 +33,7 @@ namespace Services {
             return results;
         }
 
-        public async Task<TaskReadDTO?> GetTaskByIdAsync(Guid id) {
+        public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id) {
             var task = await _context
                             .Task
                             .AsNoTracking()
@@ -51,7 +51,11 @@ namespace Services {
                             })
                             .FirstOrDefaultAsync(task => task.Id == id);
 
-            return task;
+            if (task == null) {
+                return Result<TaskReadDTO>.Failure("Task not found");
+            }
+
+            return Result<TaskReadDTO>.Success(task);
         }
 
         public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateDTO taskCreateDTO)

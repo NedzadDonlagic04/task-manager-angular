@@ -30,12 +30,12 @@ namespace Controllers
         {
             var taskState = await _taskStateService.GetTaskStateByIdAsync(id);
 
-            if (taskState == null)
+            if (taskState.IsFailure)
             {
                 return NotFound();
             }
 
-            return Ok(taskState);
+            return Ok(taskState.Value);
         }
     }
 }

@@ -1,4 +1,5 @@
 using DTOs;
+using Utils;
 using DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ namespace Services {
             return results;
         }
 
-        public async Task<TaskStateDTO?> GetTaskStateByIdAsync(int id) {
+        public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id) {
             var taskState = await _context
                                    .TaskState
                                    .AsNoTracking()
@@ -35,7 +36,11 @@ namespace Services {
                                    })
                                    .FirstOrDefaultAsync(taskState => taskState.Id == id);
 
-            return taskState;
+            if (taskState == null) {
+                return Result<TaskStateDTO>.Failure("Task state not found");
+            }
+
+            return Result<TaskStateDTO>.Success(taskState);
         }
     }
 }

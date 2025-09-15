@@ -15,6 +15,7 @@ namespace Services {
         public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync() {
             var results = await _context
                                 .Task
+                                .AsNoTracking()
                                 .Include(task => task.Tags)
                                 .Include(task => task.TaskState)
                                 .Select(task => new TaskReadDTO
@@ -35,27 +36,22 @@ namespace Services {
         public async Task<TaskReadDTO?> GetTaskByIdAsync(Guid id) {
             var task = await _context
                             .Task
+                            .AsNoTracking()
                             .Include(task => task.Tags)
                             .Include(task => task.TaskState)
+                            .Select(task => new TaskReadDTO
+                            {
+                                Id = task.Id,
+                                Title = task.Title,
+                                Description = task.Description,
+                                Deadline = task.Deadline,
+                                Created_At = task.Created_At,
+                                TaskStateName = task.TaskState.Name,
+                                TagNames = task.Tags.Select(tag => tag.Name).ToList()
+                            })
                             .FirstOrDefaultAsync(task => task.Id == id);
 
-            if (task == null)
-            {
-                return null;
-            }
-
-            var result = new TaskReadDTO
-            {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                Deadline = task.Deadline,
-                Created_At = task.Created_At,
-                TaskStateName = task.TaskState.Name,
-                TagNames = task.Tags.Select(tag => tag.Name).ToList()
-            };
-
-            return result;
+            return task;
         }
 
         public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateDTO taskCreateDTO)
@@ -129,6 +125,7 @@ namespace Services {
                 taskToUpdate.Tags.Add(tag);
             }
 
+            await _context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync();
             await _context.SaveChangesAsync();
 
             var updatedTask = new TaskReadDTO()

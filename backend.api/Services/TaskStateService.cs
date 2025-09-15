@@ -13,7 +13,8 @@ namespace Services {
         public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync() {
             var results = await _context
                                 .TaskState
-                                .Select(taskState => new TaskStateDTO()
+                                .AsNoTracking()
+                                .Select(taskState => new TaskStateDTO
                                 {
                                     Id = taskState.Id,
                                     Name = taskState.Name
@@ -24,19 +25,17 @@ namespace Services {
         }
 
         public async Task<TaskStateDTO?> GetTaskStateByIdAsync(int id) {
-            var taskState = await _context.TaskState.FindAsync(id);
+            var taskState = await _context
+                                   .TaskState
+                                   .AsNoTracking()
+                                   .Select(taskState => new TaskStateDTO
+                                   {
+                                       Id = taskState.Id,
+                                       Name = taskState.Name
+                                   })
+                                   .FirstOrDefaultAsync(taskState => taskState.Id == id);
 
-            if (taskState == null) {
-                return null;
-            }
-
-            var result = new TaskStateDTO()
-            {
-                Id = taskState.Id,
-                Name = taskState.Name
-            };
-
-            return result;
+            return taskState;
         }
     }
 }

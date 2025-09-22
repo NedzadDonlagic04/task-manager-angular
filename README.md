@@ -26,7 +26,7 @@ Not all tools were strictly necessary, some were included just because we wanted
 
 ## Application Features
 
-Simple CRUD functionality for tasks, frontend and backend validation and frontend filtering.
+CRUD functionality for tasks, frontend and backend validation and frontend filtering.
 
 ## Getting Started
 

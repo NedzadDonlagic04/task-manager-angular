@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import TaskCreateDTO from '../dtos/task-create.dto';
 import TaskReadDTO from '../dtos/task-read.dto';
@@ -11,8 +11,7 @@ import { environment } from '../environments/environment';
 })
 export class TaskService {
     private taskApiUrl = `${environment.apiUrl}/task`;
-
-    public constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     public getTask(taskId: string): Observable<TaskReadDTO> {
         return this.http.get<TaskReadDTO>(`${this.taskApiUrl}/${taskId}`);
@@ -33,11 +32,11 @@ export class TaskService {
         return this.http.put(`${this.taskApiUrl}/${taskId}`, taskData);
     }
 
-	public deleteTask(taskId: string): Observable<any> {
-		return this.http.delete(`${this.taskApiUrl}/${taskId}`);
-	}
+    public deleteTask(taskId: string): Observable<any> {
+        return this.http.delete(`${this.taskApiUrl}/${taskId}`);
+    }
 
     public deleteMultipleTasks(taskIdList: string[]): Observable<any> {
-        return this.http.put(this.taskApiUrl, taskIdList)
+        return this.http.put(this.taskApiUrl, taskIdList);
     }
 }

@@ -79,8 +79,6 @@
     }
 }
 
-// === DARK THEME SUPPORT using :host-context ===
-
 :host-context(.dark-theme) .home-container .welcome-card mat-card {
     background-color: #1a1a1a;
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);

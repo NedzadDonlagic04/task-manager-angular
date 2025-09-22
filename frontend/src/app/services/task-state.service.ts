@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import TaskStateDTO from '../dtos/task-state.dto';
@@ -9,8 +9,7 @@ import TaskStateDTO from '../dtos/task-state.dto';
 })
 export class TaskStateService {
     private tagApiUrl = `${environment.apiUrl}/task-state`;
-
-    public constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     public getTaskStates(): Observable<TaskStateDTO[]> {
         return this.http.get<TaskStateDTO[]>(this.tagApiUrl);

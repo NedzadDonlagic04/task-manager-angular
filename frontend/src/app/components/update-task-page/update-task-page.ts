@@ -5,7 +5,7 @@ import { UpdateTaskForm } from '../update-task-form/update-task-form';
     selector: 'app-update-task-page',
     imports: [UpdateTaskForm],
     templateUrl: './update-task-page.html',
-    styleUrl: './update-task-page.css',
+    styleUrl: './update-task-page.scss',
     standalone: true,
 })
 export class UpdateTaskPage {}

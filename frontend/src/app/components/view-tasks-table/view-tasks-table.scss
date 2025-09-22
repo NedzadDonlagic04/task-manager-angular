@@ -4,7 +4,6 @@
 :host {
     display: block;
 
-    // === Wrapper enables horizontal scroll on small screens ===
     .table-wrapper {
         width: 100%;
         overflow-x: auto;
@@ -12,7 +11,7 @@
         border-radius: 8px;
 
         mat-table {
-            min-width: 768px; // prevents column collapse
+            min-width: 768px;
         }
     }
 
@@ -40,7 +39,6 @@
         transition: background-color 0.2s ease;
     }
 
-    // === Checkbox Column (minimal) ===
     mat-header-cell.checkbox-column,
     mat-cell.checkbox-column {
         width: 48px;
@@ -53,7 +51,6 @@
         }
     }
 
-    // === Task Column Styling (wide) ===
     mat-header-cell.column-title,
     mat-cell.column-title {
         width: 100%;
@@ -82,7 +79,6 @@
         }
     }
 
-    // === Actions Column (fit-content + spacing) ===
     mat-header-cell.column-actions,
     mat-cell.column-actions {
         white-space: nowrap;
@@ -91,7 +87,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        gap: 0.5rem; // Ensures spacing between buttons
+        gap: 0.5rem;
 
         button[mat-icon-button] {
             padding: 0.5rem;
@@ -109,7 +105,6 @@
         }
     }
 
-    // === Tag/State Badge Containers ===
     mat-cell.column-tags,
     mat-cell.column-state {
         display: flex;
@@ -118,7 +113,6 @@
         align-items: center;
     }
 
-    // === LIGHT THEME ===
     :host-context(body) {
         mat-table {
             background-color: #fff;
@@ -162,7 +156,6 @@
         }
     }
 
-    // === DARK THEME ===
     :host-context(body.dark-theme) {
         mat-table {
             background-color: mat.m2-get-color-from-palette($dark-primary, 700);
@@ -204,7 +197,6 @@
     }
 }
 
-// === Badge Styles ===
 .badge {
     display: inline-block;
     padding: 0.25rem 0.5rem;
@@ -264,7 +256,6 @@
     border: 1px solid #e0c6a7;
 }
 
-// Reusable button style for actions like Add, Update, Delete
 .action-button {
     display: inline-flex;
     align-items: center;
@@ -297,7 +288,6 @@
     }
 }
 
-// Dark theme overrides
 :host-context(.dark-theme) {
     .action-button {
         background-color: $dark-accent-color;

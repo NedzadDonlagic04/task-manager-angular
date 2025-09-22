@@ -3,7 +3,6 @@
         <span class="app-title">OverEngineered Task Manager</span>
         <span class="flex-spacer"></span>
 
-        <!-- Desktop Navigation -->
         <nav class="nav-buttons d-none d-md-flex align-items-center gap-2">
             @for (routerLink of routerLinks; track routerLink.path) { @if
             (routerLink.path !== "update/:id") {
@@ -17,7 +16,6 @@
             </button>
             } }
 
-            <!-- Theme toggle -->
             <button
                 mat-icon-button
                 aria-label="Toggle dark mode"
@@ -30,7 +28,6 @@
             </button>
         </nav>
 
-        <!-- Mobile Hamburger -->
         <div class="d-flex d-md-none">
             <button
                 mat-icon-button
@@ -43,7 +40,6 @@
     </div>
 </mat-toolbar>
 
-<!-- Mobile Menu -->
 <mat-menu #mobileMenu="matMenu" class="mobile-menu">
     @for (routerLink of routerLinks; track routerLink.path) { @if
     (routerLink.path !== "update/:id") {
@@ -59,12 +55,10 @@
     </button>
 </mat-menu>
 
-<!-- Main content -->
 <main class="main-content container mt-4">
     <router-outlet />
 </main>
 
-<!-- Footer -->
 <footer class="app-footer text-center py-3 mt-auto">
     <div class="container">
         © 2025 Goofy little project by a couple of friends.<br />

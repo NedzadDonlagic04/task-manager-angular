@@ -65,7 +65,6 @@
             }
         }
 
-        // === Form Submit Button ===
         div:last-of-type {
             margin-top: 2rem;
             display: flex;
@@ -97,7 +96,6 @@
         }
     }
 
-    // === Dark theme overrides ===
     :host-context(.dark-theme) mat-card {
         background-color: lighten($dark-primary-color, 8%);
         color: #f5f5f5;
@@ -133,7 +131,6 @@
         }
     }
 
-    // === Responsive Layout ===
     @media (max-width: 600px) {
         mat-card {
             padding: 1rem;

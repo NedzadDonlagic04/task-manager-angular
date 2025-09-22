@@ -2,7 +2,6 @@
 @use 'sass:color';
 @use './../../../theme-variables' as *;
 
-// === Theme colors ===
 $light-bg: mat.m2-get-color-from-palette($light-primary, 50);
 $light-toolbar-bg: mat.m2-get-color-from-palette($light-primary, 500);
 $light-toolbar-text: #fff;
@@ -23,26 +22,23 @@ $dark-button-border-hover: mat.m2-get-color-from-palette($dark-accent, 500);
 $light-shadow: rgba(0, 0, 0, 0.1);
 $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
 
-// === Layout wrapper ===
 :host {
     display: flex;
     flex-direction: column;
-    /* Removed height and overflow to allow window scrolling */
     background-color: $light-bg;
-    min-height: 100vh; // ensure full height
+    min-height: 100vh;
 }
 
 :host-context(.dark-theme) {
     background-color: $dark-bg;
 }
 
-// === Toolbar ===
 .app-toolbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 64px; // standard Angular Material toolbar height
+    height: 64px;
     z-index: 1000;
     background-color: $light-toolbar-bg;
     color: $light-toolbar-text;
@@ -58,7 +54,7 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
 .toolbar-content {
     display: flex;
     align-items: center;
-    justify-content: space-between; // fix spacing of title and buttons
+    justify-content: space-between;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -83,19 +79,16 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
     }
 }
 
-// === Main Content ===
 .main-content {
     flex: 1 1 auto;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    padding-top: 64px; // push content below fixed toolbar
+    padding-top: 64px;
     box-sizing: border-box;
-    overflow: visible; // allow normal scrolling on window, not clipped
+    overflow: visible;
 }
-
-// === Footer ===
 
 .app-footer {
     background-color: $light-footer-bg;
@@ -109,7 +102,6 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
     box-shadow: 0 -2px 6px $dark-shadow;
 }
 
-// === Button styles ===
 .button-custom-style {
     border-radius: 1.5rem !important;
     font-weight: 600;
@@ -120,7 +112,6 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
         background-color 0.3s ease;
     position: relative;
 
-    // Light theme (default)
     background-color: $light-button-bg !important;
     color: $light-button-text !important;
 
@@ -138,7 +129,6 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
     }
 }
 
-// Dark theme overrides using :host-context
 :host-context(.dark-theme) .button-custom-style {
     background-color: $dark-button-bg !important;
     color: $dark-button-text !important;
@@ -179,7 +169,7 @@ $dark-shadow: mat.m2-get-color-from-palette($dark-accent, 500);
     }
 
     .main-content {
-        padding-top: 64px; // same offset on mobile
+        padding-top: 64px;
         padding-left: 0.5rem;
         padding-right: 0.5rem;
         overflow-y: auto;

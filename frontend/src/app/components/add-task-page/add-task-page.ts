@@ -5,7 +5,7 @@ import { CreateTaskForm } from '../create-task-form/create-task-form';
     selector: 'app-add-task-page',
     imports: [CreateTaskForm],
     templateUrl: './add-task-page.html',
-    styleUrl: './add-task-page.css',
+    styleUrl: './add-task-page.scss',
     standalone: true,
 })
 export class AddTaskPage {}

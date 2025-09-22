@@ -9,7 +9,8 @@
                 "@schematics/angular:component": {
                     "style": "scss",
                     "changeDetection": "OnPush",
-                    "path": "src/app/components"
+                    "path": "src/app/components",
+                    "skipTests": true
                 },
                 "@schematics/angular:service": {
                     "path": "src/services"

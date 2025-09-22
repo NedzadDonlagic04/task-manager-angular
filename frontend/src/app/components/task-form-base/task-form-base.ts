@@ -17,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
     selector: 'app-task-form-base',
     imports: [MatButtonModule],
     templateUrl: './task-form-base.html',
-    styleUrl: './task-form-base.css',
+    styleUrl: './task-form-base.scss',
     standalone: true,
 })
 export abstract class TaskFormBase implements OnInit {

@@ -41,7 +41,6 @@
             }
         }
 
-        // Responsive layout
         @media (max-width: 768px) {
             flex-direction: column;
 
@@ -67,7 +66,6 @@
         color: mat.m2-get-color-from-palette($light-primary, 600);
     }
 
-    // === Dark Theme Support ===
     :host-context(body.dark-theme) {
         .tags-section .tags-label {
             color: #fff;

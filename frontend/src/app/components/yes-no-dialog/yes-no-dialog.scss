@@ -31,7 +31,6 @@
         }
     }
 
-    // Dark theme adjustments
     :host-context(body.dark-theme) {
         h1[mat-dialog-title] {
             color: mat.m2-get-color-from-palette($dark-primary, 100);
@@ -74,7 +73,6 @@
         }
     }
 
-    // Responsive tweaks (optional)
     @media (max-width: 480px) {
         div[mat-dialog-actions] {
             flex-direction: column;

@@ -1,10 +1,6 @@
-// Import Angular Material styles and theme variables
 @use '@angular/material' as mat;
-@use './../../../theme-variables' as *; // Ensure the correct path
+@use './../../../theme-variables' as *;
 
-// Global styles for dark and light themes
-
-// Light theme chart container styles
 .chart-container {
     width: 100%;
     max-width: 1200px;
@@ -25,10 +21,7 @@
     text-align: center;
     font-size: 1.5rem;
     font-weight: bold;
-    color: mat.m2-get-color-from-palette(
-        $light-primary,
-        900
-    ); // Dark text for light theme
+    color: mat.m2-get-color-from-palette($light-primary, 900);
     margin-bottom: 0.5rem;
 }
 
@@ -39,32 +32,21 @@
     transition: background-color 0.3s ease;
 }
 
-// === Dark Theme Chart Container ===
 :host-context(.dark-theme) {
     .chart-container {
-        background-color: mat.m2-get-color-from-palette(
-            $dark-primary,
-            700
-        ); // Dark background
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15); // Soft shadow for dark theme
+        background-color: mat.m2-get-color-from-palette($dark-primary, 700);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
     }
 
     .chart-title {
-        color: mat.m2-get-color-from-palette(
-            $dark-primary,
-            100
-        ); // Light text for dark theme
+        color: mat.m2-get-color-from-palette($dark-primary, 100);
     }
 
     #task-line-chart {
-        background-color: mat.m2-get-color-from-palette(
-            $dark-primary,
-            600
-        ); // Slightly dark background for chart
+        background-color: mat.m2-get-color-from-palette($dark-primary, 600);
     }
 }
 
-// Additional styling for the chart itself if needed, such as customizing borders or tooltips
 .chart-container {
     .chart-title {
         font-size: 1.6rem;
@@ -72,17 +54,16 @@
     }
 
     #task-line-chart {
-        border: 1px solid mat.m2-get-color-from-palette($light-primary, 300); // Light border for chart (adjustable)
+        border: 1px solid mat.m2-get-color-from-palette($light-primary, 300);
     }
 }
 
-// === Dark Mode Customization ===
 :host-context(.dark-theme) {
     .chart-container {
-        border: 1px solid mat.m2-get-color-from-palette($dark-accent, 400); // Subtle accent border for dark theme
+        border: 1px solid mat.m2-get-color-from-palette($dark-accent, 400);
     }
 
     #task-line-chart {
-        border: 1px solid mat.m2-get-color-from-palette($dark-accent, 400); // Border color for dark theme
+        border: 1px solid mat.m2-get-color-from-palette($dark-accent, 400);
     }
 }

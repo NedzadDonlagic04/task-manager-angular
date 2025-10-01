@@ -7,6 +7,7 @@ import {
 import { Chart } from 'chart.js/auto';
 import { TaskService } from '../../services/task.service';
 import TaskReadDTO from '../../dtos/task-read.dto';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-task-statistics-page',
@@ -27,7 +28,7 @@ export class TaskStatisticsPage implements AfterViewInit {
                 this.tasks = tasks;
                 this.createChart();
             },
-            error: (error: any) =>
+            error: (error: HttpErrorResponse) =>
                 console.error(
                     `Error when fetching tasks for chart -> ${error}`,
                 ),

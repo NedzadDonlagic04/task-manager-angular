@@ -29,6 +29,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-view-tasks-table',
@@ -105,7 +106,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
                 );
                 this.tasksDataSource.data = tasksTableRowData;
             },
-            error: (error: any) =>
+            error: (error: HttpErrorResponse) =>
                 console.error(`Error while loading tags -> ${error}`),
         });
     }
@@ -259,7 +260,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
                     },
                 );
             },
-            error: (error: any) => {
+            error: (error: HttpErrorResponse) => {
                 this.matSnackBar.open('Failed to delete tasks.', 'Dismiss', {
                     duration: 5000,
                     panelClass: ['error-snackbar'],
@@ -278,7 +279,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
                     panelClass: ['success-snackbar'],
                 });
             },
-            error: (error: any) => {
+            error: (error: HttpErrorResponse) => {
                 this.matSnackBar.open('Failed to delete task.', 'Dismiss', {
                     duration: 5000,
                     panelClass: ['error-snackbar'],

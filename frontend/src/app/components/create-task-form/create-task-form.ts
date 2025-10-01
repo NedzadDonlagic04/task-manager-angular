@@ -11,6 +11,7 @@ import {
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-create-task-form',
@@ -55,7 +56,7 @@ export class CreateTaskForm extends TaskFormBase {
                 });
                 this.taskFormGroup.reset(this.initialFormValues);
             },
-            error: (error: any) => {
+            error: (error: HttpErrorResponse) => {
                 this.matSnackBar.open('Failed to save task.', 'Dismiss', {
                     duration: 5000,
                     panelClass: ['error-snackbar'],

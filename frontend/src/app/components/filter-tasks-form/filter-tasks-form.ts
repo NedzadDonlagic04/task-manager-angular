@@ -19,6 +19,7 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { startDateBeforeEndDateValidator } from '../../validators/start-date-before-end-date.validator';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface FilterData {
     searchTerm: string;
@@ -130,7 +131,7 @@ export class FilterTasksForm implements OnInit {
 
                 this.onValueChanged.emit(JSON.stringify(filterData));
             },
-            error: (error: any) =>
+            error: (error: HttpErrorResponse) =>
                 console.error(`Filter form value changed error -> ${error}`),
         });
 

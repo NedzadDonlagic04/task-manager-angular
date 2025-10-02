@@ -77,7 +77,7 @@ export class TaskStatisticsPage implements AfterViewInit {
         const tasksPerMonth = new Array(12).fill(0);
 
         for (const task of tasks) {
-            const createdAt = new Date(task.created_At);
+            const createdAt = new Date(task.createdAt);
             const month = createdAt.getMonth();
 
             if (month >= 0 && month < 12) {

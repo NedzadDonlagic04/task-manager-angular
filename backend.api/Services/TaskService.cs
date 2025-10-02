@@ -32,7 +32,7 @@ namespace Services
                                     Title = task.Title,
                                     Description = task.Description,
                                     Deadline = task.Deadline,
-                                    Created_At = task.Created_At,
+                                    CreatedAt = task.CreatedAt,
                                     TaskStateName = task.TaskState.Name,
                                     TagNames = task.Tags.Select(tag => tag.Name).ToList()
                                 })
@@ -54,7 +54,7 @@ namespace Services
                                 Title = task.Title,
                                 Description = task.Description,
                                 Deadline = task.Deadline,
-                                Created_At = task.Created_At,
+                                CreatedAt = task.CreatedAt,
                                 TaskStateName = task.TaskState.Name,
                                 TagNames = task.Tags.Select(tag => tag.Name).ToList()
                             })
@@ -100,7 +100,7 @@ namespace Services
                 Title = newTask.Title,
                 Description = newTask.Description,
                 Deadline = newTask.Deadline,
-                Created_At = newTask.Created_At,
+                CreatedAt = newTask.CreatedAt,
                 TaskStateName = newTask.TaskState.Name,
                 TagNames = newTask.Tags.Select(tag => tag.Name).ToList()
             };
@@ -148,7 +148,7 @@ namespace Services
                 Title = taskToUpdate.Title,
                 Description = taskToUpdate.Description,
                 Deadline = taskToUpdate.Deadline,
-                Created_At = taskToUpdate.Created_At,
+                CreatedAt = taskToUpdate.CreatedAt,
                 TaskStateName = taskToUpdate.TaskState.Name,
                 TagNames = taskToUpdate.Tags.Select(tag => tag.Name).ToList()
             };

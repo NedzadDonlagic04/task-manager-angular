@@ -26,7 +26,7 @@ export class TaskTableRowData {
     }
 
     public get createdAt(): string {
-        return this.task.created_At;
+        return this.task.createdAt;
     }
 
     public get taskStateName(): string {

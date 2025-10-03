@@ -26,32 +26,31 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
     ],
 })
 export class App implements OnInit {
-    private readonly themeStorageKey = 'isDarkTheme';
-
     protected routerLinks = routes;
     protected isDarkTheme = false;
 
-    private storageService = inject(StorageService);
+    private readonly _themeStorageKey = 'isDarkTheme';
+    private _storageService = inject(StorageService);
 
     public ngOnInit(): void {
-        const themeStorageValue = this.storageService.getItem<boolean>(
-            this.themeStorageKey,
+        const themeStorageValue = this._storageService.getItem<boolean>(
+            this._themeStorageKey,
         );
 
         if (themeStorageValue) {
             this.isDarkTheme = themeStorageValue;
-            this.applyCSSForTheme();
+            this._applyCSSForTheme();
         }
     }
 
     protected toggleDarkTheme(): void {
         this.isDarkTheme = !this.isDarkTheme;
-        this.storageService.setItem(this.themeStorageKey, this.isDarkTheme);
+        this._storageService.setItem(this._themeStorageKey, this.isDarkTheme);
 
-        this.applyCSSForTheme();
+        this._applyCSSForTheme();
     }
 
-    private applyCSSForTheme(): void {
+    private _applyCSSForTheme(): void {
         if (this.isDarkTheme) {
             document.body.classList.add('dark-theme');
         } else {

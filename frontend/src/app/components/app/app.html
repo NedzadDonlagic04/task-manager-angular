@@ -4,15 +4,15 @@
         <span class="flex-spacer"></span>
 
         <nav class="nav-buttons d-none d-md-flex align-items-center gap-2">
-            @for (routerLink of routerLinks; track routerLink.path) { @if
-            (routerLink.path !== "update/:id") {
+            @for (route of routes; track route.path) { @if (route.path !==
+            "update/:id") {
             <button
                 mat-flat-button
                 color="accent"
                 class="nav-btn button-custom-style"
-                [routerLink]="'/' + routerLink.path"
+                [routerLink]="'/' + route.path"
             >
-                {{ routerLink.title }}
+                {{ route.title }}
             </button>
             } }
 
@@ -41,10 +41,10 @@
 </mat-toolbar>
 
 <mat-menu #mobileMenu="matMenu" class="mobile-menu">
-    @for (routerLink of routerLinks; track routerLink.path) { @if
-    (routerLink.path !== "update/:id") {
-    <button mat-menu-item [routerLink]="'/' + routerLink.path">
-        {{ routerLink.title }}
+    @for (route of routes; track route.path) { @if (route.path !== "update/:id")
+    {
+    <button mat-menu-item [routerLink]="'/' + route.path">
+        {{ route.title }}
     </button>
     } }
     <button mat-menu-item (click)="toggleDarkTheme()">

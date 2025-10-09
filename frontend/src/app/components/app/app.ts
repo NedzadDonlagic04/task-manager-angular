@@ -26,11 +26,11 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
     ],
 })
 export class App implements OnInit {
-    protected routerLinks = routes;
+    protected readonly routes = routes;
     protected isDarkTheme = false;
 
     private readonly _themeStorageKey = 'isDarkTheme';
-    private _storageService = inject(StorageService);
+    private readonly _storageService = inject(StorageService);
 
     public ngOnInit(): void {
         const themeStorageValue = this._storageService.getItem<boolean>(

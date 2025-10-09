@@ -1,4 +1,4 @@
 export default interface TagDTO {
-    id: number;
+    id: string;
     name: string;
 }

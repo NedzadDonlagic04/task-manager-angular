@@ -36,7 +36,8 @@ const getTotalMillisecondsFromDateTimeOffset = (
 export const applyOffset = (
     dateTime: Date,
     offset: Partial<DateTimeOffset>,
-): Date =>
-    new Date(
+): Date => {
+    return new Date(
         dateTime.getTime() + getTotalMillisecondsFromDateTimeOffset(offset),
     );
+};

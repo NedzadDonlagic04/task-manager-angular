@@ -1,7 +1,9 @@
-export default interface TaskUpdateDTO {
-    title: string;
-    description: string;
-    deadline: string | null;
-    taskStateId: number;
-    tagIds: number[];
+export default class TaskUpdateDTO {
+    public constructor(
+        public readonly title: string,
+        public readonly description: string,
+        public readonly deadline: Date | null,
+        public readonly taskStateId: number,
+        public readonly tagIds: number[],
+    ) {}
 }

@@ -42,11 +42,19 @@ export class TaskStatisticsService {
     private _calculateMonthlyData(tasks: TaskReadDTO[]): MonthlyTasksData {
         const taskCountPerMonth: number[] = Array(MONTH_NAMES.length).fill(0);
 
-        tasks.forEach((task: TaskReadDTO) => {
-            const month = task.createdAt.getMonth();
+        tasks
+            .filter((task: TaskReadDTO) => {
+                const dateTimeNow = new Date();
 
-            ++taskCountPerMonth[month];
-        });
+                return (
+                    dateTimeNow.getFullYear() === task.createdAt.getFullYear()
+                );
+            })
+            .forEach((task: TaskReadDTO) => {
+                const month = task.createdAt.getMonth();
+
+                ++taskCountPerMonth[month];
+            });
 
         return {
             monthsLabels: MONTH_NAMES,

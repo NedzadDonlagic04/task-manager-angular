@@ -44,7 +44,7 @@ namespace Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<TaskReadDTO>> CreateTask([FromBody] TaskCreateDTO taskCreateDTO)
+        public async Task<ActionResult<TaskReadDTO>> CreateTask([FromBody] TaskCreateUpdateDTO taskCreateDTO)
         {
             var createdTask = await _taskService.CreateTaskAsync(taskCreateDTO);
 
@@ -59,7 +59,7 @@ namespace Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateTask([FromRoute] Guid id, [FromBody] TaskUpdateDTO taskUpdateDTO)
+        public async Task<ActionResult> UpdateTask([FromRoute] Guid id, [FromBody] TaskCreateUpdateDTO taskUpdateDTO)
         {
             var updatedTask = await _taskService.UpdateTaskAsync(id, taskUpdateDTO);
 

@@ -68,7 +68,7 @@ namespace Services
             return Result<TaskReadDTO>.Success(task);
         }
 
-        public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateDTO taskCreateDTO)
+        public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateUpdateDTO taskCreateDTO)
         {
             var tags = await _context
                             .Tag
@@ -108,7 +108,7 @@ namespace Services
             return Result<TaskReadDTO>.Success(result);
         }
 
-        public async Task<Result<TaskReadDTO>> UpdateTaskAsync(Guid id, TaskUpdateDTO taskUpdateDTO)
+        public async Task<Result<TaskReadDTO>> UpdateTaskAsync(Guid id, TaskCreateUpdateDTO taskUpdateDTO)
         {
             var taskToUpdate = await _context
                                     .Task
@@ -131,7 +131,6 @@ namespace Services
             taskToUpdate.Title = taskUpdateDTO.Title;
             taskToUpdate.Description = taskUpdateDTO.Description;
             taskToUpdate.Deadline = taskUpdateDTO.Deadline;
-            taskToUpdate.TaskStateId = taskUpdateDTO.TaskStateId;
 
             taskToUpdate.Tags.Clear();
             foreach (Models.Tag tag in tags)

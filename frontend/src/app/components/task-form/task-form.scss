@@ -1,0 +1,101 @@
+@use '@angular/material' as mat;
+@use 'sass:color';
+@use './../../../theme-variables' as *;
+
+:host {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.task-form {
+    width: 100%;
+    max-width: 700px;
+
+    mat-card {
+        padding: 2rem;
+        background-color: lighten($light-primary-color, 45%);
+        color: #222;
+
+        mat-card-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        mat-form-field,
+        mat-checkbox {
+            width: 100%;
+            font-size: 1.05rem;
+        }
+
+        mat-label,
+        input,
+        textarea {
+            font-size: 1.05rem;
+        }
+
+        mat-error {
+            font-size: 0.95rem;
+            color: mat.m2-get-color-from-palette($light-warn, 700);
+        }
+
+        div[formArrayName='tags'] {
+            margin-top: 1.5rem;
+
+            mat-label {
+                display: block;
+                font-size: 1.05rem;
+                margin-bottom: 0.5rem;
+            }
+
+            mat-checkbox {
+                display: inline-block;
+                width: auto;
+                margin-right: 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        .form-btn-container {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+
+            button {
+                font-size: 1.1rem;
+                padding: 0.75rem 1.5rem;
+                border-radius: 1.5rem;
+                font-weight: 600;
+                background-color: $light-primary-color;
+                color: #fff;
+
+                &:disabled {
+                    background-color: color.change(
+                        $light-primary-color,
+                        $alpha: 0.3
+                    );
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    :host-context(.dark-theme) mat-card {
+        background-color: lighten($dark-primary-color, 8%);
+        color: #f5f5f5;
+
+        mat-error {
+            color: mat.m2-get-color-from-palette($dark-accent, 200);
+        }
+
+        .form-btn-container button {
+            background-color: $dark-accent-color;
+            color: #fff;
+
+            &:disabled {
+                background-color: color.change($dark-accent-color, $alpha: 0.3);
+            }
+        }
+    }
+}

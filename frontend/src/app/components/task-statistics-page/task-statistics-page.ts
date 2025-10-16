@@ -39,6 +39,14 @@ export class TaskStatisticsPage implements AfterViewInit, OnDestroy {
     private readonly _taskStatisticsService = inject(TaskStatisticsService);
 
     public ngAfterViewInit(): void {
+        this._loadMonthlyTaskData();
+    }
+
+    public ngOnDestroy(): void {
+        this._chart?.destroy();
+    }
+
+    private _loadMonthlyTaskData(): void {
         this._taskStatisticsService
             .getMonthlyTaskData()
             .pipe(takeUntilDestroyed(this._destroyRef))
@@ -49,13 +57,9 @@ export class TaskStatisticsPage implements AfterViewInit, OnDestroy {
                 },
                 error: (error: HttpErrorResponse) =>
                     console.error(
-                        `Error when fetching tasks for chart -> ${error}`,
+                        `Error when fetching tasks for chart -> ${error.message}`,
                     ),
             });
-    }
-
-    public ngOnDestroy(): void {
-        this._chart?.destroy();
     }
 
     private _createChart(monthlyTasksData: MonthlyTasksData): void {

@@ -1,4 +1,4 @@
-<form [formGroup]="filterFormGroup">
+<form [formGroup]="filterTaskFormGroup">
     <mat-form-field appearance="fill">
         <mat-label>Search for term:</mat-label>
         <input matInput formControlName="searchTerm" />
@@ -16,7 +16,8 @@
             [for]="dateStartPicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #dateStartPicker></mat-datepicker>
-        @if(deadlineStartControl?.errors?.['startDateBeforeEndDate']) {
+        @if(filterTaskFormGroup.controls.deadlineStart.errors?.['startDateBeforeEndDate'])
+        {
         <mat-error> Deadline start date can't be after end date </mat-error>
         }
     </mat-form-field>
@@ -33,6 +34,10 @@
             [for]="dateEndPicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #dateEndPicker></mat-datepicker>
+        @if(filterTaskFormGroup.controls.deadlineEnd.errors?.['startDateBeforeEndDate'])
+        {
+        <mat-error> Deadline end date can't be after end date </mat-error>
+        }
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -47,8 +52,9 @@
             [for]="createdAtStartPicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #createdAtStartPicker></mat-datepicker>
-        @if(createdAtStartControl?.errors?.['startDateBeforeEndDate']) {
-        <mat-error> Createdt at start date can't be after end date </mat-error>
+        @if(filterTaskFormGroup.controls.createdAtStart.errors?.['startDateBeforeEndDate'])
+        {
+        <mat-error> Created at start date can't be after end date </mat-error>
         }
     </mat-form-field>
 
@@ -64,14 +70,15 @@
             [for]="createdAtEndPicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #createdAtEndPicker></mat-datepicker>
+        @if(filterTaskFormGroup.controls.createdAtEnd.errors?.['startDateBeforeEndDate'])
+        {
+        <mat-error> Created at end date can't be after end date </mat-error>
+        }
     </mat-form-field>
 
-    @if (tags.length === 0) {
-    <p>Loading task states...</p>
-    } @else {
     <mat-form-field appearance="fill">
         <mat-label>Task States</mat-label>
-        <mat-select formControlName="taskState">
+        <mat-select formControlName="taskStateName">
             <mat-option [value]="''">All States</mat-option>
             @for (taskState of taskStates; track taskState.id) {
             <mat-option [value]="taskState.name">
@@ -80,11 +87,8 @@
             }
         </mat-select>
     </mat-form-field>
-    } @if (tags.length === 0) {
-    <p>Loading task tags...</p>
-    } @else {
 
-    <div class="tags-section" formArrayName="tags">
+    <div class="tags-section" formArrayName="selectedTags">
         <div class="tags-label">Tags:</div>
         <div class="tags-checkbox-group">
             @for(tag of tags; track tag.id; let i = $index) {
@@ -92,6 +96,4 @@
             }
         </div>
     </div>
-
-    }
 </form>

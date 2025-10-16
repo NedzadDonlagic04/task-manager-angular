@@ -1,10 +1,12 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
-    FormArray,
-    FormControl,
-    ReactiveFormsModule,
-    UntypedFormGroup,
-} from '@angular/forms';
+    Component,
+    DestroyRef,
+    EventEmitter,
+    inject,
+    OnInit,
+    Output,
+} from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
     MatDatepicker,
     MatDatepickerModule,
@@ -13,23 +15,18 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import TagDTO from '../../dtos/tag.dto';
 import { TagService } from '../../services/tag.service';
-import { TaskStateService } from '../../services/task-state.service';
-import TaskStateDTO from '../../dtos/task-state.dto';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { startDateBeforeEndDateValidator } from '../../validators/start-date-before-end-date.validator';
+import {
+    FilterTasksFormService,
+    ProcessedFilterTaskFormValue,
+} from '../../services/filter-task-form.service';
+import { forkJoin } from 'rxjs';
+import { TaskStateService } from '../../services/task-state.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-
-export interface FilterData {
-    searchTerm: string;
-    taskStateName: string;
-    deadlineStart: string;
-    deadlineEnd: string;
-    createdAtStart: string;
-    createdAtEnd: string;
-    tagNames: string[];
-}
+import TaskStateDTO from '../../dtos/task-state.dto';
 
 @Component({
     selector: 'app-filter-tasks-form',
@@ -47,110 +44,78 @@ export interface FilterData {
     templateUrl: './filter-tasks-form.html',
     styleUrl: './filter-tasks-form.scss',
     standalone: true,
+    providers: [FilterTasksFormService],
 })
 export class FilterTasksForm implements OnInit {
-    protected readonly filterFormGroup = new UntypedFormGroup({
-        searchTerm: new FormControl(''),
-        taskState: new FormControl(''),
-        deadlineStart: new FormControl('', {
-            nonNullable: true,
-            validators: [
-                startDateBeforeEndDateValidator('deadlineStart', 'deadlineEnd'),
-            ],
-        }),
-        deadlineEnd: new FormControl('', {
-            nonNullable: true,
-        }),
-        createdAtStart: new FormControl('', {
-            nonNullable: true,
-            validators: [
-                startDateBeforeEndDateValidator(
-                    'createdAtStart',
-                    'createdAtEnd',
-                ),
-            ],
-        }),
-        createdAtEnd: new FormControl('', {
-            nonNullable: true,
-        }),
-    });
-
+    @Output() protected filterChanged = new EventEmitter<string>();
+    protected readonly filterTaskFormGroup;
     protected tags: TagDTO[] = [];
     protected taskStates: TaskStateDTO[] = [];
 
-    @Output() onValueChanged = new EventEmitter<string>();
+    private readonly _destroyRef = inject(DestroyRef);
+    private readonly _tagService = inject(TagService);
+    private readonly _taskStateService = inject(TaskStateService);
+    private readonly _filterTaskFormService = inject(FilterTasksFormService);
 
-    private tagService = inject(TagService);
-    private taskStateService = inject(TaskStateService);
+    public constructor() {
+        this.filterTaskFormGroup =
+            this._filterTaskFormService.createFilterTaskFormGroup();
+    }
 
     public ngOnInit(): void {
-        this.taskStateService.getTaskStates().subscribe({
-            next: (taskStates) => {
-                this.taskStates = taskStates;
-            },
-            error: (error) =>
-                console.error(`Error while loading task states -> ${error}`),
-        });
-
-        this.tagService.getTags().subscribe({
-            next: (tags) => {
-                this.tags = tags;
-
-                const tagControls = tags.map(
-                    () => new FormControl(false, { nonNullable: true }),
-                );
-
-                this.filterFormGroup.addControl(
-                    'tags',
-                    new FormArray(tagControls),
-                );
-            },
-            error: (error) =>
-                console.error(`Error while loading tags -> ${error}`),
-        });
-
-        this.filterFormGroup.valueChanges.subscribe({
-            next: (filterObj) => {
-                const tagNames: string[] = [];
-
-                for (let i = 0; i < filterObj.tags.length; ++i) {
-                    if (filterObj.tags[i]) {
-                        tagNames.push(this.tags[i].name);
-                    }
-                }
-
-                const filterData: FilterData = {
-                    ...filterObj,
-                    taskStateName: filterObj.taskState,
-                    deadlineStart: filterObj.deadlineStart ?? '',
-                    deadlineEnd: filterObj.deadlineEnd ?? '',
-                    createdAtStart: filterObj.createdAtStart ?? '',
-                    createdAtEnd: filterObj.createdAtEnd ?? '',
-                    tagNames: tagNames,
-                };
-
-                this.onValueChanged.emit(JSON.stringify(filterData));
-            },
-            error: (error: HttpErrorResponse) =>
-                console.error(`Filter form value changed error -> ${error}`),
-        });
-
-        this.filterFormGroup.get('deadlineEnd')?.valueChanges.subscribe(() => {
-            this.filterFormGroup.get('deadlineStart')?.updateValueAndValidity();
-        });
-
-        this.filterFormGroup.get('createdAtEnd')?.valueChanges.subscribe(() => {
-            this.filterFormGroup
-                .get('createdAtStart')
-                ?.updateValueAndValidity();
-        });
+        this._loadTagsAndTaskStates();
     }
 
-    public get deadlineStartControl() {
-        return this.filterFormGroup.get('deadlineStart');
+    private _loadTagsAndTaskStates(): void {
+        forkJoin({
+            tags: this._tagService.getTags(),
+            taskStates: this._taskStateService.getTaskStates(),
+        })
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe({
+                next: ({
+                    tags,
+                    taskStates,
+                }: {
+                    tags: TagDTO[];
+                    taskStates: TaskStateDTO[];
+                }) => {
+                    this.tags = tags;
+                    this.taskStates = taskStates;
+
+                    this._filterTaskFormService.setTagsArrayControl(
+                        this.filterTaskFormGroup,
+                        tags.length,
+                    );
+
+                    this._subscribeToFormGroupValueChanged();
+                },
+                error: (error: HttpErrorResponse) =>
+                    console.error(
+                        `Error while loading tags and task states -> ${error.message}`,
+                    ),
+            });
     }
 
-    public get createdAtStartControl() {
-        return this.filterFormGroup.get('createdAtStart');
+    private _subscribeToFormGroupValueChanged(): void {
+        this.filterTaskFormGroup.valueChanges
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe({
+                next: () => {
+                    const processedFilterTaskFormValue: ProcessedFilterTaskFormValue =
+                        this._filterTaskFormService.createProcessedFilterTaskFormValue(
+                            this.filterTaskFormGroup.getRawValue(),
+                            this.tags,
+                        );
+
+                    this.filterChanged.emit(
+                        JSON.stringify(processedFilterTaskFormValue),
+                    );
+                },
+                error: (error: unknown) =>
+                    console.error(
+                        `Error occured while changing filter task form value -> ${error}`,
+                    ),
+            });
     }
 }

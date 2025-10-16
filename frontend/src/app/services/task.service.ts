@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import TaskCreateDTO from '../dtos/task/task-create.dto';
+import TaskCreateDTO from '../dtos/task/task-create-update.dto';
 import TaskReadDTO from '../dtos/task/task-read.dto';
-import TaskUpdateDTO from '../dtos/task/task-update.dto';
 import { environment } from '../environments/environment';
 import { plainToInstance } from 'class-transformer';
+import TaskCreateUpdateDTO from '../dtos/task/task-create-update.dto';
 
 @Injectable({
     providedIn: 'root',
@@ -36,7 +36,7 @@ export class TaskService {
 
     public updateTask(
         taskId: string,
-        taskData: TaskUpdateDTO,
+        taskData: TaskCreateUpdateDTO,
     ): Observable<unknown> {
         return this._httpClient.put(`${this._taskApiUrl}/${taskId}`, taskData);
     }

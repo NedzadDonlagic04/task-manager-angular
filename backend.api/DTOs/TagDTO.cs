@@ -1,8 +1,8 @@
 namespace DTOs
 {
-    public class TagDTO
+    public record TagDTO
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
+        public required Guid Id { get; init; }
+        public required string Name { get; init; }
     }
 }

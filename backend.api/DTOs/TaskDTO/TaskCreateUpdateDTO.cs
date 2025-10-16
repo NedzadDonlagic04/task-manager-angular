@@ -1,27 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 
-using Enums;
-
 using Validation;
 
 namespace DTOs
 {
-    public class TaskUpdateDTO
+    public record TaskCreateUpdateDTO
     {
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Title must be between 3 and 50 characters.")]
-        public string Title { get; set; } = null!;
+        public required string Title { get; init; }
 
         [StringLength(1_000, ErrorMessage = "Description must be between 0 and 1_000 characters.")]
-        public string Description { get; set; } = null!;
+        public required string Description { get; init; }
 
         [MinimumFutureOffset(1)]
-        public DateTime? Deadline { get; set; }
-
-        [EnumValidation(typeof(TaskStateEnum))]
-        public int TaskStateId { get; set; }
+        public DateTime? Deadline { get; init; }
 
         [Required]
-        public List<Guid> TagIds { get; set; } = new();
+        public required IReadOnlyList<Guid> TagIds { get; init; }
     }
 }

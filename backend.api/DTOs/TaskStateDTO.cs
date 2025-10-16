@@ -1,8 +1,8 @@
 namespace DTOs
 {
-    public class TaskStateDTO
+    public record TaskStateDTO
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
+        public required int Id { get; init; }
+        public required string Name { get; init; }
     }
 }

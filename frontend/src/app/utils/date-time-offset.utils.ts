@@ -20,9 +20,7 @@ class Milliseconds {
     public static readonly PER_DAY = 24 * Milliseconds.PER_HOUR;
 }
 
-const getTotalMillisecondsFromDateTimeOffset = (
-    offset: Partial<DateTimeOffset>,
-): number => {
+const toMilliseconds = (offset: Partial<DateTimeOffset>): number => {
     const totalOffsetInMilliseconds =
         (offset?.days ?? 0) * Milliseconds.PER_DAY +
         (offset?.hours ?? 0) * Milliseconds.PER_HOUR +
@@ -37,7 +35,5 @@ export const applyOffset = (
     dateTime: Date,
     offset: Partial<DateTimeOffset>,
 ): Date => {
-    return new Date(
-        dateTime.getTime() + getTotalMillisecondsFromDateTimeOffset(offset),
-    );
+    return new Date(dateTime.getTime() + toMilliseconds(offset));
 };

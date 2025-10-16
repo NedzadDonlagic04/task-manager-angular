@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { UpdateTaskForm } from '../update-task-form/update-task-form';
+import { TaskForm } from '../task-form/task-form';
 
 @Component({
     selector: 'app-update-task-page',
-    imports: [UpdateTaskForm],
+    imports: [TaskForm],
     templateUrl: './update-task-page.html',
     styleUrl: './update-task-page.scss',
     standalone: true,

@@ -2,6 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     inject,
     OnInit,
     ViewChild,
@@ -16,20 +17,20 @@ import {
     MatTableDataSource,
 } from '@angular/material/table';
 import { TaskService } from '../../services/task.service';
-import TaskReadDTO from '../../dtos/task-read.dto';
-import { TaskTableRowData } from '../../services/task-table-row-data.service';
+import TaskReadDTO from '../../dtos/task/task-read.dto';
+import { TaskTableRow as TaskTableRow } from '../../utils/task-table-row';
 import { DatePipe, NgClass } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { FilterData } from '../filter-tasks-form/filter-tasks-form';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatDialog } from '@angular/material/dialog';
-import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { YesNoDialogService } from '../../services/yes-no-dialog.service';
+import { ProcessedFilterTaskFormValue } from '../../services/filter-task-form.service';
+import { TaskFilterService } from '../../services/task-filter.service';
 
 @Component({
     selector: 'app-view-tasks-table',
@@ -51,41 +52,43 @@ import { HttpErrorResponse } from '@angular/common/http';
     styleUrl: './view-tasks-table.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
+    providers: [YesNoDialogService],
 })
 export class ViewTasksTable implements OnInit, AfterViewInit {
-    protected readonly NOT_SET_MESSAGE = '<Not set>';
-
+    protected readonly not_set_message = '<Not set>';
     protected readonly displayedTasksColumns: string[] = [
         'select',
         'title',
         'deadline',
         'createdAt',
-        'taskStateName',
-        'tagNames',
+        'state',
+        'tags',
         'actions',
     ];
-
-    protected readonly tasksDataSource =
-        new MatTableDataSource<TaskTableRowData>();
-    protected readonly selectedTasks = new SelectionModel<TaskTableRowData>(
+    protected readonly tasksDataSource = new MatTableDataSource<TaskTableRow>();
+    protected readonly selectedTasks = new SelectionModel<TaskTableRow>(
         true,
         [],
     );
 
-    @ViewChild(MatSort) sort!: MatSort;
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) protected sort!: MatSort;
+    @ViewChild(MatPaginator) protected paginator!: MatPaginator;
 
-    protected taskService = inject(TaskService);
-    protected dialog = inject(MatDialog);
-    protected matSnackBar = inject(MatSnackBar);
-    protected router = inject(Router);
+    private readonly _taskService = inject(TaskService);
+    private readonly _taskFilterService = inject(TaskFilterService);
+    private readonly _router = inject(Router);
+    private readonly _destroyRef = inject(DestroyRef);
+    private readonly _yesNoDialogService = inject(YesNoDialogService);
+    private _processedFilterFormValue: ProcessedFilterTaskFormValue | null =
+        null;
 
     public constructor() {
-        this.tasksDataSource.filterPredicate = this.taskTableFilterPredicate;
+        this.tasksDataSource.filterPredicate =
+            this._taskTableFilterPredicate.bind(this);
     }
 
     public ngOnInit(): void {
-        this.refreshTasksTable();
+        this._refreshTasksTable();
     }
 
     public ngAfterViewInit(): void {
@@ -93,128 +96,47 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         this.tasksDataSource.paginator = this.paginator;
     }
 
-    protected navigatoToUpdatePage(taskId: string): void {
-        this.router.navigate(['/update', taskId]);
+    public filterTasks(filterObjStr: string): void {
+        this._processedFilterFormValue = JSON.parse(filterObjStr);
+        this.tasksDataSource.filter = filterObjStr;
     }
 
-    private refreshTasksTable(): void {
-        this.taskService.getTasks().subscribe({
-            next: (tasks: TaskReadDTO[]) => {
-                const tasksTableRowData: TaskTableRowData[] = tasks.map(
-                    (task: TaskReadDTO, index: number) =>
-                        new TaskTableRowData(index + 1, task),
-                );
-                this.tasksDataSource.data = tasksTableRowData;
-            },
-            error: (error: HttpErrorResponse) =>
-                console.error(`Error while loading tags -> ${error}`),
-        });
+    protected navigateToUpdatePage(taskId: string): void {
+        this._router.navigate(['/update', taskId]);
     }
 
-    protected showDeleteDialog(taskId?: string): void {
-        const isBatchDelete: boolean = this.isAnyRowSelected();
+    protected openBatchDeleteDialog(): void {
+        if (!this.isAnyRowSelected()) {
+            return;
+        }
 
-        const dialogRef = this.dialog.open(YesNoDialog, {
-            width: '350px',
-            data: {
-                title: 'Delete',
-                message: isBatchDelete
-                    ? `Are you sure you want to delete ${this.selectedTasks.selected.length} ${this.selectedTasks.selected.length === 1 ? 'task' : 'tasks'}?`
-                    : 'Are you sure you want to delete selected task?',
-                confirmText: 'Delete',
-                cancelText: 'Cancel',
-            },
-            disableClose: true,
+        const dialogRef = this._yesNoDialogService.open({
+            title: 'Batch Delete Tasks',
+            message: `Are you sure you want to delete ${this.selectedTasks.selected.length} tasks?`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            if (result && isBatchDelete) this.batchDelete();
-            else if (result) this.deleteInstance(taskId!);
+            if (result) {
+                this._batchDeleteSelectedTasks();
+            }
         });
     }
 
-    private taskTableFilterPredicate(
-        rowData: TaskTableRowData,
-        filter: string,
-    ): boolean {
-        const filterData: FilterData = JSON.parse(filter);
+    protected openDeleteTaskDialog(taskId: string): void {
+        const dialogRef = this._yesNoDialogService.open({
+            title: 'Delete Task',
+            message: `Are you sure you want to delete task?`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
+        });
 
-        const searchTerm = filterData.searchTerm.trim().toLocaleLowerCase();
-        const deadlineStartDate = new Date(filterData.deadlineStart);
-        const deadlineEndDate = new Date(filterData.deadlineEnd);
-        const createdAtStartDate = new Date(filterData.createdAtStart);
-        const createdAtEndDate = new Date(filterData.createdAtEnd);
-        const { taskStateName, tagNames } = filterData;
-
-        const createDateWithoutHours = (dateStr: string): Date => {
-            const date = new Date(dateStr);
-            date.setHours(0, 0, 0, 0);
-            return date;
-        };
-
-        const areTagNamesSame = (
-            tagNames1: string[],
-            tagNames2: string[],
-        ): boolean => {
-            if (tagNames1.length !== tagNames2.length) {
-                return false;
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this._deleteTask(taskId);
             }
-
-            tagNames1.sort();
-            tagNames2.sort();
-
-            for (let i = 0; i < tagNames1.length; ++i) {
-                if (tagNames1[i] !== tagNames2[i]) {
-                    return false;
-                }
-            }
-
-            return true;
-        };
-
-        const searchTermValid =
-            searchTerm === '' ||
-            rowData.title.toLocaleLowerCase().includes(searchTerm) ||
-            rowData.description.toLocaleLowerCase().includes(searchTerm);
-
-        const deadlineStartValid =
-            isNaN(deadlineStartDate.getTime()) ||
-            (rowData.deadline !== null &&
-                createDateWithoutHours(rowData.deadline) >= deadlineStartDate);
-
-        const deadlineEndValid =
-            isNaN(deadlineEndDate.getTime()) ||
-            (rowData.deadline !== null &&
-                createDateWithoutHours(rowData.deadline) <= deadlineEndDate);
-
-        const createdAtStartValid =
-            isNaN(createdAtStartDate.getTime()) ||
-            createDateWithoutHours(rowData.createdAt) >= createdAtStartDate;
-
-        const createdAtEndValid =
-            isNaN(createdAtEndDate.getTime()) ||
-            createDateWithoutHours(rowData.createdAt) <= createdAtEndDate;
-
-        const taskStateNameValid =
-            taskStateName === '' || taskStateName === rowData.taskStateName;
-
-        const tagNamesValid =
-            tagNames.length === 0 ||
-            areTagNamesSame(tagNames, rowData.tagNames);
-
-        return (
-            searchTermValid &&
-            deadlineStartValid &&
-            deadlineEndValid &&
-            createdAtStartValid &&
-            createdAtEndValid &&
-            taskStateNameValid &&
-            tagNamesValid
-        );
-    }
-
-    public filterTasks(filterObjStr: string): void {
-        this.tasksDataSource.filter = filterObjStr;
+        });
     }
 
     protected isAnyRowSelected(): boolean {
@@ -237,55 +159,75 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         this.selectedTasks.select(...this.tasksDataSource.data);
     }
 
-    protected batchDelete(): void {
-        const tasksToDelete: string[] = [];
-        this.selectedTasks.selected.forEach((task) =>
-            tasksToDelete.push(task.id),
+    private _batchDeleteSelectedTasks(): void {
+        const tasksToDelete: string[] = this.selectedTasks.selected.map(
+            (task: TaskTableRow) => task.id,
         );
 
-        this.taskService.deleteMultipleTasks(tasksToDelete).subscribe({
-            next: () => {
-                this.selectedTasks.deselect(
-                    ...this.selectedTasks.selected.filter((task) =>
-                        tasksToDelete.includes(task.id),
+        this._taskService
+            .deleteMultipleTasks(tasksToDelete)
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe({
+                next: () => {
+                    /*
+                        TODO: Consider what would happen if some tasks failed to delete
+                        Maybe return the ids of the ones that failed or some shit like that
+                        Currently that case is not handled, everything is just deselected after
+                        the batch delete operation
+                    */
+                    this.selectedTasks.clear();
+                    this._refreshTasksTable();
+                },
+                error: (error: HttpErrorResponse) =>
+                    console.error(
+                        `Error while deleting tasks -> ${error.message}`,
                     ),
-                );
-                this.refreshTasksTable();
-                this.matSnackBar.open(
-                    'Tasks deleted successfully!',
-                    'Dismiss',
-                    {
-                        duration: 3000,
-                        panelClass: ['success-snackbar'],
-                    },
-                );
-            },
-            error: (error: HttpErrorResponse) => {
-                this.matSnackBar.open('Failed to delete tasks.', 'Dismiss', {
-                    duration: 5000,
-                    panelClass: ['error-snackbar'],
-                });
-                console.error('Error while deleting tasks -> ', error);
-            },
-        });
+            });
     }
 
-    private deleteInstance(taskId: string) {
-        this.taskService.deleteTask(taskId).subscribe({
-            next: () => {
-                this.refreshTasksTable();
-                this.matSnackBar.open('Task deleted successfully!', 'Dismiss', {
-                    duration: 3000,
-                    panelClass: ['success-snackbar'],
-                });
-            },
-            error: (error: HttpErrorResponse) => {
-                this.matSnackBar.open('Failed to delete task.', 'Dismiss', {
-                    duration: 5000,
-                    panelClass: ['error-snackbar'],
-                });
-                console.error('Error while deleting tasks -> ', error);
-            },
-        });
+    private _taskTableFilterPredicate(row: TaskTableRow, _: string): boolean {
+        if (!this._processedFilterFormValue) {
+            return true;
+        }
+
+        return this._taskFilterService.doesRowMatchFilter(
+            row,
+            this._processedFilterFormValue,
+        );
+    }
+
+    private _refreshTasksTable(): void {
+        this._taskService
+            .getTasks()
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe({
+                next: (tasks: TaskReadDTO[]) => {
+                    const tasksTableRowData: TaskTableRow[] = tasks.map(
+                        (task: TaskReadDTO, index: number) =>
+                            new TaskTableRow(index + 1, task),
+                    );
+
+                    this.tasksDataSource.data = tasksTableRowData;
+                },
+                error: (error: HttpErrorResponse) =>
+                    console.error(
+                        `Error while loading tasks -> ${error.message}`,
+                    ),
+            });
+    }
+
+    private _deleteTask(taskId: string): void {
+        this._taskService
+            .deleteTask(taskId)
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe({
+                next: () => {
+                    this._refreshTasksTable();
+                },
+                error: (error: HttpErrorResponse) =>
+                    console.error(
+                        `Error while deleting single task -> ${error.message}`,
+                    ),
+            });
     }
 }

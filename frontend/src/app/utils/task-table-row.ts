@@ -1,6 +1,6 @@
 import TaskReadDTO from '../dtos/task/task-read.dto';
 
-export class TaskTableRowData {
+export class TaskTableRow {
     public readonly rowNum: number;
     private readonly _task: TaskReadDTO;
 

@@ -5,7 +5,7 @@ using Utils;
 
 namespace Services;
 
-public class TaskStateService : ITaskStateService
+public sealed class TaskStateService : ITaskStateService
 {
     private readonly AppDbContext _context;
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Services;
 
-public class TaskDeadlineMonitorService : BackgroundService
+public sealed class TaskDeadlineMonitorService : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<TaskDeadlineMonitorService> _logger;

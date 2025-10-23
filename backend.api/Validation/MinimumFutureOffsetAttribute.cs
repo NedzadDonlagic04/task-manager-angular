@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Validation;
 
-public class MinimumFutureOffsetAttribute : ValidationAttribute
+public sealed class MinimumFutureOffsetAttribute : ValidationAttribute
 {
     private readonly double _hours;
 

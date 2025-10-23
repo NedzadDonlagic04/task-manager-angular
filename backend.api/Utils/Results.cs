@@ -1,6 +1,6 @@
 namespace Utils;
 
-public class Result
+public sealed class Result
 {
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
@@ -21,7 +21,7 @@ public class Result
     public static Result Failure(string error) => new Result(new List<string> { error });
 }
 
-public class Result<T>
+public sealed class Result<T>
 {
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;

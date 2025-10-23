@@ -5,7 +5,7 @@ using Utils;
 
 namespace Services;
 
-public class TagService : ITagService
+public sealed class TagService : ITagService
 {
     private readonly AppDbContext _context;
 

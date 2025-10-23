@@ -3,7 +3,7 @@ using Validation;
 
 namespace DTOs;
 
-public record TaskCreateUpdateDTO
+public sealed record TaskCreateUpdateDTO
 {
     [Required]
     [StringLength(50, MinimumLength = 3, ErrorMessage = "Title must be between 3 and 50 characters.")]

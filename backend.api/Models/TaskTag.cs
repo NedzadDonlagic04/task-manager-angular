@@ -1,6 +1,6 @@
 namespace Models;
 
-public class TaskTag
+public sealed class TaskTag
 {
     public Guid TaskId { get; set; }
     public Task Task { get; set; } = null!;

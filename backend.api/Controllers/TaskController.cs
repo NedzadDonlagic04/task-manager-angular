@@ -6,7 +6,7 @@ namespace Controllers;
 
 [ApiController]
 [Route("api/task")]
-public class TaskController : ControllerBase
+public sealed class TaskController : ControllerBase
 {
     private readonly ITaskService _taskService;
 

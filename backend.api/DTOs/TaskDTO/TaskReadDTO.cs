@@ -1,6 +1,6 @@
 namespace DTOs;
 
-public record TaskReadDTO
+public sealed record TaskReadDTO
 {
     public required Guid Id { get; init; }
     public required string Title { get; init; }

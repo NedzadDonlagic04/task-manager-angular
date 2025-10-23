@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Validation;
 
-public class EnumValidationAttribute : ValidationAttribute
+public sealed class EnumValidationAttribute : ValidationAttribute
 {
     private readonly Type _enumType;
 

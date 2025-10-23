@@ -24,7 +24,7 @@ public sealed class TagController : ControllerBase
         return Ok(tags);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TagDTO>> GetTagById([FromRoute] Guid id)

@@ -24,7 +24,7 @@ public sealed class TaskController : ControllerBase
         return Ok(tasks);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskReadDTO>> GetTaskById([FromRoute] Guid id)
@@ -54,7 +54,7 @@ public sealed class TaskController : ControllerBase
         return Ok(createdTask.Value);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> UpdateTask([FromRoute] Guid id, [FromBody] TaskCreateUpdateDTO taskUpdateDTO)
@@ -69,7 +69,7 @@ public sealed class TaskController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> DeleteTask([FromRoute] Guid id)

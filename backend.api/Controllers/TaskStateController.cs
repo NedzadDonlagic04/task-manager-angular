@@ -24,7 +24,7 @@ public sealed class TaskStateController : ControllerBase
         return Ok(taskStates);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskStateDTO>> GetTaskStateById([FromRoute] int id)

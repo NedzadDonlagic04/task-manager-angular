@@ -1,8 +1,7 @@
-namespace DTOs
+namespace DTOs;
+
+public record TaskStateDTO
 {
-    public record TaskStateDTO
-    {
-        public required int Id { get; init; }
-        public required string Name { get; init; }
-    }
+    public required int Id { get; init; }
+    public required string Name { get; init; }
 }

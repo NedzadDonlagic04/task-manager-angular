@@ -1,4 +1,3 @@
-namespace Enums
-{
-    public enum TaskStateEnum { Pending = 1, Success, Fail }
-}
+namespace Enums;
+
+public enum TaskStateEnum { Pending = 1, Success, Fail }

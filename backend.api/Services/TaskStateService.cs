@@ -5,18 +5,11 @@ using Utils;
 
 namespace Services;
 
-public sealed class TaskStateService : ITaskStateService
+public sealed class TaskStateService(AppDbContext context) : ITaskStateService
 {
-    private readonly AppDbContext _context;
-
-    public TaskStateService(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync()
     {
-        var results = await _context
+        var results = await context
                             .TaskState
                             .AsNoTracking()
                             .Select(taskState => new TaskStateDTO
@@ -31,7 +24,7 @@ public sealed class TaskStateService : ITaskStateService
 
     public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id)
     {
-        var taskState = await _context
+        var taskState = await context
                                .TaskState
                                .AsNoTracking()
                                .Select(taskState => new TaskStateDTO

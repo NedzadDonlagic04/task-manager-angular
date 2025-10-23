@@ -4,22 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Services;
 
-public sealed class TaskDeadlineMonitorService : BackgroundService
+public sealed class TaskDeadlineMonitorService(
+    IServiceProvider serviceProvider,
+    ILogger<TaskDeadlineMonitorService> logger
+) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<TaskDeadlineMonitorService> _logger;
-
-    public TaskDeadlineMonitorService(IServiceProvider serviceProvider, ILogger<TaskDeadlineMonitorService> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            using var scope = _serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             var expiredTasks = await context
@@ -30,22 +24,22 @@ public sealed class TaskDeadlineMonitorService : BackgroundService
             foreach (var expiredTask in expiredTasks)
             {
                 expiredTask.TaskStateId = (int)TaskStateEnum.Fail;
-                _logger.LogInformation("Task '{ExpiredTaskTitle}' (ID: {ExpiredTaskI}) has expired and its state has been set to {TaskStateFailName}.", expiredTask.Title, expiredTask.Id, nameof(TaskStateEnum.Fail));
+                logger.LogInformation("Task '{ExpiredTaskTitle}' (ID: {ExpiredTaskI}) has expired and its state has been set to {TaskStateFailName}.", expiredTask.Title, expiredTask.Id, nameof(TaskStateEnum.Fail));
             }
 
             if (expiredTasks.Any())
             {
                 await context.SaveChangesAsync(stoppingToken);
-                _logger.LogInformation("Successfully updated {UpdatedTasksCount} expired tasks.", expiredTasks.Count);
+                logger.LogInformation("Successfully updated {UpdatedTasksCount} expired tasks.", expiredTasks.Count);
             }
             else
             {
-                _logger.LogInformation("No expired tasks found to update.");
+                logger.LogInformation("No expired tasks found to update.");
             }
 
-            _logger.LogDebug("Waiting for one minute before next check...");
+            logger.LogDebug("Waiting for one minute before next check...");
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
-        _logger.LogInformation("Task deadline monitoring service is stopping.");
+        logger.LogInformation("Task deadline monitoring service is stopping.");
     }
 }

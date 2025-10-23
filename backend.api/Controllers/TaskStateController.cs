@@ -6,20 +6,13 @@ namespace Controllers;
 
 [ApiController]
 [Route("api/task-state")]
-public sealed class TaskStateController : ControllerBase
+public sealed class TaskStateController(ITaskStateService taskStateService) : ControllerBase
 {
-    private readonly ITaskStateService _taskStateService;
-
-    public TaskStateController(ITaskStateService taskStateService)
-    {
-        _taskStateService = taskStateService;
-    }
-
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TaskStateDTO>>> GetTaskStates()
     {
-        var taskStates = await _taskStateService.GetTaskStatesAsync();
+        var taskStates = await taskStateService.GetTaskStatesAsync();
 
         return Ok(taskStates);
     }
@@ -29,7 +22,7 @@ public sealed class TaskStateController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskStateDTO>> GetTaskStateById([FromRoute] int id)
     {
-        var taskState = await _taskStateService.GetTaskStateByIdAsync(id);
+        var taskState = await taskStateService.GetTaskStateByIdAsync(id);
 
         if (taskState.IsFailure)
         {

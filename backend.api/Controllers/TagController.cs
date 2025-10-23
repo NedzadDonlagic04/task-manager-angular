@@ -6,20 +6,13 @@ namespace Controllers;
 
 [ApiController]
 [Route("api/tag")]
-public sealed class TagController : ControllerBase
+public sealed class TagController(ITagService tagService) : ControllerBase
 {
-    private readonly ITagService _tagService;
-
-    public TagController(ITagService tagService)
-    {
-        _tagService = tagService;
-    }
-
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TagDTO>>> GetTags()
     {
-        var tags = await _tagService.GetTagsAsync();
+        var tags = await tagService.GetTagsAsync();
 
         return Ok(tags);
     }
@@ -29,7 +22,7 @@ public sealed class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TagDTO>> GetTagById([FromRoute] Guid id)
     {
-        var tag = await _tagService.GetTagByIdAsync(id);
+        var tag = await tagService.GetTagByIdAsync(id);
 
         if (tag.IsFailure)
         {

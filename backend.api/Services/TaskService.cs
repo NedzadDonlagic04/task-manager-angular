@@ -6,18 +6,11 @@ using Utils;
 
 namespace Services;
 
-public sealed class TaskService : ITaskService
+public sealed class TaskService(AppDbContext context) : ITaskService
 {
-    private readonly AppDbContext _context;
-
-    public TaskService(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync()
     {
-        var results = await _context
+        var results = await context
                             .Task
                             .AsNoTracking()
                             .Include(task => task.Tags)
@@ -39,7 +32,7 @@ public sealed class TaskService : ITaskService
 
     public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id)
     {
-        var task = await _context
+        var task = await context
                         .Task
                         .AsNoTracking()
                         .Include(task => task.Tags)
@@ -66,7 +59,7 @@ public sealed class TaskService : ITaskService
 
     public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateUpdateDTO taskCreateDTO)
     {
-        var tags = await _context
+        var tags = await context
                         .Tag
                         .Where(tag => taskCreateDTO.TagIds.Contains(tag.Id))
                         .ToListAsync();
@@ -85,10 +78,10 @@ public sealed class TaskService : ITaskService
             Tags = tags
         };
 
-        _context.Task.Add(newTask);
-        await _context.SaveChangesAsync();
-        await _context.Entry(newTask).Reference(task => task.TaskState).LoadAsync();
-        await _context.Entry(newTask).Collection(task => task.Tags).LoadAsync();
+        context.Task.Add(newTask);
+        await context.SaveChangesAsync();
+        await context.Entry(newTask).Reference(task => task.TaskState).LoadAsync();
+        await context.Entry(newTask).Collection(task => task.Tags).LoadAsync();
 
         var result = new TaskReadDTO
         {
@@ -106,7 +99,7 @@ public sealed class TaskService : ITaskService
 
     public async Task<Result<TaskReadDTO>> UpdateTaskAsync(Guid id, TaskCreateUpdateDTO taskUpdateDTO)
     {
-        var taskToUpdate = await _context
+        var taskToUpdate = await context
                                 .Task
                                 .Include(task => task.Tags)
                                 .Include(task => task.TaskState)
@@ -117,7 +110,7 @@ public sealed class TaskService : ITaskService
             return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
         }
 
-        var tags = await _context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync();
+        var tags = await context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync();
 
         if (tags.Count != taskUpdateDTO.TagIds.Count)
         {
@@ -134,8 +127,8 @@ public sealed class TaskService : ITaskService
             taskToUpdate.Tags.Add(tag);
         }
 
-        await _context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync();
-        await _context.SaveChangesAsync();
+        await context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync();
+        await context.SaveChangesAsync();
 
         var updatedTask = new TaskReadDTO()
         {
@@ -153,7 +146,7 @@ public sealed class TaskService : ITaskService
 
     public async Task<Result> DeleteTask(Guid id)
     {
-        var task = await _context
+        var task = await context
                         .Task
                         .FindAsync(id);
 
@@ -162,15 +155,15 @@ public sealed class TaskService : ITaskService
             return Result.Failure("Task to delete doesn't exist");
         }
 
-        _context.Task.Remove(task);
-        await _context.SaveChangesAsync();
+        context.Task.Remove(task);
+        await context.SaveChangesAsync();
 
         return Result.Success();
     }
 
     public async Task<Result> DeleteTasks(List<Guid> ids)
     {
-        var tasks = await _context
+        var tasks = await context
                         .Task
                         .Where(task => ids.Contains(task.Id))
                         .ToListAsync();
@@ -180,8 +173,8 @@ public sealed class TaskService : ITaskService
             return Result.Failure("No tasks found for given list of ids");
         }
 
-        _context.Task.RemoveRange(tasks);
-        await _context.SaveChangesAsync();
+        context.Task.RemoveRange(tasks);
+        await context.SaveChangesAsync();
 
         return Result.Success();
     }

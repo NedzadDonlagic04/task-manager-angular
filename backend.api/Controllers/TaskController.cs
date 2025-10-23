@@ -6,20 +6,13 @@ namespace Controllers;
 
 [ApiController]
 [Route("api/task")]
-public sealed class TaskController : ControllerBase
+public sealed class TaskController(ITaskService taskService) : ControllerBase
 {
-    private readonly ITaskService _taskService;
-
-    public TaskController(ITaskService taskService)
-    {
-        _taskService = taskService;
-    }
-
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TaskReadDTO>>> GetTasks()
     {
-        var tasks = await _taskService.GetTasksAsync();
+        var tasks = await taskService.GetTasksAsync();
 
         return Ok(tasks);
     }
@@ -29,7 +22,7 @@ public sealed class TaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskReadDTO>> GetTaskById([FromRoute] Guid id)
     {
-        var task = await _taskService.GetTaskByIdAsync(id);
+        var task = await taskService.GetTaskByIdAsync(id);
 
         if (task.IsFailure)
         {
@@ -44,7 +37,7 @@ public sealed class TaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TaskReadDTO>> CreateTask([FromBody] TaskCreateUpdateDTO taskCreateDTO)
     {
-        var createdTask = await _taskService.CreateTaskAsync(taskCreateDTO);
+        var createdTask = await taskService.CreateTaskAsync(taskCreateDTO);
 
         if (createdTask.IsFailure)
         {
@@ -59,7 +52,7 @@ public sealed class TaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> UpdateTask([FromRoute] Guid id, [FromBody] TaskCreateUpdateDTO taskUpdateDTO)
     {
-        var updatedTask = await _taskService.UpdateTaskAsync(id, taskUpdateDTO);
+        var updatedTask = await taskService.UpdateTaskAsync(id, taskUpdateDTO);
 
         if (updatedTask.IsFailure)
         {
@@ -74,7 +67,7 @@ public sealed class TaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> DeleteTask([FromRoute] Guid id)
     {
-        var result = await _taskService.DeleteTask(id);
+        var result = await taskService.DeleteTask(id);
 
         if (result.IsFailure)
         {
@@ -89,7 +82,7 @@ public sealed class TaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> ids)
     {
-        var result = await _taskService.DeleteTasks(ids);
+        var result = await taskService.DeleteTasks(ids);
 
         if (result.IsFailure)
         {

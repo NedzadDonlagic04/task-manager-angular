@@ -5,18 +5,11 @@ using Utils;
 
 namespace Services;
 
-public sealed class TagService : ITagService
+public sealed class TagService(AppDbContext context) : ITagService
 {
-    private readonly AppDbContext _context;
-
-    public TagService(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<IEnumerable<TagDTO>> GetTagsAsync()
     {
-        var results = await _context
+        var results = await context
                             .Tag
                             .AsNoTracking()
                             .Select(tag => new TagDTO
@@ -31,7 +24,7 @@ public sealed class TagService : ITagService
 
     public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id)
     {
-        var tag = await _context
+        var tag = await context
                         .Tag
                         .AsNoTracking()
                         .Select(tag => new TagDTO

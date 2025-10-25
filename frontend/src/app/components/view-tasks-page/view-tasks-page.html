@@ -1,3 +1,3 @@
-<app-filter-tasks-form (onValueChanged)="tasksTable.filterTasks($event)" />
+<app-filter-tasks-form (filterChanged)="tasksTable.filterTasks($event)" />
 
 <app-view-tasks-table #tasksTable />

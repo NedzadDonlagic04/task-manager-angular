@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Models
+namespace Models;
+
+public sealed class TaskState
 {
-    public class TaskState
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-    }
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
 }

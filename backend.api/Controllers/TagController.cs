@@ -1,44 +1,39 @@
 using DTOs;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Services;
 
-namespace Controllers
+namespace Controllers;
+
+[ApiController]
+[Route("api/tag")]
+public sealed class TagController(ITagService tagService) : ControllerBase
 {
-    [ApiController]
-    [Route("api/tag")]
-    public class TagController : ControllerBase
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<TagDTO>>> GetTags(
+        CancellationToken cancellationToken
+    )
     {
-        private readonly ITagService _tagService;
+        var tags = await tagService.GetTagsAsync(cancellationToken);
 
-        public TagController(ITagService tagService)
+        return Ok(tags);
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<TagDTO>> GetTagById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var tag = await tagService.GetTagByIdAsync(id, cancellationToken);
+
+        if (tag.IsFailure)
         {
-            _tagService = tagService;
+            return NotFound();
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<TagDTO>>> GetTags()
-        {
-            var tags = await _tagService.GetTagsAsync();
-
-            return Ok(tags);
-        }
-
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TagDTO>> GetTagById([FromRoute] Guid id)
-        {
-            var tag = await _tagService.GetTagByIdAsync(id);
-
-            if (tag.IsFailure)
-            {
-                return NotFound();
-            }
-
-            return Ok(tag.Value);
-        }
+        return Ok(tag.Value);
     }
 }

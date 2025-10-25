@@ -1,4 +1,4 @@
-export default interface TaskStateDTO {
-    id: number;
-    name: string;
+export default class TaskStateDTO {
+    public readonly id!: number;
+    public readonly name!: string;
 }

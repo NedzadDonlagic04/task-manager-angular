@@ -1,4 +1,4 @@
-export default interface TagDTO {
-    id: number;
-    name: string;
+export default class TagDTO {
+    public readonly id!: string;
+    public readonly name!: string;
 }

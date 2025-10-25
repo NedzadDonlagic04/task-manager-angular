@@ -1,6 +1,10 @@
 @use '@angular/material' as mat;
 @use './../../../theme-variables' as *;
 
+:host {
+    width: 100%;
+}
+
 .chart-container {
     width: 100%;
     max-width: 1200px;

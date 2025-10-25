@@ -1,15 +1,20 @@
-import { Routes } from '@angular/router';
+import { Route } from '@angular/router';
 import { HomePage } from '../home-page/home-page';
 
-export const routes: Routes = [
-    { path: '', title: 'Home', component: HomePage },
+export interface AppRoute extends Route {
+    showInNav: boolean;
+}
+
+export const routes: AppRoute[] = [
+    { path: '', title: 'Home', component: HomePage, showInNav: true },
     {
         path: 'add-task',
         title: 'Add Task',
         loadComponent: () =>
-            import('../add-task-page/add-task-page').then(
-                (module) => module.AddTaskPage,
+            import('../create-task-page/create-task-page').then(
+                (module) => module.CreateTaskPage,
             ),
+        showInNav: true,
     },
     {
         path: 'view-tasks',
@@ -18,14 +23,16 @@ export const routes: Routes = [
             import('../view-tasks-page/view-tasks-page').then(
                 (module) => module.ViewTasksPage,
             ),
+        showInNav: true,
     },
     {
-        path: 'update/:id',
+        path: 'update/:task-id',
         title: 'Update Task',
         loadComponent: () =>
             import('../update-task-page/update-task-page').then(
                 (module) => module.UpdateTaskPage,
             ),
+        showInNav: false,
     },
     {
         path: 'task-statistics',
@@ -34,5 +41,6 @@ export const routes: Routes = [
             import('../task-statistics-page/task-statistics-page').then(
                 (module) => module.TaskStatisticsPage,
             ),
+        showInNav: true,
     },
 ];

@@ -1,89 +1,83 @@
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
     Component,
+    DestroyRef,
+    ElementRef,
     inject,
+    OnDestroy,
+    ViewChild,
 } from '@angular/core';
 import { Chart } from 'chart.js/auto';
-import { TaskService } from '../../services/task.service';
-import TaskReadDTO from '../../dtos/task-read.dto';
+import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    MonthlyTasksData,
+    TaskStatisticsService,
+} from '../../services/task-statistics.service';
 
 @Component({
     selector: 'app-task-statistics-page',
     imports: [],
     templateUrl: './task-statistics-page.html',
     styleUrl: './task-statistics-page.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
 })
-export class TaskStatisticsPage implements AfterViewInit {
-    protected taskService = inject(TaskService);
+export class TaskStatisticsPage implements AfterViewInit, OnDestroy {
+    protected isChartLoading: boolean = true;
 
-    private tasks!: TaskReadDTO[];
+    @ViewChild('taskLineChart')
+    set chartCanvas(chartCanvas: ElementRef<HTMLCanvasElement>) {
+        if (chartCanvas) {
+            this._chartCanvas = chartCanvas;
+            this._createChart(this._monthlyTasksData);
+        }
+    }
+    private _chartCanvas!: ElementRef<HTMLCanvasElement>;
+    private _chart?: Chart;
+    private _monthlyTasksData!: MonthlyTasksData;
+    private readonly _destroyRef = inject(DestroyRef);
+    private readonly _taskStatisticsService = inject(TaskStatisticsService);
 
     public ngAfterViewInit(): void {
-        this.taskService.getTasks().subscribe({
-            next: (tasks: TaskReadDTO[]) => {
-                this.tasks = tasks;
-                this.createChart();
-            },
-            error: (error: any) =>
-                console.error(
-                    `Error when fetching tasks for chart -> ${error}`,
-                ),
-        });
+        this._loadMonthlyTaskData();
     }
 
-    private createChart(): void {
-        const monthNames = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-        ];
-        const tasksByMonth = TaskStatisticsPage.getTasksPerMonthCount(
-            this.tasks,
-        );
+    public ngOnDestroy(): void {
+        this._chart?.destroy();
+    }
 
-        const chart = new Chart(
-            document.getElementById('task-line-chart') as HTMLCanvasElement,
-            {
-                type: 'line',
-                data: {
-                    labels: monthNames,
-                    datasets: [
-                        {
-                            label: 'Task Creations',
-                            data: tasksByMonth,
-                            fill: true,
-                            tension: 0.5,
-                        },
-                    ],
+    private _loadMonthlyTaskData(): void {
+        this._taskStatisticsService
+            .getMonthlyTaskData()
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe({
+                next: (monthlyTasksData: MonthlyTasksData) => {
+                    this.isChartLoading = false;
+                    this._monthlyTasksData = monthlyTasksData;
                 },
-            },
-        );
+                error: (error: HttpErrorResponse) =>
+                    console.error(
+                        `Error when fetching tasks for chart -> ${error.message}`,
+                    ),
+            });
     }
 
-    private static getTasksPerMonthCount(tasks: TaskReadDTO[]): number[] {
-        const tasksPerMonth = new Array(12).fill(0);
+    private _createChart(monthlyTasksData: MonthlyTasksData): void {
+        this._chart?.destroy();
 
-        for (const task of tasks) {
-            const createdAt = new Date(task.created_At);
-            const month = createdAt.getMonth();
-
-            if (month >= 0 && month < 12) {
-                ++tasksPerMonth[month];
-            }
-        }
-
-        return tasksPerMonth;
+        this._chart = new Chart(this._chartCanvas.nativeElement, {
+            type: 'line',
+            data: {
+                labels: monthlyTasksData.monthsLabels as string[],
+                datasets: [
+                    {
+                        label: 'Task Creations',
+                        data: monthlyTasksData.taskCountPerMonth,
+                        fill: true,
+                        tension: 0.5,
+                    },
+                ],
+            },
+        });
     }
 }

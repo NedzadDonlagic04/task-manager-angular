@@ -1,104 +1,112 @@
 using DTOs;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Services;
 
-namespace Controllers
+namespace Controllers;
+
+[ApiController]
+[Route("api/task")]
+public sealed class TaskController(ITaskService taskService) : ControllerBase
 {
-    [ApiController]
-    [Route("api/task")]
-    public class TaskController : ControllerBase
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<TaskReadDTO>>> GetTasks(
+        CancellationToken cancellationToken
+    )
     {
-        private readonly ITaskService _taskService;
+        var tasks = await taskService.GetTasksAsync(cancellationToken);
 
-        public TaskController(ITaskService taskService)
+        return Ok(tasks);
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<TaskReadDTO>> GetTaskById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var task = await taskService.GetTaskByIdAsync(id, cancellationToken);
+
+        if (task.IsFailure)
         {
-            _taskService = taskService;
+            return NotFound();
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<TaskReadDTO>>> GetTasks()
-        {
-            var tasks = await _taskService.GetTasksAsync();
+        return Ok(task.Value);
+    }
 
-            return Ok(tasks);
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<TaskReadDTO>> CreateTask(
+        [FromBody] TaskCreateUpdateDTO taskCreateDTO,
+        CancellationToken cancellationToken
+    )
+    {
+        var createdTask = await taskService.CreateTaskAsync(taskCreateDTO, cancellationToken);
+
+        if (createdTask.IsFailure)
+        {
+            return BadRequest(createdTask.Errors);
         }
 
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TaskReadDTO>> GetTaskById([FromRoute] Guid id)
+        return Ok(createdTask.Value);
+    }
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> UpdateTask(
+        [FromRoute] Guid id,
+        [FromBody] TaskCreateUpdateDTO taskUpdateDTO,
+        CancellationToken cancellationToken
+    )
+    {
+        var updatedTask = await taskService.UpdateTaskAsync(id, taskUpdateDTO, cancellationToken);
+
+        if (updatedTask.IsFailure)
         {
-            var task = await _taskService.GetTaskByIdAsync(id);
-
-            if (task.IsFailure)
-            {
-                return NotFound();
-            }
-
-            return Ok(task.Value);
+            return BadRequest(updatedTask.Errors);
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<TaskReadDTO>> CreateTask([FromBody] TaskCreateDTO taskCreateDTO)
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> DeleteTask(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await taskService.DeleteTaskAsync(id, cancellationToken);
+
+        if (result.IsFailure)
         {
-            var createdTask = await _taskService.CreateTaskAsync(taskCreateDTO);
-
-            if (createdTask.IsFailure)
-            {
-                return BadRequest(createdTask.Errors);
-            }
-
-            return Ok(createdTask.Value);
+            return BadRequest(result.Errors);
         }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateTask([FromRoute] Guid id, [FromBody] TaskUpdateDTO taskUpdateDTO)
+        return NoContent();
+    }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> DeleteMultipleTasks(
+        [FromBody] List<Guid> ids,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await taskService.DeleteTasksAsync(ids, cancellationToken);
+
+        if (result.IsFailure)
         {
-            var updatedTask = await _taskService.UpdateTaskAsync(id, taskUpdateDTO);
-
-            if (updatedTask.IsFailure)
-            {
-                return BadRequest(updatedTask.Errors);
-            }
-
-            return NoContent();
+            return BadRequest(result.Errors);
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> DeleteTask([FromRoute] Guid id)
-        {
-            var result = await _taskService.DeleteTask(id);
-
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return NoContent();
-        }
-
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> ids)
-        {
-            var result = await _taskService.DeleteTasks(ids);
-
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

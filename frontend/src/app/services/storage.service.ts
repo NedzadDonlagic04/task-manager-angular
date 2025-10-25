@@ -4,10 +4,10 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class StorageService {
-    public setItem(key: string, item: any): void {
+    public setItem(key: string, item: unknown): void {
         try {
             localStorage.setItem(key, JSON.stringify(item));
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(`Error while saving item -> ${error}`);
         }
     }
@@ -19,7 +19,7 @@ export class StorageService {
                 return JSON.parse(item) as T;
             }
             return null;
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(`Error while getting item -> ${error}`);
             return null;
         }
@@ -28,7 +28,7 @@ export class StorageService {
     public removeItem(key: string): void {
         try {
             localStorage.removeItem(key);
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(`Error while removing item -> ${error}`);
         }
     }
@@ -36,7 +36,7 @@ export class StorageService {
     public clearItems(): void {
         try {
             localStorage.clear();
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(`Error while clearing items -> ${error}`);
         }
     }

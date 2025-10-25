@@ -3,7 +3,7 @@
     extended
     class="action-button"
     [disabled]="!isAnyRowSelected()"
-    (click)="showDeleteDialog()"
+    (click)="openBatchDeleteDialog()"
 >
     <mat-icon>delete</mat-icon>
     Delete
@@ -57,7 +57,7 @@
             >
             <mat-cell *matCellDef="let task" class="hide-on-mobile">
                 @if (task.deadline !== null) { {{ task.deadline | date:'short'
-                }} } @else { {{ NOT_SET_MESSAGE }} }
+                }} } @else { {{ not_set_message }} }
             </mat-cell>
         </ng-container>
 
@@ -79,7 +79,7 @@
                 mat-sort-header
                 class="hide-on-mobile"
             >
-                Task State
+                State
             </mat-header-cell>
             <mat-cell *matCellDef="let task" class="hide-on-mobile">
                 <span
@@ -90,7 +90,7 @@
             </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="tagNames">
+        <ng-container matColumnDef="tags">
             <mat-header-cell *matHeaderCellDef class="hide-on-mobile"
                 >Tags</mat-header-cell
             >
@@ -103,7 +103,7 @@
                     >{{ tag }}</span
                 >
                 } } @else {
-                <span class="badge badge-empty">{{ NOT_SET_MESSAGE }}</span>
+                <span class="badge badge-empty">{{ not_set_message }}</span>
                 }
             </mat-cell>
         </ng-container>
@@ -114,14 +114,14 @@
                 <button
                     mat-icon-button
                     color="primary"
-                    (click)="navigatoToUpdatePage(task.id)"
+                    (click)="navigateToUpdatePage(task.id)"
                 >
                     <mat-icon>edit</mat-icon>
                 </button>
                 <button
                     mat-icon-button
                     color="warn"
-                    (click)="showDeleteDialog(task.id)"
+                    (click)="openDeleteTaskDialog(task.id)"
                 >
                     <mat-icon>delete</mat-icon>
                 </button>

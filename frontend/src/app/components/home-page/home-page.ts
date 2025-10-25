@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule, MatIcon } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home-page',
@@ -20,9 +20,9 @@ import { Router, RouterLink } from '@angular/router';
     standalone: true,
 })
 export class HomePage {
-    private router = inject(Router);
+    private _router = inject(Router);
 
     protected redirectToAddTaskPage() {
-        this.router.navigate(['/add-task']);
+        this._router.navigate(['/add-task']);
     }
 }

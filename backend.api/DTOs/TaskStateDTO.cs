@@ -1,8 +1,7 @@
-namespace DTOs
+namespace DTOs;
+
+public sealed record TaskStateDTO
 {
-    public class TaskStateDTO
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-    }
+    public required int Id { get; init; }
+    public required string Name { get; init; }
 }

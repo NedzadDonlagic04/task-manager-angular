@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Inject,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ConfirmDialog } from '../../interfaces/confirm-dialog.interface';
+import { YesNoDialogData } from '../../services/yes-no-dialog.service';
 
 @Component({
     selector: 'app-yes-no-dialog',
@@ -11,8 +16,8 @@ import { ConfirmDialog } from '../../interfaces/confirm-dialog.interface';
     standalone: true,
 })
 export class YesNoDialog {
-    public constructor(
-        protected dialogRef: MatDialogRef<YesNoDialog>,
-        @Inject(MAT_DIALOG_DATA) protected data: ConfirmDialog,
-    ) {}
+    protected readonly dialogRef: MatDialogRef<YesNoDialog> =
+        inject(MatDialogRef);
+    protected readonly yesNoDialogData =
+        inject<YesNoDialogData>(MAT_DIALOG_DATA);
 }

@@ -1,55 +1,39 @@
 using DbContexts;
-
 using DTOs;
-
 using Microsoft.EntityFrameworkCore;
-
 using Utils;
 
-namespace Services
+namespace Services;
+
+public sealed class TaskStateService(AppDbContext context) : ITaskStateService
 {
-    public class TaskStateService : ITaskStateService
+    public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync(
+        CancellationToken cancellationToken
+    )
     {
-        private readonly AppDbContext _context;
+        var results = await context
+            .TaskState.AsNoTracking()
+            .Select(taskState => new TaskStateDTO { Id = taskState.Id, Name = taskState.Name })
+            .ToListAsync(cancellationToken);
 
-        public TaskStateService(AppDbContext context)
+        return results;
+    }
+
+    public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(
+        int id,
+        CancellationToken cancellationToken
+    )
+    {
+        var taskState = await context
+            .TaskState.AsNoTracking()
+            .Select(taskState => new TaskStateDTO { Id = taskState.Id, Name = taskState.Name })
+            .FirstOrDefaultAsync(taskState => taskState.Id == id, cancellationToken);
+
+        if (taskState == null)
         {
-            _context = context;
+            return Result<TaskStateDTO>.Failure("Task state not found");
         }
 
-        public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync()
-        {
-            var results = await _context
-                                .TaskState
-                                .AsNoTracking()
-                                .Select(taskState => new TaskStateDTO
-                                {
-                                    Id = taskState.Id,
-                                    Name = taskState.Name
-                                })
-                                .ToListAsync();
-
-            return results;
-        }
-
-        public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id)
-        {
-            var taskState = await _context
-                                   .TaskState
-                                   .AsNoTracking()
-                                   .Select(taskState => new TaskStateDTO
-                                   {
-                                       Id = taskState.Id,
-                                       Name = taskState.Name
-                                   })
-                                   .FirstOrDefaultAsync(taskState => taskState.Id == id);
-
-            if (taskState == null)
-            {
-                return Result<TaskStateDTO>.Failure("Task state not found");
-            }
-
-            return Result<TaskStateDTO>.Success(taskState);
-        }
+        return Result<TaskStateDTO>.Success(taskState);
     }
 }

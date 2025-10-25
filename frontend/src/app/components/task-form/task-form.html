@@ -1,21 +1,26 @@
-<form [formGroup]="taskFormGroup" (ngSubmit)="onSubmit()" class="task-form">
+<form [formGroup]="taskFormGroup" (ngSubmit)="onSubmit()">
     <mat-card>
-        <mat-card-title>Update Task</mat-card-title>
+        <mat-card-title
+            >{{ formType() === 'create'? 'Create New Task' : 'Update Task'
+            }}</mat-card-title
+        >
 
         <mat-form-field appearance="fill">
             <mat-label>Title</mat-label>
             <input matInput formControlName="title" />
-            @if(titleControl?.errors?.['required']) {
+            @if(taskFormGroup.controls.title.errors?.['required']) {
             <mat-error> Title is a required input </mat-error>
-            } @if(titleControl?.errors?.['minlength']) {
+            } @if(taskFormGroup.controls.title.errors?.['minlength']) {
             <mat-error>
                 Title must be at least {{
-                titleControl?.errors?.['minlength'].requiredLength }} characters
+                taskFormGroup.controls.title.errors?.['minlength'].requiredLength
+                }} characters
             </mat-error>
-            } @if(titleControl?.errors?.['maxlength']) {
+            } @if(taskFormGroup.controls.title.errors?.['maxlength']) {
             <mat-error>
                 Title cannot exceed {{
-                titleControl?.errors?.['maxlength'].requiredLength }} characters
+                taskFormGroup.controls.title.errors?.['maxlength'].requiredLength
+                }} characters
             </mat-error>
             }
         </mat-form-field>
@@ -23,11 +28,11 @@
         <mat-form-field appearance="fill">
             <mat-label>Description</mat-label>
             <textarea matInput formControlName="description"></textarea>
-            @if(descriptionControl?.errors?.['maxlength']) {
+            @if(taskFormGroup.controls.description.errors?.['maxlength']) {
             <mat-error>
                 Description cannot exceed {{
-                descriptionControl?.errors?.['maxlength'].requiredLength }}
-                characters
+                taskFormGroup.controls.description.errors?.['maxlength'].requiredLength
+                }} characters
             </mat-error>
             }
         </mat-form-field>
@@ -36,23 +41,20 @@
             Add deadline?
         </mat-checkbox>
 
-        @if(hasDeadlineControl?.value) {
+        @if(taskFormGroup.controls.hasDeadline.value) {
         <mat-form-field appearance="fill">
             <mat-label>Task deadline date</mat-label>
             <input
                 matInput
                 [matDatepicker]="datePicker"
                 formControlName="deadlineDate"
+                [errorStateMatcher]="getDeadlineErrorMatcher()"
             />
             <mat-datepicker-toggle
                 matSuffix
                 [for]="datePicker"
             ></mat-datepicker-toggle>
             <mat-datepicker #datePicker></mat-datepicker>
-            @if(deadlineDateControl?.errors?.['deadlineDateAhead']) {
-            <mat-error>
-                Deadline date has to be today or a future date </mat-error
-            >}
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -61,35 +63,23 @@
                 matInput
                 [matTimepicker]="timePicker"
                 formControlName="deadlineTime"
+                [errorStateMatcher]="getDeadlineErrorMatcher()"
             />
             <mat-timepicker-toggle
                 matSuffix
                 [for]="timePicker"
             ></mat-timepicker-toggle>
             <mat-timepicker #timePicker></mat-timepicker>
-            @if(deadlineTimeControl?.errors?.['deadlineTimeAhead']) {
-            <mat-error>
-                Deadline time has to be an hour ahead of current time
-            </mat-error>
-            }
         </mat-form-field>
-        } @if (tags.length === 0) {
-        <p>Loading task states...</p>
-        } @else {
-        <mat-form-field appearance="fill">
-            <mat-label>Task States</mat-label>
-            <mat-select formControlName="taskStates">
-                @for (taskState of taskStates; track taskState.id) {
-                <mat-option [value]="taskState.id">
-                    {{ taskState.name }}
-                </mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
-        } @if (tags.length === 0) {
+        @if(taskFormGroup.errors?.['deadlineDateTimeInvalid']) {
+        <mat-error>
+            Deadline date and time has to be an hour ahead of the current date
+            and time
+        </mat-error>
+        } } @if (tags.length === 0) {
         <p>Loading task tags...</p>
         } @else {
-        <div formArrayName="tags">
+        <div formArrayName="selectedTags">
             <mat-label>Task tags:</mat-label>
             @for(tag of tags; track tag.id; let i = $index) {
             <mat-checkbox [formControlName]="i"> {{ tag.name }} </mat-checkbox>
@@ -97,13 +87,14 @@
         </div>
         }
 
-        <div>
+        <div class="form-btn-container">
             <button
                 matButton="filled"
+                color="primary"
                 type="submit"
                 [disabled]="taskFormGroup.invalid"
             >
-                Update
+                {{ formType() === 'create' ? 'Add' : 'Update' }}
             </button>
         </div>
     </mat-card>

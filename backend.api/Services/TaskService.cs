@@ -1,194 +1,194 @@
 using DbContexts;
-
 using DTOs;
-
 using Enums;
-
 using Microsoft.EntityFrameworkCore;
-
 using Utils;
 
-namespace Services
+namespace Services;
+
+public sealed class TaskService(AppDbContext context) : ITaskService
 {
-    public class TaskService : ITaskService
+    public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync(CancellationToken cancellationToken)
     {
-        private readonly AppDbContext _context;
+        var results = await context
+            .Task.AsNoTracking()
+            .Include(task => task.Tags)
+            .Include(task => task.TaskState)
+            .Select(task => new TaskReadDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Deadline = task.Deadline,
+                CreatedAt = task.CreatedAt,
+                TaskStateName = task.TaskState.Name,
+                TagNames = task.Tags.Select(tag => tag.Name).ToList(),
+            })
+            .ToListAsync(cancellationToken);
 
-        public TaskService(AppDbContext context)
+        return results;
+    }
+
+    public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var task = await context
+            .Task.AsNoTracking()
+            .Include(task => task.Tags)
+            .Include(task => task.TaskState)
+            .Select(task => new TaskReadDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Deadline = task.Deadline,
+                CreatedAt = task.CreatedAt,
+                TaskStateName = task.TaskState.Name,
+                TagNames = task.Tags.Select(tag => tag.Name).ToList(),
+            })
+            .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
+
+        if (task == null)
         {
-            _context = context;
+            return Result<TaskReadDTO>.Failure("Task not found");
         }
 
-        public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync()
-        {
-            var results = await _context
-                                .Task
-                                .AsNoTracking()
-                                .Include(task => task.Tags)
-                                .Include(task => task.TaskState)
-                                .Select(task => new TaskReadDTO
-                                {
-                                    Id = task.Id,
-                                    Title = task.Title,
-                                    Description = task.Description,
-                                    Deadline = task.Deadline,
-                                    Created_At = task.Created_At,
-                                    TaskStateName = task.TaskState.Name,
-                                    TagNames = task.Tags.Select(tag => tag.Name).ToList()
-                                })
-                                .ToListAsync();
+        return Result<TaskReadDTO>.Success(task);
+    }
 
-            return results;
+    public async Task<Result<TaskReadDTO>> CreateTaskAsync(
+        TaskCreateUpdateDTO taskCreateDTO,
+        CancellationToken cancellationToken
+    )
+    {
+        var tags = await context
+            .Tag.Where(tag => taskCreateDTO.TagIds.Contains(tag.Id))
+            .ToListAsync(cancellationToken);
+
+        if (tags.Count != taskCreateDTO.TagIds.Count)
+        {
+            return Result<TaskReadDTO>.Failure("One or more tags do not exist");
         }
 
-        public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id)
+        var newTask = new Models.Task
         {
-            var task = await _context
-                            .Task
-                            .AsNoTracking()
-                            .Include(task => task.Tags)
-                            .Include(task => task.TaskState)
-                            .Select(task => new TaskReadDTO
-                            {
-                                Id = task.Id,
-                                Title = task.Title,
-                                Description = task.Description,
-                                Deadline = task.Deadline,
-                                Created_At = task.Created_At,
-                                TaskStateName = task.TaskState.Name,
-                                TagNames = task.Tags.Select(tag => tag.Name).ToList()
-                            })
-                            .FirstOrDefaultAsync(task => task.Id == id);
+            Title = taskCreateDTO.Title,
+            Description = taskCreateDTO.Description,
+            Deadline = taskCreateDTO.Deadline?.ToUniversalTime(),
+            TaskStateId = (int)TaskStateEnum.Pending,
+            Tags = tags,
+        };
 
-            if (task == null)
-            {
-                return Result<TaskReadDTO>.Failure("Task not found");
-            }
+        context.Task.Add(newTask);
+        await context.SaveChangesAsync(cancellationToken);
+        await context.Entry(newTask).Reference(task => task.TaskState).LoadAsync(cancellationToken);
+        await context.Entry(newTask).Collection(task => task.Tags).LoadAsync(cancellationToken);
 
-            return Result<TaskReadDTO>.Success(task);
+        var result = new TaskReadDTO
+        {
+            Id = newTask.Id,
+            Title = newTask.Title,
+            Description = newTask.Description,
+            Deadline = newTask.Deadline,
+            CreatedAt = newTask.CreatedAt,
+            TaskStateName = newTask.TaskState.Name,
+            TagNames = newTask.Tags.Select(tag => tag.Name).ToList(),
+        };
+
+        return Result<TaskReadDTO>.Success(result);
+    }
+
+    public async Task<Result<TaskReadDTO>> UpdateTaskAsync(
+        Guid id,
+        TaskCreateUpdateDTO taskUpdateDTO,
+        CancellationToken cancellationToken
+    )
+    {
+        var taskToUpdate = await context
+            .Task.Include(task => task.Tags)
+            .Include(task => task.TaskState)
+            .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
+
+        if (taskToUpdate == null)
+        {
+            return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
         }
 
-        public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateDTO taskCreateDTO)
+        var tags = await context
+            .Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id))
+            .ToListAsync(cancellationToken);
+
+        if (tags.Count != taskUpdateDTO.TagIds.Count)
         {
-            var tags = await _context
-                            .Tag
-                            .Where(tag => taskCreateDTO.TagIds.Contains(tag.Id))
-                            .ToListAsync();
-
-            if (tags.Count != taskCreateDTO.TagIds.Count)
-            {
-                return Result<TaskReadDTO>.Failure("One or more tags do not exist");
-            }
-
-            var newTask = new Models.Task
-            {
-                Title = taskCreateDTO.Title,
-                Description = taskCreateDTO.Description,
-                Deadline = taskCreateDTO.Deadline?.ToUniversalTime(),
-                TaskStateId = (int)TaskStateEnum.Pending,
-                Tags = tags
-            };
-
-            _context.Task.Add(newTask);
-            await _context.SaveChangesAsync();
-            await _context.Entry(newTask).Reference(task => task.TaskState).LoadAsync();
-            await _context.Entry(newTask).Collection(task => task.Tags).LoadAsync();
-
-            var result = new TaskReadDTO
-            {
-                Id = newTask.Id,
-                Title = newTask.Title,
-                Description = newTask.Description,
-                Deadline = newTask.Deadline,
-                Created_At = newTask.Created_At,
-                TaskStateName = newTask.TaskState.Name,
-                TagNames = newTask.Tags.Select(tag => tag.Name).ToList()
-            };
-
-            return Result<TaskReadDTO>.Success(result);
+            return Result<TaskReadDTO>.Failure("One or more tags do not exist");
         }
 
-        public async Task<Result<TaskReadDTO>> UpdateTaskAsync(Guid id, TaskUpdateDTO taskUpdateDTO)
+        taskToUpdate.Title = taskUpdateDTO.Title;
+        taskToUpdate.Description = taskUpdateDTO.Description;
+        taskToUpdate.Deadline = taskUpdateDTO.Deadline;
+
+        taskToUpdate.Tags.Clear();
+        foreach (Models.Tag tag in tags)
         {
-            var taskToUpdate = await _context
-                                    .Task
-                                    .Include(task => task.Tags)
-                                    .Include(task => task.TaskState)
-                                    .FirstOrDefaultAsync(task => task.Id == id);
-
-            if (taskToUpdate == null)
-            {
-                return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
-            }
-
-            var tags = await _context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync();
-
-            if (tags.Count != taskUpdateDTO.TagIds.Count)
-            {
-                return Result<TaskReadDTO>.Failure("One or more tags do not exist");
-            }
-
-            taskToUpdate.Title = taskUpdateDTO.Title;
-            taskToUpdate.Description = taskUpdateDTO.Description;
-            taskToUpdate.Deadline = taskUpdateDTO.Deadline;
-            taskToUpdate.TaskStateId = taskUpdateDTO.TaskStateId;
-
-            taskToUpdate.Tags.Clear();
-            foreach (Models.Tag tag in tags)
-            {
-                taskToUpdate.Tags.Add(tag);
-            }
-
-            await _context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync();
-            await _context.SaveChangesAsync();
-
-            var updatedTask = new TaskReadDTO()
-            {
-                Id = taskToUpdate.Id,
-                Title = taskToUpdate.Title,
-                Description = taskToUpdate.Description,
-                Deadline = taskToUpdate.Deadline,
-                Created_At = taskToUpdate.Created_At,
-                TaskStateName = taskToUpdate.TaskState.Name,
-                TagNames = taskToUpdate.Tags.Select(tag => tag.Name).ToList()
-            };
-
-            return Result<TaskReadDTO>.Success(updatedTask);
+            taskToUpdate.Tags.Add(tag);
         }
 
-        public async Task<Result> DeleteTask(Guid id)
+        await context
+            .Entry(taskToUpdate)
+            .Reference(task => task.TaskState)
+            .LoadAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        var updatedTask = new TaskReadDTO()
         {
-            var task = await _context
-                            .Task
-                            .FindAsync(id);
+            Id = taskToUpdate.Id,
+            Title = taskToUpdate.Title,
+            Description = taskToUpdate.Description,
+            Deadline = taskToUpdate.Deadline,
+            CreatedAt = taskToUpdate.CreatedAt,
+            TaskStateName = taskToUpdate.TaskState.Name,
+            TagNames = taskToUpdate.Tags.Select(tag => tag.Name).ToList(),
+        };
 
-            if (task == null)
-            {
-                return Result.Failure("Task to delete doesn't exist");
-            }
+        return Result<TaskReadDTO>.Success(updatedTask);
+    }
 
-            _context.Task.Remove(task);
-            await _context.SaveChangesAsync();
+    public async Task<Result> DeleteTaskAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var task = await context.Task.FindAsync(id, cancellationToken);
 
-            return Result.Success();
+        if (task == null)
+        {
+            return Result.Failure("Task to delete doesn't exist");
         }
 
-        public async Task<Result> DeleteTasks(List<Guid> ids)
+        context.Task.Remove(task);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
+    }
+
+    public async Task<Result> DeleteTasksAsync(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
         {
-            var tasks = await _context
-                            .Task
-                            .Where(task => ids.Contains(task.Id))
-                            .ToListAsync();
-
-            if (tasks.Count == 0)
-            {
-                return Result.Failure("No tasks found for given list of ids");
-            }
-
-            _context.Task.RemoveRange(tasks);
-            await _context.SaveChangesAsync();
-
-            return Result.Success();
+            return Result.Failure("No task IDs provided");
         }
+
+        var tasks = await context
+            .Task.Where(task => ids.Contains(task.Id))
+            .ToListAsync(cancellationToken);
+
+        if (tasks.Count == 0)
+        {
+            return Result.Failure("No tasks found for given list of ids");
+        }
+
+        context.Task.RemoveRange(tasks);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
 }

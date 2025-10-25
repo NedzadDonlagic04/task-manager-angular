@@ -34,7 +34,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tag", (string)null);
 
                     b.HasData(
                         new
@@ -65,7 +65,7 @@ namespace backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Created_At")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Deadline")
@@ -86,7 +86,7 @@ namespace backend.Migrations
 
                     b.HasIndex("TaskStateId");
 
-                    b.ToTable("Task");
+                    b.ToTable("Task", (string)null);
                 });
 
             modelBuilder.Entity("Models.TaskState", b =>
@@ -100,7 +100,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaskState");
+                    b.ToTable("TaskState", (string)null);
 
                     b.HasData(
                         new
@@ -132,7 +132,7 @@ namespace backend.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("TaskTag");
+                    b.ToTable("TaskTag", (string)null);
                 });
 
             modelBuilder.Entity("Models.Task", b =>

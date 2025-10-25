@@ -1,12 +1,10 @@
 using DTOs;
-
 using Utils;
 
-namespace Services
+namespace Services;
+
+public interface ITaskStateService
 {
-    public interface ITaskStateService
-    {
-        Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync();
-        Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id);
-    }
+    Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync(CancellationToken cancellationToken);
+    Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id, CancellationToken cancellationToken);
 }

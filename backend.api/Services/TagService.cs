@@ -1,55 +1,34 @@
 using DbContexts;
-
 using DTOs;
-
 using Microsoft.EntityFrameworkCore;
-
 using Utils;
 
-namespace Services
+namespace Services;
+
+public sealed class TagService(AppDbContext context) : ITagService
 {
-    public class TagService : ITagService
+    public async Task<IEnumerable<TagDTO>> GetTagsAsync(CancellationToken cancellationToken)
     {
-        private readonly AppDbContext _context;
+        var results = await context
+            .Tag.AsNoTracking()
+            .Select(tag => new TagDTO { Id = tag.Id, Name = tag.Name })
+            .ToListAsync(cancellationToken);
 
-        public TagService(AppDbContext context)
+        return results;
+    }
+
+    public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var tag = await context
+            .Tag.AsNoTracking()
+            .Select(tag => new TagDTO { Id = tag.Id, Name = tag.Name })
+            .FirstOrDefaultAsync(tag => tag.Id == id, cancellationToken);
+
+        if (tag == null)
         {
-            _context = context;
+            return Result<TagDTO>.Failure("Tag not found");
         }
 
-        public async Task<IEnumerable<TagDTO>> GetTagsAsync()
-        {
-            var results = await _context
-                                .Tag
-                                .AsNoTracking()
-                                .Select(tag => new TagDTO
-                                {
-                                    Id = tag.Id,
-                                    Name = tag.Name
-                                })
-                                .ToListAsync();
-
-            return results;
-        }
-
-        public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id)
-        {
-            var tag = await _context
-                            .Tag
-                            .AsNoTracking()
-                            .Select(tag => new TagDTO
-                            {
-                                Id = tag.Id,
-                                Name = tag.Name
-                            })
-                            .FirstOrDefaultAsync(tag => tag.Id == id);
-
-            if (tag == null)
-            {
-                return Result<TagDTO>.Failure("Tag not found");
-            }
-
-            return Result<TagDTO>.Success(tag);
-        }
+        return Result<TagDTO>.Success(tag);
     }
 }

@@ -1,13 +1,12 @@
-namespace DTOs
+namespace DTOs;
+
+public sealed record TaskReadDTO
 {
-    public class TaskReadDTO
-    {
-        public Guid Id { get; set; }
-        public string Title { get; set; } = null!;
-        public string Description { get; set; } = null!;
-        public DateTime? Deadline { get; set; }
-        public DateTime Created_At { get; set; }
-        public string TaskStateName { get; set; } = null!;
-        public List<string> TagNames { get; set; } = new();
-    }
+    public required Guid Id { get; init; }
+    public required string Title { get; init; }
+    public required string Description { get; init; }
+    public DateTime? Deadline { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    public required string TaskStateName { get; init; }
+    public required IReadOnlyList<string> TagNames { get; init; }
 }

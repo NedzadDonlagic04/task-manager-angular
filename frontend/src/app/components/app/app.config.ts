@@ -7,13 +7,14 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { httpErrorHandling } from '../../interceptors/httpErrorHandling.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideNativeDateAdapter(),
-        provideHttpClient(),
+        provideHttpClient(withInterceptors([httpErrorHandling])),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
     ],

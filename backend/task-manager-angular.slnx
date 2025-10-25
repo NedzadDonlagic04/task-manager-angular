@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="backend.api/backend.api.csproj" DisplayName="Backend.API" />
+  <Project Path="Backend.Application/Backend.Application.csproj" Id="d06c68e2-5b52-46e9-a374-7b5e5655d40d" />
+  <Project Path="backend.domain/Backend.Domain.csproj" Id="ef23df8b-df77-4abf-984e-420102b6d9e3" />
+  <Project Path="Backend.Infastructure/Backend.Infastructure.csproj" Id="194e3750-80d3-43c0-baf0-3f5b1323926a" />
+  <Project Path="Backend.Shared/Backend.Shared.csproj" Id="1d63511e-f82c-4e9c-be55-13d9e4634730" />
+  <Project Path="backend.unit-tests/Backend.UnitTests.csproj" />
+</Solution>

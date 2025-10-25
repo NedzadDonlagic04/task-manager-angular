@@ -15,6 +15,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
 
         var taskStatesData = Enum.GetValues(typeof(TaskStateEnum))
             .Cast<TaskStateEnum>()
+            .Where(taskStateEnum => taskStateEnum != TaskStateEnum.Uninitialized)
             .Select(
                 taskStateEnum => new TaskState
                 {

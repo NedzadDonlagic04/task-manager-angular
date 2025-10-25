@@ -34,7 +34,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tag", (string)null);
 
                     b.HasData(
                         new
@@ -86,7 +86,7 @@ namespace backend.Migrations
 
                     b.HasIndex("TaskStateId");
 
-                    b.ToTable("Task");
+                    b.ToTable("Task", (string)null);
                 });
 
             modelBuilder.Entity("Models.TaskState", b =>
@@ -100,14 +100,9 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaskState");
+                    b.ToTable("TaskState", (string)null);
 
                     b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            Name = "Uninitialized"
-                        },
                         new
                         {
                             Id = 1,
@@ -137,7 +132,7 @@ namespace backend.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("TaskTag");
+                    b.ToTable("TaskTag", (string)null);
                 });
 
             modelBuilder.Entity("Models.Task", b =>

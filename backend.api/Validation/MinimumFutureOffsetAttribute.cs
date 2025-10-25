@@ -22,7 +22,7 @@ public sealed class MinimumFutureOffsetAttribute : ValidationAttribute
         {
             DateTime minimumValidDateTime = DateTime.UtcNow.AddHours(_hours);
 
-            return (dateTimeValue >= minimumValidDateTime)? ValidationResult.Success : new ValidationResult(ErrorMessage);
+            return (dateTimeValue >= minimumValidDateTime) ? ValidationResult.Success : new ValidationResult(ErrorMessage);
         }
 
         return new ValidationResult("Property must be a valid date.");

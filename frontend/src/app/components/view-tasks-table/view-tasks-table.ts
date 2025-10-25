@@ -61,7 +61,7 @@ export class ViewTasksTable implements OnInit, AfterViewInit {
         'title',
         'deadline',
         'createdAt',
-        'state',
+        'taskStateName',
         'tags',
         'actions',
     ];

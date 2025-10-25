@@ -1,4 +1,4 @@
-import { FormArray, FormControl } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 export type UnwrapFormControl<T> = T extends FormControl<infer U> ? U : never;
 
@@ -10,5 +10,7 @@ export type FormControlsToRawValue<T> = {
         ? UnwrapFormControl<T[K]>
         : T[K] extends FormArray<FormControl<any>>
           ? UnwrapFormArray<T[K]>
-          : never;
+          : T[K] extends FormGroup<infer U>
+            ? FormControlsToRawValue<U>
+            : never;
 };

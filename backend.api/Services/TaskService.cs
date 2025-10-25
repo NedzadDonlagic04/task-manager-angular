@@ -8,7 +8,7 @@ namespace Services;
 
 public sealed class TaskService(AppDbContext context) : ITaskService
 {
-    public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync()
+    public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync(CancellationToken cancellationToken)
     {
         var results = await context
                             .Task
@@ -25,12 +25,12 @@ public sealed class TaskService(AppDbContext context) : ITaskService
                                 TaskStateName = task.TaskState.Name,
                                 TagNames = task.Tags.Select(tag => tag.Name).ToList()
                             })
-                            .ToListAsync();
+                            .ToListAsync(cancellationToken);
 
         return results;
     }
 
-    public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id)
+    public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var task = await context
                         .Task
@@ -47,7 +47,7 @@ public sealed class TaskService(AppDbContext context) : ITaskService
                             TaskStateName = task.TaskState.Name,
                             TagNames = task.Tags.Select(tag => tag.Name).ToList()
                         })
-                        .FirstOrDefaultAsync(task => task.Id == id);
+                        .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
         if (task == null)
         {
@@ -57,12 +57,12 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         return Result<TaskReadDTO>.Success(task);
     }
 
-    public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateUpdateDTO taskCreateDTO)
+    public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateUpdateDTO taskCreateDTO, CancellationToken cancellationToken)
     {
         var tags = await context
                         .Tag
                         .Where(tag => taskCreateDTO.TagIds.Contains(tag.Id))
-                        .ToListAsync();
+                        .ToListAsync(cancellationToken);
 
         if (tags.Count != taskCreateDTO.TagIds.Count)
         {
@@ -79,9 +79,9 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         };
 
         context.Task.Add(newTask);
-        await context.SaveChangesAsync();
-        await context.Entry(newTask).Reference(task => task.TaskState).LoadAsync();
-        await context.Entry(newTask).Collection(task => task.Tags).LoadAsync();
+        await context.SaveChangesAsync(cancellationToken);
+        await context.Entry(newTask).Reference(task => task.TaskState).LoadAsync(cancellationToken);
+        await context.Entry(newTask).Collection(task => task.Tags).LoadAsync(cancellationToken);
 
         var result = new TaskReadDTO
         {
@@ -97,20 +97,20 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         return Result<TaskReadDTO>.Success(result);
     }
 
-    public async Task<Result<TaskReadDTO>> UpdateTaskAsync(Guid id, TaskCreateUpdateDTO taskUpdateDTO)
+    public async Task<Result<TaskReadDTO>> UpdateTaskAsync(Guid id, TaskCreateUpdateDTO taskUpdateDTO, CancellationToken cancellationToken)
     {
         var taskToUpdate = await context
                                 .Task
                                 .Include(task => task.Tags)
                                 .Include(task => task.TaskState)
-                                .FirstOrDefaultAsync(task => task.Id == id);
+                                .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
         if (taskToUpdate == null)
         {
             return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
         }
 
-        var tags = await context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync();
+        var tags = await context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
 
         if (tags.Count != taskUpdateDTO.TagIds.Count)
         {
@@ -127,8 +127,8 @@ public sealed class TaskService(AppDbContext context) : ITaskService
             taskToUpdate.Tags.Add(tag);
         }
 
-        await context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync();
-        await context.SaveChangesAsync();
+        await context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         var updatedTask = new TaskReadDTO()
         {
@@ -144,11 +144,11 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         return Result<TaskReadDTO>.Success(updatedTask);
     }
 
-    public async Task<Result> DeleteTask(Guid id)
+    public async Task<Result> DeleteTaskAsync(Guid id, CancellationToken cancellationToken)
     {
         var task = await context
                         .Task
-                        .FindAsync(id);
+                        .FindAsync(id, cancellationToken);
 
         if (task == null)
         {
@@ -156,17 +156,22 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         }
 
         context.Task.Remove(task);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
 
-    public async Task<Result> DeleteTasks(List<Guid> ids)
+    public async Task<Result> DeleteTasksAsync(List<Guid> ids, CancellationToken cancellationToken)
     {
+        if (ids.Count == 0)
+        {
+            return Result.Failure("No task IDs provided");
+        }
+
         var tasks = await context
                         .Task
                         .Where(task => ids.Contains(task.Id))
-                        .ToListAsync();
+                        .ToListAsync(cancellationToken);
 
         if (tasks.Count == 0)
         {
@@ -174,7 +179,7 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         }
 
         context.Task.RemoveRange(tasks);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

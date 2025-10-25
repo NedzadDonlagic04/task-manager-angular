@@ -5,6 +5,6 @@ namespace Services;
 
 public interface ITagService
 {
-    Task<IEnumerable<TagDTO>> GetTagsAsync();
-    Task<Result<TagDTO>> GetTagByIdAsync(Guid id);
+    Task<IEnumerable<TagDTO>> GetTagsAsync(CancellationToken cancellationToken);
+    Task<Result<TagDTO>> GetTagByIdAsync(Guid id, CancellationToken cancellationToken);
 }

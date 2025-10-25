@@ -7,7 +7,7 @@ namespace Services;
 
 public sealed class TaskStateService(AppDbContext context) : ITaskStateService
 {
-    public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync()
+    public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync(CancellationToken cancellationToken)
     {
         var results = await context
                             .TaskState
@@ -17,12 +17,12 @@ public sealed class TaskStateService(AppDbContext context) : ITaskStateService
                                 Id = taskState.Id,
                                 Name = taskState.Name
                             })
-                            .ToListAsync();
+                            .ToListAsync(cancellationToken);
 
         return results;
     }
 
-    public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id)
+    public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(int id, CancellationToken cancellationToken)
     {
         var taskState = await context
                                .TaskState
@@ -32,7 +32,7 @@ public sealed class TaskStateService(AppDbContext context) : ITaskStateService
                                    Id = taskState.Id,
                                    Name = taskState.Name
                                })
-                               .FirstOrDefaultAsync(taskState => taskState.Id == id);
+                               .FirstOrDefaultAsync(taskState => taskState.Id == id, cancellationToken);
 
         if (taskState == null)
         {

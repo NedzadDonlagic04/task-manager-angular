@@ -7,7 +7,7 @@ namespace Services;
 
 public sealed class TagService(AppDbContext context) : ITagService
 {
-    public async Task<IEnumerable<TagDTO>> GetTagsAsync()
+    public async Task<IEnumerable<TagDTO>> GetTagsAsync(CancellationToken cancellationToken)
     {
         var results = await context
                             .Tag
@@ -17,12 +17,12 @@ public sealed class TagService(AppDbContext context) : ITagService
                                 Id = tag.Id,
                                 Name = tag.Name
                             })
-                            .ToListAsync();
+                            .ToListAsync(cancellationToken);
 
         return results;
     }
 
-    public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id)
+    public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var tag = await context
                         .Tag
@@ -32,7 +32,7 @@ public sealed class TagService(AppDbContext context) : ITagService
                             Id = tag.Id,
                             Name = tag.Name
                         })
-                        .FirstOrDefaultAsync(tag => tag.Id == id);
+                        .FirstOrDefaultAsync(tag => tag.Id == id, cancellationToken);
 
         if (tag == null)
         {

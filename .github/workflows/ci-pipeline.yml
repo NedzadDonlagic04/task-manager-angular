@@ -1,63 +1,58 @@
 name: .NET CI Pipeline
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  workflow_dispatch:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+    workflow_dispatch:
 
 jobs:
-  format-check:
-    runs-on: ubuntu-latest
+    format-check:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "9.0.x"
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "9.0.x"
 
-      - name: Restore dependencies for backend.api
-        run: dotnet restore
-        working-directory: ./backend.api
+            - name: Install csharpier
+              run: dotnet tool install -g csharpier
 
-      - name: Format Check for backend.api
-        run: dotnet format --verify-no-changes --verbosity diagnostic
-        working-directory: ./backend.api
+            - name: Format check for backend.api
+              run: csharpier check .
+              working-directory: ./backend.api
 
-      - name: Restore dependencies for backend.unit-tests
-        run: dotnet restore
-        working-directory: ./backend.unit-tests
+            - name: Format check for backend.unit-tests
+              run: csharpier check .
+              working-directory: ./backend.unit-tests
 
-      - name: Format Check for backend.unit-tests
-        run: dotnet format --verify-no-changes --verbosity diagnostic
-        working-directory: ./backend.unit-tests
+    build-and-test:
+        runs-on: ubuntu-latest
+        needs: format-check
 
-  build-and-test:
-    runs-on: ubuntu-latest
-    needs: format-check
+        defaults:
+            run:
+                working-directory: ./backend.unit-tests
 
-    defaults:
-      run:
-        working-directory: ./backend.unit-tests
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "9.0.x"
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "9.0.x"
+            - name: Restore dependencies
+              run: dotnet restore
 
-      - name: Restore dependencies
-        run: dotnet restore
+            - name: Build
+              run: dotnet build --no-restore
 
-      - name: Build
-        run: dotnet build --no-restore
-
-      - name: Run tests
-        run: dotnet test --no-build
+            - name: Run tests
+              run: dotnet test --no-build

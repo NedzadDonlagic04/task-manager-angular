@@ -1,20 +1,19 @@
 <mat-toolbar class="app-toolbar mat-elevation-z4">
     <div class="toolbar-content container-fluid">
-        <span class="app-title">OverEngineered Task Manager</span>
+        <span class="app-title">Task Manager</span>
         <span class="flex-spacer"></span>
 
         <nav class="nav-buttons d-none d-md-flex align-items-center gap-2">
-            @for (route of routes; track route.path) { @if (route.path !==
-            "update/:id") {
+            @for (navRoute of navRoutes; track navRoute.path) {
             <button
                 mat-flat-button
                 color="accent"
                 class="nav-btn button-custom-style"
-                [routerLink]="'/' + route.path"
+                [routerLink]="'/' + navRoute.path"
             >
-                {{ route.title }}
+                {{ navRoute.title }}
             </button>
-            } }
+            }
 
             <button
                 mat-icon-button
@@ -23,7 +22,8 @@
                 class="theme-toggle"
             >
                 <mat-icon>
-                    {{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}
+                    {{ themeService.isDarkTheme() ? 'brightness_7' :
+                    'brightness_4' }}
                 </mat-icon>
             </button>
         </nav>
@@ -41,15 +41,14 @@
 </mat-toolbar>
 
 <mat-menu #mobileMenu="matMenu" class="mobile-menu">
-    @for (route of routes; track route.path) { @if (route.path !== "update/:id")
-    {
-    <button mat-menu-item [routerLink]="'/' + route.path">
-        {{ route.title }}
+    @for (navRoute of navRoutes; track navRoute.path) {
+    <button mat-menu-item [routerLink]="'/' + navRoute.path">
+        {{ navRoute.title }}
     </button>
-    } }
+    }
     <button mat-menu-item (click)="toggleDarkTheme()">
         <mat-icon>
-            {{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}
+            {{ themeService.isDarkTheme() ? 'brightness_7' : 'brightness_4' }}
         </mat-icon>
         Toggle Theme
     </button>
@@ -62,7 +61,5 @@
 <footer class="app-footer text-center py-3 mt-auto">
     <div class="container">
         © 2025 Goofy little project by a couple of friends.<br />
-        Built with Angular, Angular Material, Bootstrap, and a sprinkle of
-        over-engineering.
     </div>
 </footer>

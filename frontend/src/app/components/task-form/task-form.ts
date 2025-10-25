@@ -22,6 +22,7 @@ import TaskCreateUpdateDTO from '../../dtos/task/task-create-update.dto';
 import { TaskService } from '../../services/task.service';
 import TaskReadDTO from '../../dtos/task/task-read.dto';
 import { forkJoin } from 'rxjs';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
     selector: 'app-task-form',
@@ -87,6 +88,14 @@ export class TaskForm implements OnInit {
         } else {
             this._handleUpdateSubmit();
         }
+    }
+
+    protected getDeadlineErrorMatcher(): ErrorStateMatcher {
+        return {
+            isErrorState: () => {
+                return this.taskFormGroup.errors?.['deadlineDateTimeInvalid'];
+            },
+        };
     }
 
     private _handleCreateSubmit(): void {

@@ -48,6 +48,7 @@
                 matInput
                 [matDatepicker]="datePicker"
                 formControlName="deadlineDate"
+                [errorStateMatcher]="getDeadlineErrorMatcher()"
             />
             <mat-datepicker-toggle
                 matSuffix
@@ -62,21 +63,20 @@
                 matInput
                 [matTimepicker]="timePicker"
                 formControlName="deadlineTime"
+                [errorStateMatcher]="getDeadlineErrorMatcher()"
             />
             <mat-timepicker-toggle
                 matSuffix
                 [for]="timePicker"
             ></mat-timepicker-toggle>
             <mat-timepicker #timePicker></mat-timepicker>
-            @if(taskFormGroup.controls.deadlineTime.errors?.['deadlineDateTimeInvalid'])
-            {
-            <mat-error>
-                Deadline date and time has to be an hour ahead of the current
-                date and time
-            </mat-error>
-            }
         </mat-form-field>
-        } @if (tags.length === 0) {
+        @if(taskFormGroup.errors?.['deadlineDateTimeInvalid']) {
+        <mat-error>
+            Deadline date and time has to be an hour ahead of the current date
+            and time
+        </mat-error>
+        } } @if (tags.length === 0) {
         <p>Loading task tags...</p>
         } @else {
         <div formArrayName="selectedTags">

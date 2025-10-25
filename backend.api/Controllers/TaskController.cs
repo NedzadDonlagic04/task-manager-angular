@@ -1,7 +1,5 @@
 using DTOs;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Services;
 
 namespace Controllers;
@@ -12,7 +10,9 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<TaskReadDTO>>> GetTasks(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<TaskReadDTO>>> GetTasks(
+        CancellationToken cancellationToken
+    )
     {
         var tasks = await taskService.GetTasksAsync(cancellationToken);
 
@@ -22,7 +22,10 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<TaskReadDTO>> GetTaskById([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<TaskReadDTO>> GetTaskById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
     {
         var task = await taskService.GetTaskByIdAsync(id, cancellationToken);
 
@@ -37,7 +40,10 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<TaskReadDTO>> CreateTask([FromBody] TaskCreateUpdateDTO taskCreateDTO, CancellationToken cancellationToken)
+    public async Task<ActionResult<TaskReadDTO>> CreateTask(
+        [FromBody] TaskCreateUpdateDTO taskCreateDTO,
+        CancellationToken cancellationToken
+    )
     {
         var createdTask = await taskService.CreateTaskAsync(taskCreateDTO, cancellationToken);
 
@@ -52,7 +58,11 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> UpdateTask([FromRoute] Guid id, [FromBody] TaskCreateUpdateDTO taskUpdateDTO, CancellationToken cancellationToken)
+    public async Task<ActionResult> UpdateTask(
+        [FromRoute] Guid id,
+        [FromBody] TaskCreateUpdateDTO taskUpdateDTO,
+        CancellationToken cancellationToken
+    )
     {
         var updatedTask = await taskService.UpdateTaskAsync(id, taskUpdateDTO, cancellationToken);
 
@@ -67,7 +77,10 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> DeleteTask([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> DeleteTask(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
     {
         var result = await taskService.DeleteTaskAsync(id, cancellationToken);
 
@@ -82,7 +95,10 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> DeleteMultipleTasks([FromBody] List<Guid> ids, CancellationToken cancellationToken)
+    public async Task<ActionResult> DeleteMultipleTasks(
+        [FromBody] List<Guid> ids,
+        CancellationToken cancellationToken
+    )
     {
         var result = await taskService.DeleteTasksAsync(ids, cancellationToken);
 

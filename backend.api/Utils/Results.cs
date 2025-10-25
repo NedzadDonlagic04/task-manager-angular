@@ -18,6 +18,7 @@ public sealed class Result
     }
 
     public static Result Success() => new Result();
+
     public static Result Failure(string error) => new Result(new List<string> { error });
 }
 
@@ -41,6 +42,8 @@ public sealed class Result<T>
     }
 
     public static Result<T> Success(T value) => new Result<T>(value);
+
     public static Result<T> Failure(string error) => new Result<T>(new List<string>() { error });
+
     public static Result<T> Failure(List<string> errors) => new Result<T>(errors);
 }

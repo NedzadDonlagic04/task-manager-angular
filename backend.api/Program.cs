@@ -1,7 +1,5 @@
 using DbContexts;
-
 using Microsoft.EntityFrameworkCore;
-
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,17 +8,19 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"] ?? throw new Exception("Cors:AllowedOrigin not set");
+var allowedOrigin =
+    builder.Configuration["Cors:AllowedOrigin"]
+    ?? throw new Exception("Cors:AllowedOrigin not set");
 builder.Services.AddCors(options =>
-    {
-        options.AddPolicy("AllowFrontend", policy =>
-            policy.WithOrigins(allowedOrigin)
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-    }
-);
+{
+    options.AddPolicy(
+        "AllowFrontend",
+        policy => policy.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader()
+    );
+});
 
-var connectionString = builder.Configuration["Database_Url"] ?? throw new Exception("Database_Url not set");
+var connectionString =
+    builder.Configuration["Database_Url"] ?? throw new Exception("Database_Url not set");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<ITagService, TagService>();

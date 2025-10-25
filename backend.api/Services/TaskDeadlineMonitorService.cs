@@ -1,7 +1,5 @@
 using DbContexts;
-
 using Enums;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Services;
@@ -19,20 +17,30 @@ public sealed class TaskDeadlineMonitorService(
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             var expiredTasks = await context
-                                    .Task
-                                    .Where(task => task.Deadline < DateTime.UtcNow && task.TaskStateId == (int)TaskStateEnum.Pending)
-                                    .ToListAsync(stoppingToken);
+                .Task.Where(task =>
+                    task.Deadline < DateTime.UtcNow
+                    && task.TaskStateId == (int)TaskStateEnum.Pending
+                )
+                .ToListAsync(stoppingToken);
 
             foreach (var expiredTask in expiredTasks)
             {
                 expiredTask.TaskStateId = (int)TaskStateEnum.Fail;
-                logger.LogInformation("Task '{ExpiredTaskTitle}' (ID: {ExpiredTaskI}) has expired and its state has been set to {TaskStateFailName}.", expiredTask.Title, expiredTask.Id, nameof(TaskStateEnum.Fail));
+                logger.LogInformation(
+                    "Task '{ExpiredTaskTitle}' (ID: {ExpiredTaskI}) has expired and its state has been set to {TaskStateFailName}.",
+                    expiredTask.Title,
+                    expiredTask.Id,
+                    nameof(TaskStateEnum.Fail)
+                );
             }
 
             if (expiredTasks.Any())
             {
                 await context.SaveChangesAsync(stoppingToken);
-                logger.LogInformation("Successfully updated {UpdatedTasksCount} expired tasks.", expiredTasks.Count);
+                logger.LogInformation(
+                    "Successfully updated {UpdatedTasksCount} expired tasks.",
+                    expiredTasks.Count
+                );
             }
             else
             {

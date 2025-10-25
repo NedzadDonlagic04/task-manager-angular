@@ -15,7 +15,8 @@ public sealed class EnumValidationAttribute : ValidationAttribute
 
         _enumType = enumType;
 
-        ErrorMessage = $"Invalid value for the enum '{_enumType.Name}'. Valid enum values: {string.Join(", ", Enum.GetNames(_enumType))}";
+        ErrorMessage =
+            $"Invalid value for the enum '{_enumType.Name}'. Valid enum values: {string.Join(", ", Enum.GetNames(_enumType))}";
     }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)

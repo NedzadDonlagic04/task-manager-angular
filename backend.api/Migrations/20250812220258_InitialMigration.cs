@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -17,24 +16,26 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tag", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "TaskState",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TaskState", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "Task",
@@ -43,9 +44,15 @@ namespace backend.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Deadline = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TaskStateId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Deadline = table.Column<DateTime>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
+                    CreatedAt = table.Column<DateTime>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
+                    TaskStateId = table.Column<Guid>(type: "uuid", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -55,15 +62,17 @@ namespace backend.Migrations
                         column: x => x.TaskStateId,
                         principalTable: "TaskState",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "TagTask",
                 columns: table => new
                 {
                     TagsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TasksId = table.Column<Guid>(type: "uuid", nullable: false)
+                    TasksId = table.Column<Guid>(type: "uuid", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -73,21 +82,24 @@ namespace backend.Migrations
                         column: x => x.TagsId,
                         principalTable: "Tag",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_TagTask_Task_TasksId",
                         column: x => x.TasksId,
                         principalTable: "Task",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "TaskTag",
                 columns: table => new
                 {
                     TaskId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TagId = table.Column<Guid>(type: "uuid", nullable: false)
+                    TagId = table.Column<Guid>(type: "uuid", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -97,48 +109,49 @@ namespace backend.Migrations
                         column: x => x.TagId,
                         principalTable: "Tag",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_TaskTag_Task_TaskId",
                         column: x => x.TaskId,
                         principalTable: "Task",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_TagTask_TasksId",
                 table: "TagTask",
-                column: "TasksId");
+                column: "TasksId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Task_TaskStateId",
                 table: "Task",
-                column: "TaskStateId");
+                column: "TaskStateId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaskTag_TagId",
                 table: "TaskTag",
-                column: "TagId");
+                column: "TagId"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "TagTask");
+            migrationBuilder.DropTable(name: "TagTask");
 
-            migrationBuilder.DropTable(
-                name: "TaskTag");
+            migrationBuilder.DropTable(name: "TaskTag");
 
-            migrationBuilder.DropTable(
-                name: "Tag");
+            migrationBuilder.DropTable(name: "Tag");
 
-            migrationBuilder.DropTable(
-                name: "Task");
+            migrationBuilder.DropTable(name: "Task");
 
-            migrationBuilder.DropTable(
-                name: "TaskState");
+            migrationBuilder.DropTable(name: "TaskState");
         }
     }
 }

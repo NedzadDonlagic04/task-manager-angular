@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -12,8 +11,7 @@ namespace backend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "TagTask");
+            migrationBuilder.DropTable(name: "TagTask");
         }
 
         /// <inheritdoc />
@@ -24,7 +22,7 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     TagsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TasksId = table.Column<Guid>(type: "uuid", nullable: false)
+                    TasksId = table.Column<Guid>(type: "uuid", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -34,19 +32,23 @@ namespace backend.Migrations
                         column: x => x.TagsId,
                         principalTable: "Tag",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_TagTask_Task_TasksId",
                         column: x => x.TasksId,
                         principalTable: "Task",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_TagTask_TasksId",
                 table: "TagTask",
-                column: "TasksId");
+                column: "TasksId"
+            );
         }
     }
 }

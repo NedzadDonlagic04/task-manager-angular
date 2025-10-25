@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
 using DTOs;
-
 using Validation;
 
 namespace UnitTest.DTOs
@@ -15,7 +13,7 @@ namespace UnitTest.DTOs
                 Title = "Valid Task Title",
                 Description = "Valid Task Description",
                 Deadline = DateTime.Now.AddDays(7),
-                TagIds = new List<Guid>()
+                TagIds = new List<Guid>(),
             };
         }
 
@@ -24,23 +22,36 @@ namespace UnitTest.DTOs
             var validationContext = new ValidationContext(taskCreateUpdateDTO);
             var validationResults = new List<ValidationResult>();
 
-            Validator.TryValidateObject(taskCreateUpdateDTO, validationContext, validationResults, true);
+            Validator.TryValidateObject(
+                taskCreateUpdateDTO,
+                validationContext,
+                validationResults,
+                true
+            );
 
             return validationResults;
         }
 
-        private static string GetErrorMessageFromAttribute<TPropertyOwner, TAttribute>(string propertyName)
+        private static string GetErrorMessageFromAttribute<TPropertyOwner, TAttribute>(
+            string propertyName
+        )
             where TAttribute : ValidationAttribute
         {
             var property = typeof(TPropertyOwner).GetProperty(propertyName);
 
             if (property == null)
             {
-                throw new ArgumentException($"Property '{propertyName}' doesn't exist on type '{typeof(TPropertyOwner).Name}'");
+                throw new ArgumentException(
+                    $"Property '{propertyName}' doesn't exist on type '{typeof(TPropertyOwner).Name}'"
+                );
             }
 
-            var attribute = property.GetCustomAttributes(typeof(TAttribute), true).FirstOrDefault() as TAttribute;
-            var errorMessage = attribute?.FormatErrorMessage(propertyName) ?? $"The {propertyName} field is not valid.";
+            var attribute =
+                property.GetCustomAttributes(typeof(TAttribute), true).FirstOrDefault()
+                as TAttribute;
+            var errorMessage =
+                attribute?.FormatErrorMessage(propertyName)
+                ?? $"The {propertyName} field is not valid.";
 
             return errorMessage;
         }
@@ -61,7 +72,10 @@ namespace UnitTest.DTOs
             var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with { Title = null! };
 
             var results = Validate(taskCreateUpdateDTO);
-            var expectedErrorMessage = GetErrorMessageFromAttribute<TaskCreateUpdateDTO, RequiredAttribute>(nameof(TaskCreateUpdateDTO.Title));
+            var expectedErrorMessage = GetErrorMessageFromAttribute<
+                TaskCreateUpdateDTO,
+                RequiredAttribute
+            >(nameof(TaskCreateUpdateDTO.Title));
 
             Assert.Single(results);
             Assert.Equal(expectedErrorMessage, results[0].ErrorMessage);
@@ -73,7 +87,10 @@ namespace UnitTest.DTOs
             var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with { Title = "aa" };
 
             var results = Validate(taskCreateUpdateDTO);
-            var expectedErrorMessage = GetErrorMessageFromAttribute<TaskCreateUpdateDTO, StringLengthAttribute>(nameof(TaskCreateUpdateDTO.Title));
+            var expectedErrorMessage = GetErrorMessageFromAttribute<
+                TaskCreateUpdateDTO,
+                StringLengthAttribute
+            >(nameof(TaskCreateUpdateDTO.Title));
 
             Assert.Single(results);
             Assert.Equal(expectedErrorMessage, results[0].ErrorMessage);
@@ -82,10 +99,16 @@ namespace UnitTest.DTOs
         [Fact]
         public void Title_TooLong_ReturnsValidationError()
         {
-            var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with { Title = new string('a', 51) };
+            var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with
+            {
+                Title = new string('a', 51),
+            };
 
             var results = Validate(taskCreateUpdateDTO);
-            var expectedErrorMessage = GetErrorMessageFromAttribute<TaskCreateUpdateDTO, StringLengthAttribute>(nameof(TaskCreateUpdateDTO.Title));
+            var expectedErrorMessage = GetErrorMessageFromAttribute<
+                TaskCreateUpdateDTO,
+                StringLengthAttribute
+            >(nameof(TaskCreateUpdateDTO.Title));
 
             Assert.Single(results);
             Assert.Equal(expectedErrorMessage, results[0].ErrorMessage);
@@ -94,10 +117,16 @@ namespace UnitTest.DTOs
         [Fact]
         public void Description_TooLong_ReturnsValidationError()
         {
-            var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with { Description = new string('a', 1_001) };
+            var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with
+            {
+                Description = new string('a', 1_001),
+            };
 
             var results = Validate(taskCreateUpdateDTO);
-            var expectedErrorMessage = GetErrorMessageFromAttribute<TaskCreateUpdateDTO, StringLengthAttribute>(nameof(TaskCreateUpdateDTO.Description));
+            var expectedErrorMessage = GetErrorMessageFromAttribute<
+                TaskCreateUpdateDTO,
+                StringLengthAttribute
+            >(nameof(TaskCreateUpdateDTO.Description));
 
             Assert.Single(results);
             Assert.Equal(expectedErrorMessage, results[0].ErrorMessage);
@@ -106,10 +135,16 @@ namespace UnitTest.DTOs
         [Fact]
         public void Deadline_NotAnHourAhead_ReturnsValidationError()
         {
-            var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with { Deadline = DateTime.UtcNow };
+            var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with
+            {
+                Deadline = DateTime.UtcNow,
+            };
 
             var results = Validate(taskCreateUpdateDTO);
-            var expectedErrorMessage = GetErrorMessageFromAttribute<TaskCreateUpdateDTO, MinimumFutureOffsetAttribute>(nameof(TaskCreateUpdateDTO.Deadline));
+            var expectedErrorMessage = GetErrorMessageFromAttribute<
+                TaskCreateUpdateDTO,
+                MinimumFutureOffsetAttribute
+            >(nameof(TaskCreateUpdateDTO.Deadline));
 
             Assert.Single(results);
             Assert.Equal(expectedErrorMessage, results[0].ErrorMessage);
@@ -121,7 +156,10 @@ namespace UnitTest.DTOs
             var taskCreateUpdateDTO = CreateValidTaskCreateUpdateDTO() with { TagIds = null! };
 
             var results = Validate(taskCreateUpdateDTO);
-            var expectedErrorMessage = GetErrorMessageFromAttribute<TaskCreateUpdateDTO, RequiredAttribute>(nameof(TaskCreateUpdateDTO.TagIds));
+            var expectedErrorMessage = GetErrorMessageFromAttribute<
+                TaskCreateUpdateDTO,
+                RequiredAttribute
+            >(nameof(TaskCreateUpdateDTO.TagIds));
 
             Assert.Single(results);
             Assert.Equal(expectedErrorMessage, results[0].ErrorMessage);

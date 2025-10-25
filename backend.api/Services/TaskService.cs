@@ -1,11 +1,7 @@
 using DbContexts;
-
 using DTOs;
-
 using Enums;
-
 using Microsoft.EntityFrameworkCore;
-
 using Utils;
 
 namespace Services;
@@ -15,43 +11,44 @@ public sealed class TaskService(AppDbContext context) : ITaskService
     public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync(CancellationToken cancellationToken)
     {
         var results = await context
-                            .Task
-                            .AsNoTracking()
-                            .Include(task => task.Tags)
-                            .Include(task => task.TaskState)
-                            .Select(task => new TaskReadDTO
-                            {
-                                Id = task.Id,
-                                Title = task.Title,
-                                Description = task.Description,
-                                Deadline = task.Deadline,
-                                CreatedAt = task.CreatedAt,
-                                TaskStateName = task.TaskState.Name,
-                                TagNames = task.Tags.Select(tag => tag.Name).ToList()
-                            })
-                            .ToListAsync(cancellationToken);
+            .Task.AsNoTracking()
+            .Include(task => task.Tags)
+            .Include(task => task.TaskState)
+            .Select(task => new TaskReadDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Deadline = task.Deadline,
+                CreatedAt = task.CreatedAt,
+                TaskStateName = task.TaskState.Name,
+                TagNames = task.Tags.Select(tag => tag.Name).ToList(),
+            })
+            .ToListAsync(cancellationToken);
 
         return results;
     }
 
-    public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    )
     {
         var task = await context
-                        .Task
-                        .AsNoTracking()
-                        .Include(task => task.Tags)
-                        .Include(task => task.TaskState)
-                        .Select(task => new TaskReadDTO
-                        {
-                            Id = task.Id,
-                            Title = task.Title,
-                            Description = task.Description,
-                            Deadline = task.Deadline,
-                            CreatedAt = task.CreatedAt,
-                            TaskStateName = task.TaskState.Name,
-                            TagNames = task.Tags.Select(tag => tag.Name).ToList()
-                        })
-                        .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
+            .Task.AsNoTracking()
+            .Include(task => task.Tags)
+            .Include(task => task.TaskState)
+            .Select(task => new TaskReadDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Deadline = task.Deadline,
+                CreatedAt = task.CreatedAt,
+                TaskStateName = task.TaskState.Name,
+                TagNames = task.Tags.Select(tag => tag.Name).ToList(),
+            })
+            .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
         if (task == null)
         {
@@ -61,12 +58,14 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         return Result<TaskReadDTO>.Success(task);
     }
 
-    public async Task<Result<TaskReadDTO>> CreateTaskAsync(TaskCreateUpdateDTO taskCreateDTO, CancellationToken cancellationToken)
+    public async Task<Result<TaskReadDTO>> CreateTaskAsync(
+        TaskCreateUpdateDTO taskCreateDTO,
+        CancellationToken cancellationToken
+    )
     {
         var tags = await context
-                        .Tag
-                        .Where(tag => taskCreateDTO.TagIds.Contains(tag.Id))
-                        .ToListAsync(cancellationToken);
+            .Tag.Where(tag => taskCreateDTO.TagIds.Contains(tag.Id))
+            .ToListAsync(cancellationToken);
 
         if (tags.Count != taskCreateDTO.TagIds.Count)
         {
@@ -79,7 +78,7 @@ public sealed class TaskService(AppDbContext context) : ITaskService
             Description = taskCreateDTO.Description,
             Deadline = taskCreateDTO.Deadline?.ToUniversalTime(),
             TaskStateId = (int)TaskStateEnum.Pending,
-            Tags = tags
+            Tags = tags,
         };
 
         context.Task.Add(newTask);
@@ -95,26 +94,31 @@ public sealed class TaskService(AppDbContext context) : ITaskService
             Deadline = newTask.Deadline,
             CreatedAt = newTask.CreatedAt,
             TaskStateName = newTask.TaskState.Name,
-            TagNames = newTask.Tags.Select(tag => tag.Name).ToList()
+            TagNames = newTask.Tags.Select(tag => tag.Name).ToList(),
         };
 
         return Result<TaskReadDTO>.Success(result);
     }
 
-    public async Task<Result<TaskReadDTO>> UpdateTaskAsync(Guid id, TaskCreateUpdateDTO taskUpdateDTO, CancellationToken cancellationToken)
+    public async Task<Result<TaskReadDTO>> UpdateTaskAsync(
+        Guid id,
+        TaskCreateUpdateDTO taskUpdateDTO,
+        CancellationToken cancellationToken
+    )
     {
         var taskToUpdate = await context
-                                .Task
-                                .Include(task => task.Tags)
-                                .Include(task => task.TaskState)
-                                .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
+            .Task.Include(task => task.Tags)
+            .Include(task => task.TaskState)
+            .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
         if (taskToUpdate == null)
         {
             return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
         }
 
-        var tags = await context.Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
+        var tags = await context
+            .Tag.Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id))
+            .ToListAsync(cancellationToken);
 
         if (tags.Count != taskUpdateDTO.TagIds.Count)
         {
@@ -131,7 +135,10 @@ public sealed class TaskService(AppDbContext context) : ITaskService
             taskToUpdate.Tags.Add(tag);
         }
 
-        await context.Entry(taskToUpdate).Reference(task => task.TaskState).LoadAsync(cancellationToken);
+        await context
+            .Entry(taskToUpdate)
+            .Reference(task => task.TaskState)
+            .LoadAsync(cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
         var updatedTask = new TaskReadDTO()
@@ -142,7 +149,7 @@ public sealed class TaskService(AppDbContext context) : ITaskService
             Deadline = taskToUpdate.Deadline,
             CreatedAt = taskToUpdate.CreatedAt,
             TaskStateName = taskToUpdate.TaskState.Name,
-            TagNames = taskToUpdate.Tags.Select(tag => tag.Name).ToList()
+            TagNames = taskToUpdate.Tags.Select(tag => tag.Name).ToList(),
         };
 
         return Result<TaskReadDTO>.Success(updatedTask);
@@ -150,9 +157,7 @@ public sealed class TaskService(AppDbContext context) : ITaskService
 
     public async Task<Result> DeleteTaskAsync(Guid id, CancellationToken cancellationToken)
     {
-        var task = await context
-                        .Task
-                        .FindAsync(id, cancellationToken);
+        var task = await context.Task.FindAsync(id, cancellationToken);
 
         if (task == null)
         {
@@ -173,9 +178,8 @@ public sealed class TaskService(AppDbContext context) : ITaskService
         }
 
         var tasks = await context
-                        .Task
-                        .Where(task => ids.Contains(task.Id))
-                        .ToListAsync(cancellationToken);
+            .Task.Where(task => ids.Contains(task.Id))
+            .ToListAsync(cancellationToken);
 
         if (tasks.Count == 0)
         {

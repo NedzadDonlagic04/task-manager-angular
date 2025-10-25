@@ -6,15 +6,17 @@ import {
     NonNullableFormBuilder,
 } from '@angular/forms';
 import { FormControlsToRawValue } from '../utils/extract-raw-values-from-form.utils';
-import { startDateBeforeEndDateValidator } from '../validators/start-date-before-end-date.validator';
 import TagDTO from '../dtos/tag.dto';
+
+export interface DateRangeControls {
+    start: FormControl<Date | null>;
+    end: FormControl<Date | null>;
+}
 
 export interface FilterTaskFormControls {
     searchTerm: FormControl<string>;
-    deadlineStart: FormControl<string>;
-    deadlineEnd: FormControl<string>;
-    createdAtStart: FormControl<string>;
-    createdAtEnd: FormControl<string>;
+    deadlineRange: FormGroup<DateRangeControls>;
+    createdAtRange: FormGroup<DateRangeControls>;
     taskStateName: FormControl<string>;
     selectedTags: FormArray<FormControl<boolean>>;
 }
@@ -24,10 +26,14 @@ export type FilterTaskFormValue =
 
 export interface ProcessedFilterTaskFormValue {
     searchTerm: string;
-    deadlineStart: Date | null;
-    deadlineEnd: Date | null;
-    createdAtStart: Date | null;
-    createdAtEnd: Date | null;
+    deadline: {
+        start: Date | null;
+        end: Date | null;
+    };
+    createdAt: {
+        start: Date | null;
+        end: Date | null;
+    };
     taskStateName: string;
     tagNames: string[];
 }
@@ -38,31 +44,27 @@ export class FilterTasksFormService {
 
     public createFilterTaskFormGroup(): FormGroup<FilterTaskFormControls> {
         const filterTaskFormGroup =
-            this._nonNullableFormBuilder.group<FilterTaskFormControls>(
-                {
-                    searchTerm: this._nonNullableFormBuilder.control(''),
-                    deadlineStart: this._nonNullableFormBuilder.control(''),
-                    deadlineEnd: this._nonNullableFormBuilder.control(''),
-                    createdAtStart: this._nonNullableFormBuilder.control(''),
-                    createdAtEnd: this._nonNullableFormBuilder.control(''),
-                    taskStateName: this._nonNullableFormBuilder.control(''),
-                    selectedTags: this._nonNullableFormBuilder.array<boolean>(
-                        [],
+            this._nonNullableFormBuilder.group<FilterTaskFormControls>({
+                searchTerm: this._nonNullableFormBuilder.control(''),
+                deadlineRange: this._nonNullableFormBuilder.group({
+                    start: this._nonNullableFormBuilder.control<Date | null>(
+                        null,
                     ),
-                },
-                {
-                    validators: [
-                        startDateBeforeEndDateValidator(
-                            'deadlineStart',
-                            'deadlineEnd',
-                        ),
-                        startDateBeforeEndDateValidator(
-                            'createdAtStart',
-                            'createdAtEnd',
-                        ),
-                    ],
-                },
-            );
+                    end: this._nonNullableFormBuilder.control<Date | null>(
+                        null,
+                    ),
+                }),
+                createdAtRange: this._nonNullableFormBuilder.group({
+                    start: this._nonNullableFormBuilder.control<Date | null>(
+                        null,
+                    ),
+                    end: this._nonNullableFormBuilder.control<Date | null>(
+                        null,
+                    ),
+                }),
+                taskStateName: this._nonNullableFormBuilder.control(''),
+                selectedTags: this._nonNullableFormBuilder.array<boolean>([]),
+            });
 
         return filterTaskFormGroup;
     }
@@ -84,10 +86,14 @@ export class FilterTasksFormService {
     ): ProcessedFilterTaskFormValue {
         return {
             searchTerm: filterTaskFormValue.searchTerm.trim(),
-            deadlineStart: new Date(filterTaskFormValue.deadlineStart),
-            deadlineEnd: new Date(filterTaskFormValue.deadlineEnd),
-            createdAtStart: new Date(filterTaskFormValue.createdAtStart),
-            createdAtEnd: new Date(filterTaskFormValue.createdAtEnd),
+            deadline: {
+                start: filterTaskFormValue.deadlineRange.start,
+                end: filterTaskFormValue.deadlineRange.end,
+            },
+            createdAt: {
+                start: filterTaskFormValue.createdAtRange.start,
+                end: filterTaskFormValue.createdAtRange.end,
+            },
             taskStateName: filterTaskFormValue.taskStateName,
             tagNames: this.getTagNamesFromTagsAndSelectedTags(
                 tags,

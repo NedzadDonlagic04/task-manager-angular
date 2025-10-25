@@ -7,10 +7,7 @@ import {
     Output,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-    MatDatepicker,
-    MatDatepickerModule,
-} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import TagDTO from '../../dtos/tag.dto';
@@ -35,7 +32,6 @@ import TaskStateDTO from '../../dtos/task-state.dto';
         MatFormField,
         MatLabel,
         MatInputModule,
-        MatDatepicker,
         MatDatepickerModule,
         MatOption,
         MatSelect,

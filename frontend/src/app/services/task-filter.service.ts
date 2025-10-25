@@ -31,16 +31,16 @@ export class TaskFilterService {
         } else if (
             !this._doesRowMatchDeadlineRange(
                 row,
-                processedFilterFormValue.deadlineStart,
-                processedFilterFormValue.deadlineEnd,
+                processedFilterFormValue.deadline.start,
+                processedFilterFormValue.deadline.end,
             )
         ) {
             return false;
         } else if (
             !this._doesRowMatchCreatedAtRange(
                 row,
-                processedFilterFormValue.createdAtStart,
-                processedFilterFormValue.createdAtEnd,
+                processedFilterFormValue.createdAt.start,
+                processedFilterFormValue.createdAt.end,
             )
         ) {
             return false;

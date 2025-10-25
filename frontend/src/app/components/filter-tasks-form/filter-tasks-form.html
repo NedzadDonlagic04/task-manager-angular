@@ -5,75 +5,53 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Deadline start:</mat-label>
-        <input
-            matInput
-            [matDatepicker]="dateStartPicker"
-            formControlName="deadlineStart"
-        />
+        <mat-label>Enter deadline date range:</mat-label>
+        <mat-date-range-input
+            [rangePicker]="deadlinePicker"
+            [formGroup]="filterTaskFormGroup.controls.deadlineRange"
+        >
+            <input
+                matStartDate
+                placeholder="Start deadline"
+                formControlName="start"
+            />
+            <input
+                matEndDate
+                placeholder="End deadline"
+                formControlName="end"
+            />
+        </mat-date-range-input>
+
         <mat-datepicker-toggle
-            matSuffix
-            [for]="dateStartPicker"
+            matIconSuffix
+            [for]="deadlinePicker"
         ></mat-datepicker-toggle>
-        <mat-datepicker #dateStartPicker></mat-datepicker>
-        @if(filterTaskFormGroup.controls.deadlineStart.errors?.['startDateBeforeEndDate'])
-        {
-        <mat-error> Deadline start date can't be after end date </mat-error>
-        }
+        <mat-date-range-picker #deadlinePicker> </mat-date-range-picker>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Deadline end:</mat-label>
-        <input
-            matInput
-            [matDatepicker]="dateEndPicker"
-            formControlName="deadlineEnd"
-        />
-        <mat-datepicker-toggle
-            matSuffix
-            [for]="dateEndPicker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #dateEndPicker></mat-datepicker>
-        @if(filterTaskFormGroup.controls.deadlineEnd.errors?.['startDateBeforeEndDate'])
-        {
-        <mat-error> Deadline end date can't be after end date </mat-error>
-        }
-    </mat-form-field>
+        <mat-label>Enter created at date range:</mat-label>
+        <mat-date-range-input
+            [rangePicker]="createdAtPicker"
+            [formGroup]="filterTaskFormGroup.controls.createdAtRange"
+        >
+            <input
+                matStartDate
+                placeholder="Start created at"
+                formControlName="start"
+            />
+            <input
+                matEndDate
+                placeholder="End created at"
+                formControlName="end"
+            />
+        </mat-date-range-input>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Created at start:</mat-label>
-        <input
-            matInput
-            [matDatepicker]="createdAtStartPicker"
-            formControlName="createdAtStart"
-        />
         <mat-datepicker-toggle
-            matSuffix
-            [for]="createdAtStartPicker"
+            matIconSuffix
+            [for]="createdAtPicker"
         ></mat-datepicker-toggle>
-        <mat-datepicker #createdAtStartPicker></mat-datepicker>
-        @if(filterTaskFormGroup.controls.createdAtStart.errors?.['startDateBeforeEndDate'])
-        {
-        <mat-error> Created at start date can't be after end date </mat-error>
-        }
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-        <mat-label>Created at end:</mat-label>
-        <input
-            matInput
-            [matDatepicker]="createdAtEndPicker"
-            formControlName="createdAtEnd"
-        />
-        <mat-datepicker-toggle
-            matSuffix
-            [for]="createdAtEndPicker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #createdAtEndPicker></mat-datepicker>
-        @if(filterTaskFormGroup.controls.createdAtEnd.errors?.['startDateBeforeEndDate'])
-        {
-        <mat-error> Created at end date can't be after end date </mat-error>
-        }
+        <mat-date-range-picker #createdAtPicker> </mat-date-range-picker>
     </mat-form-field>
 
     <mat-form-field appearance="fill">

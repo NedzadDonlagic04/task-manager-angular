@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Backend.Application.Validation;
 using Backend.Application.DTOs.TaskDTO;
+using Backend.Application.Validation;
 
 namespace Backend.UnitTests.DTOs.TaskDTO;
 

@@ -18,7 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Backend.Application\Backend.Application.csproj" />
-    <ProjectReference Include="..\backend.domain\Backend.Domain.csproj" />
+    <ProjectReference Include="..\Backend.Domain\Backend.Domain.csproj" />
     <ProjectReference Include="..\Backend.Shared\Backend.Shared.csproj" />
   </ItemGroup>
 </Project>

@@ -1,3 +1,7 @@
-*.sln
+.vs
 .zed
 .env*
+obj
+bin
+*.user
+*.csproj.user

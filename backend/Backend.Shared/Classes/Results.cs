@@ -1,4 +1,4 @@
-namespace Backend.Shared.Utils;
+namespace Backend.Shared.Classes;
 
 public sealed class Result
 {

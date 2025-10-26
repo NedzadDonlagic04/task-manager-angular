@@ -11,6 +11,10 @@ jobs:
     format-check:
         runs-on: ubuntu-latest
 
+        defaults:
+            run:
+                working-directory: ./backend
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -23,13 +27,23 @@ jobs:
             - name: Install csharpier
               run: dotnet tool install -g csharpier
 
-            - name: Format check for backend.api
-              run: csharpier check .
-              working-directory: ./backend.api
+            - name: Format check for Backend.API
+              run: csharpier check ./Backend.API
 
-            - name: Format check for backend.unit-tests
-              run: csharpier check .
-              working-directory: ./backend.unit-tests
+            - name: Format check for Backend.Application
+              run: csharpier check ./Backend.Application
+
+            - name: Format check for Backend.Domain
+              run: csharpier check ./Backend.Domain
+
+            - name: Format check for Backend.Infastructure
+              run: csharpier check Backend.Infastructure
+
+            - name: Format check for Backend.Shared
+              run: csharpier check ./Backend.Shared
+
+            - name: Format check for Backend.UnitTests
+              run: csharpier check ./Backend.UnitTests
 
     build-and-test:
         runs-on: ubuntu-latest
@@ -37,7 +51,7 @@ jobs:
 
         defaults:
             run:
-                working-directory: ./backend.unit-tests
+                working-directory: ./backend/Backend.UnitTests
 
         steps:
             - name: Checkout code

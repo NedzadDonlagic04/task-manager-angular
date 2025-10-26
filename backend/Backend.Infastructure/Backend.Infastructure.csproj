@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="Seeders\" />
   </ItemGroup>
@@ -23,5 +21,4 @@
    <ProjectReference Include="..\backend.domain\Backend.Domain.csproj" />
    <ProjectReference Include="..\Backend.Shared\Backend.Shared.csproj" />
  </ItemGroup>
-
 </Project>

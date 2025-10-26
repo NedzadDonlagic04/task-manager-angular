@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Backend.Domain.Models;
+namespace Backend.Domain.Entities;
 
 public sealed class TaskState
 {

@@ -1,10 +1,13 @@
+using Backend.Application.Interfaces;
 using Backend.Domain.Enums;
 using Backend.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Infastructure.Database;
 
-public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
+    : DbContext(options),
+        IAppDbContext
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

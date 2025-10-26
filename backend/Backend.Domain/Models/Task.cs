@@ -9,5 +9,6 @@ public sealed class Task
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public int TaskStateId { get; set; }
     public TaskState TaskState { get; set; } = null!;
-    public List<Tag> Tags { get; set; } = new();
+    public List<Tag> Tags { get; set; } = [];
+    public User User { get; set; } = null!;
 }

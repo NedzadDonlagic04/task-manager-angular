@@ -13,7 +13,7 @@ public class TaskCreateUpdateDTO_Test
             Title = "Valid Task Title",
             Description = "Valid Task Description",
             Deadline = DateTime.Now.AddDays(7),
-            TagIds = new List<Guid>(),
+            TagIds = [],
         };
     }
 

@@ -7,7 +7,7 @@
   <ItemGroup>
     <Folder Include="Seeders\" />
   </ItemGroup>
- <ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,9 +16,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
   </ItemGroup>
- <ItemGroup>
-   <ProjectReference Include="..\Backend.Application\Backend.Application.csproj" />
-   <ProjectReference Include="..\backend.domain\Backend.Domain.csproj" />
-   <ProjectReference Include="..\Backend.Shared\Backend.Shared.csproj" />
- </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Backend.Application\Backend.Application.csproj" />
+    <ProjectReference Include="..\backend.domain\Backend.Domain.csproj" />
+    <ProjectReference Include="..\Backend.Shared\Backend.Shared.csproj" />
+  </ItemGroup>
 </Project>

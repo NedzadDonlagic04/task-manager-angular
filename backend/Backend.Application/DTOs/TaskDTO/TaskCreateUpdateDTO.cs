@@ -17,7 +17,7 @@ public sealed record TaskCreateUpdateDTO
     public required string Description { get; init; }
 
     [MinimumFutureOffset(1)]
-    public DateTime? Deadline { get; init; }
+    public DateTimeOffset? Deadline { get; init; }
 
     [Required]
     public required IReadOnlyList<Guid> TagIds { get; init; }

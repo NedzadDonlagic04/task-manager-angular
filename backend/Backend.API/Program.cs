@@ -10,7 +10,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddOpenApi();
         builder.Services.AddSwaggerGen();
         builder.Services.AddAPI(builder.Configuration);
         builder.Services.AddInfastructure(builder.Configuration);
@@ -22,7 +21,7 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.MapOpenApi();
+            app.MapSwagger();
         }
 
         await app.Services.InitializeDatabaseAsync();

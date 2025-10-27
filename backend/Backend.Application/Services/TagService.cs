@@ -1,7 +1,7 @@
 using Backend.Application.DTOs;
 using Backend.Application.Interfaces;
-using Backend.Domain.Models;
-using Backend.Shared.Utils;
+using Backend.Domain.Entities;
+using Backend.Shared.Classes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Application.Services;

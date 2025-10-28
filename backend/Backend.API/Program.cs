@@ -11,6 +11,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddSwaggerGen();
+
         builder.Services.AddAPI(builder.Configuration);
         builder.Services.AddInfastructure(builder.Configuration);
         builder.Services.AddApplication();
@@ -19,9 +20,8 @@ public class Program
 
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
             app.MapSwagger();
+            app.UseSwaggerUI();
         }
 
         await app.Services.InitializeDatabaseAsync();

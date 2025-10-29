@@ -8,6 +8,7 @@ public sealed class User : ITimeStampedEntity
     public string Username { get; set; } = null!;
     public string HashedPassword { get; set; } = null!;
 
+    public Guid UserProfileId { get; set; }
     public UserProfile UserProfile { get; set; } = null!;
 
     public List<Task> Tasks { get; set; } = [];

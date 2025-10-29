@@ -45,6 +45,7 @@ internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User
             Id = mockUserId,
             Username = "mock_user",
             HashedPassword = mockHashedPassword,
+            UserProfileId = mockUserId,
             CreatedAt = fixedSeedTime,
             UpdatedAt = null,
         };

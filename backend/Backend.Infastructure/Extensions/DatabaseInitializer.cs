@@ -1,5 +1,4 @@
-﻿using System;
-using Backend.Infastructure.Database;
+﻿using Backend.Infastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

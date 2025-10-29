@@ -12,7 +12,7 @@ public class TaskCreateUpdateDTO_Test
         {
             Title = "Valid Task Title",
             Description = "Valid Task Description",
-            Deadline = DateTime.Now.AddDays(7),
+            Deadline = DateTimeOffset.UtcNow.AddDays(7),
             TagIds = [],
         };
     }
@@ -37,17 +37,15 @@ public class TaskCreateUpdateDTO_Test
     )
         where TAttribute : ValidationAttribute
     {
-        var property = typeof(TPropertyOwner).GetProperty(propertyName);
-
-        if (property == null)
-        {
-            throw new ArgumentException(
+        var property =
+            typeof(TPropertyOwner).GetProperty(propertyName)
+            ?? throw new ArgumentException(
                 $"Property '{propertyName}' doesn't exist on type '{typeof(TPropertyOwner).Name}'"
             );
-        }
 
         var attribute =
             property.GetCustomAttributes(typeof(TAttribute), true).FirstOrDefault() as TAttribute;
+
         var errorMessage =
             attribute?.FormatErrorMessage(propertyName)
             ?? $"The {propertyName} field is not valid.";

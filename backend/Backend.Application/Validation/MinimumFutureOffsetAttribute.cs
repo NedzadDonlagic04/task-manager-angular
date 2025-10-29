@@ -18,11 +18,11 @@ public sealed class MinimumFutureOffsetAttribute : ValidationAttribute
         {
             return ValidationResult.Success;
         }
-        else if (value is DateTime dateTimeValue)
+        else if (value is DateTimeOffset dateTimeOffset)
         {
-            DateTime minimumValidDateTime = DateTime.UtcNow.AddHours(_hours);
+            DateTimeOffset minimumValidDateTime = DateTime.UtcNow.AddHours(_hours);
 
-            return (dateTimeValue >= minimumValidDateTime)
+            return (dateTimeOffset >= minimumValidDateTime)
                 ? ValidationResult.Success
                 : new ValidationResult(ErrorMessage);
         }

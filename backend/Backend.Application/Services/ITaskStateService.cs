@@ -1,5 +1,5 @@
 using Backend.Application.DTOs;
-using Backend.Shared.Utils;
+using Backend.Shared.Classes;
 
 namespace Backend.Application.Services;
 

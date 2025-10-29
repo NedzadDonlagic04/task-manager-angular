@@ -20,7 +20,7 @@ public sealed class TaskDeadlineMonitorService(
             var context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
 
             var expiredTasks = await context
-                .Set<Domain.Models.Task>()
+                .Set<Domain.Entities.Task>()
                 .Where(task =>
                     task.Deadline < DateTime.UtcNow
                     && task.TaskStateId == (int)TaskStateEnum.Pending

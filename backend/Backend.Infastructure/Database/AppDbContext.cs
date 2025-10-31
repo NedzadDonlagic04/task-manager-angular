@@ -1,7 +1,7 @@
 using System.Reflection;
 using Backend.Application.Interfaces;
 using Backend.Domain.Entities;
-using Backend.Shared.Interfaces;
+using Backend.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Infastructure.Database;

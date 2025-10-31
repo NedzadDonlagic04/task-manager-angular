@@ -161,7 +161,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             Deadline = taskToUpdate.Deadline,
             CreatedAt = taskToUpdate.CreatedAt,
             TaskStateName = taskToUpdate.TaskState.Name,
-            TagNames = taskToUpdate.Tags.Select(tag => tag.Name).ToList(),
+            TagNames = [.. taskToUpdate.Tags.Select(tag => tag.Name)],
         };
 
         return Result<TaskReadDTO>.Success(updatedTask);

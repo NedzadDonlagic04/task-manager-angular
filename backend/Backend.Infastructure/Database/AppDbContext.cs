@@ -12,7 +12,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
         IAppDbContext
 {
     public DbSet<TagEntity> Tag { get; private set; } = null!;
-    public DbSet<Domain.Entities.Tasks.TaskEntity> Task { get; private set; } = null!;
+    public DbSet<TaskEntity> Task { get; private set; } = null!;
     public DbSet<TaskStateEntity> TaskState { get; private set; } = null!;
     public DbSet<TaskTagEntity> TaskTag { get; private set; } = null!;
     public DbSet<UserEntity> User { get; private set; } = null!;

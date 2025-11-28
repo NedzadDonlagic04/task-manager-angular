@@ -1,6 +1,6 @@
 ﻿namespace Backend.Shared.Records;
 
-public sealed record Error(string Code, string Detail, ErrorType type)
+public sealed record Error(string Code, string Detail, ErrorType Type)
 {
     public static readonly Error None = new("", "", ErrorType.None);
 

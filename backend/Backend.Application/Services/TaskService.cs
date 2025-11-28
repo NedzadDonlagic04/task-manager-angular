@@ -16,8 +16,6 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         var results = await context
             .Set<Domain.Entities.Task>()
             .AsNoTracking()
-            .Include(task => task.Tags)
-            .Include(task => task.TaskState)
             .Select(task => new TaskReadDTO
             {
                 Id = task.Id,
@@ -41,8 +39,6 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         var task = await context
             .Set<Domain.Entities.Task>()
             .AsNoTracking()
-            .Include(task => task.Tags)
-            .Include(task => task.TaskState)
             .Select(task => new TaskReadDTO
             {
                 Id = task.Id,
@@ -119,8 +115,6 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     {
         var taskToUpdate = await context
             .Set<Domain.Entities.Task>()
-            .Include(task => task.Tags)
-            .Include(task => task.TaskState)
             .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
         if (taskToUpdate == null)

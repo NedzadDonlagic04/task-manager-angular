@@ -1,4 +1,4 @@
-﻿namespace Backend.Shared.Interfaces;
+﻿namespace Backend.Domain.Interfaces;
 
 public interface ICreationTimestamp
 {

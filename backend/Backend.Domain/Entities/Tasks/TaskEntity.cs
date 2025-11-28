@@ -1,5 +1,5 @@
 using Backend.Domain.Entities.Users;
-using Backend.Shared.Interfaces;
+using Backend.Domain.Interfaces;
 
 namespace Backend.Domain.Entities.Tasks;
 

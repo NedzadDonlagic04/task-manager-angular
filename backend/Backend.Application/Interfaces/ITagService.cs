@@ -1,7 +1,7 @@
 using Backend.Application.DTOs;
 using Backend.Shared.Classes;
 
-namespace Backend.Application.Services;
+namespace Backend.Application.Interfaces;
 
 public interface ITagService
 {

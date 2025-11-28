@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Backend.Application.Services;
+namespace Backend.Application.Services.Tasks;
 
 public sealed class TaskDeadlineMonitorService(
     IServiceProvider serviceProvider,

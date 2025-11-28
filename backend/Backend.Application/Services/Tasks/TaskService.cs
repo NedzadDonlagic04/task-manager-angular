@@ -1,11 +1,12 @@
 using Backend.Application.DTOs.TaskDTO;
 using Backend.Application.Interfaces;
+using Backend.Application.Interfaces.Tasks;
 using Backend.Domain.Entities.Tasks;
 using Backend.Domain.Enums;
 using Backend.Shared.Classes;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Application.Services;
+namespace Backend.Application.Services.Tasks;
 
 public sealed class TaskService(IAppDbContext context) : ITaskService
 {

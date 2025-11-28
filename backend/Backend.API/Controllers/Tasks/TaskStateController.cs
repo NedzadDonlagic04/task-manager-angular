@@ -29,8 +29,6 @@ public sealed class TaskStateController(ITaskStateService taskStateService) : Co
     {
         var taskState = await taskStateService.GetTaskStateByIdAsync(id, cancellationToken);
 
-        return taskState.IsFailure
-            ? (ActionResult<TaskStateDTO>)NotFound()
-            : (ActionResult<TaskStateDTO>)Ok(taskState.Value);
+        return taskState.IsFailure ? NotFound() : Ok(taskState.Value);
     }
 }

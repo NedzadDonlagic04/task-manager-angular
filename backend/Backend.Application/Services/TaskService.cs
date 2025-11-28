@@ -82,16 +82,6 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
         context.Set<TaskEntity>().Add(newTask);
         await context.SaveChangesAsync(cancellationToken);
-        await context
-            .Set<TaskEntity>()
-            .Entry(newTask)
-            .Reference(task => task.TaskState)
-            .LoadAsync(cancellationToken);
-        await context
-            .Set<TaskEntity>()
-            .Entry(newTask)
-            .Collection(task => task.Tags)
-            .LoadAsync(cancellationToken);
 
         var result = new TaskReadDTO
         {
@@ -101,7 +91,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             Deadline = newTask.Deadline,
             CreatedAt = newTask.CreatedAt,
             TaskStateName = newTask.TaskState.Name,
-            TagNames = newTask.Tags.Select(tag => tag.Name).ToList(),
+            TagNames = [.. newTask.Tags.Select(tag => tag.Name)],
         };
 
         return Result<TaskReadDTO>.Success(result);
@@ -142,11 +132,6 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             taskToUpdate.Tags.Add(tag);
         }
 
-        await context
-            .Set<TaskEntity>()
-            .Entry(taskToUpdate)
-            .Reference(task => task.TaskState)
-            .LoadAsync(cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
         var updatedTask = new TaskReadDTO()
@@ -157,7 +142,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             Deadline = taskToUpdate.Deadline,
             CreatedAt = taskToUpdate.CreatedAt,
             TaskStateName = taskToUpdate.TaskState.Name,
-            TagNames = taskToUpdate.Tags.Select(tag => tag.Name).ToList(),
+            TagNames = [.. taskToUpdate.Tags.Select(tag => tag.Name)],
         };
 
         return Result<TaskReadDTO>.Success(updatedTask);

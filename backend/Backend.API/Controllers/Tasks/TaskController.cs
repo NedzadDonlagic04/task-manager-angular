@@ -78,7 +78,7 @@ public sealed class TaskController(ITaskService taskService) : ApiControllerBase
         return result.IsFailure ? Problem(result.Errors) : NoContent();
     }
 
-    [HttpPut]
+    [HttpPut("bulk-delete")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> DeleteMultipleTasks(

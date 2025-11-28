@@ -14,7 +14,8 @@ public static class DependencyInjection
     )
     {
         var connectionString =
-            configuration["DATABASE_URL"] ?? throw new Exception("DATABASE_URL not set");
+            configuration["Database:ConnectionString"]
+            ?? throw new Exception("Database:ConnectionString not set");
 
         services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped<IAppDbContext>(scope => scope.GetRequiredService<AppDbContext>());

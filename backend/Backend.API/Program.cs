@@ -2,34 +2,25 @@ using Backend.API.Extensions;
 using Backend.Application.Extensions;
 using Backend.Infastructure.Extensions;
 
-namespace Backend.API;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+builder
+    .Services.AddAPI(builder.Configuration)
+    .AddInfastructure(builder.Configuration)
+    .AddApplication();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddSwaggerGen();
-
-        builder.Services.AddAPI(builder.Configuration);
-        builder.Services.AddInfastructure(builder.Configuration);
-        builder.Services.AddApplication();
-
-        var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapSwagger();
-            app.UseSwaggerUI();
-        }
-
-        await app.Services.InitializeDatabaseAsync();
-
-        app.UseCors("AllowFrontend");
-        app.UseHttpsRedirection();
-        app.MapControllers();
-
-        app.Run();
-    }
+    app.MapSwagger();
+    app.UseSwaggerUI();
 }
+
+await app.Services.InitializeDatabaseAsync();
+
+app.UseCors("AllowFrontend");
+app.UseHttpsRedirection();
+app.MapControllers();
+
+app.Run();

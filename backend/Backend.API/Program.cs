@@ -19,7 +19,7 @@ if (app.Environment.IsDevelopment())
 
 await app.Services.InitializeDatabaseAsync();
 
-app.UseCors("AllowFrontend");
+app.UseAPI();
 app.UseHttpsRedirection();
 app.MapControllers();
 

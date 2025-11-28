@@ -1,49 +1,78 @@
+using Backend.Shared.Records;
+
 namespace Backend.Shared.Classes;
 
-public sealed class Result
+public class Result
 {
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
-    public List<string> Errors { get; } = new List<string>();
+    public List<Error> Errors { get; } = [];
 
-    private Result()
+    public static Result Success() => new();
+
+    public static Result Failure(Error error) => new(error);
+
+    public static Result Failure(List<Error> errors) => new(errors);
+
+    public static implicit operator Result(Error error) => new(error);
+
+    public static implicit operator Result(List<Error> errors) => new(errors);
+
+    protected Result()
     {
         IsSuccess = true;
     }
 
-    private Result(List<string> errors)
+    protected Result(Error error)
     {
+        ArgumentNullException.ThrowIfNull(error, nameof(error));
+
+        IsSuccess = false;
+        Errors = [error];
+    }
+
+    protected Result(List<Error> errors)
+    {
+        ArgumentNullException.ThrowIfNull(errors, nameof(errors));
+        ArgumentOutOfRangeException.ThrowIfZero(errors.Count, nameof(errors));
+
         IsSuccess = false;
         Errors = errors;
     }
-
-    public static Result Success() => new Result();
-
-    public static Result Failure(string error) => new Result(new List<string> { error });
 }
 
-public sealed class Result<T>
+public sealed class Result<T> : Result
 {
-    public bool IsSuccess { get; }
-    public bool IsFailure => !IsSuccess;
-    public T? Value { get; }
-    public List<string> Errors { get; } = new List<string>();
+    private readonly T? _value;
+
+    public T Value =>
+        IsSuccess
+            ? _value!
+            : throw new InvalidOperationException(
+                $"Cannot access Value of a failed result. Errors: {string.Join(", ", Errors.Select(error => error.Code))}"
+            );
+
+    public static Result<T> Success(T value) => new(value);
+
+    public static new Result<T> Failure(Error error) => new(error);
+
+    public static new Result<T> Failure(List<Error> errors) => new(errors);
+
+    public static implicit operator Result<T>(Error error) => new(error);
+
+    public static implicit operator Result<T>(List<Error> errors) => new(errors);
 
     private Result(T value)
+        : base()
     {
-        IsSuccess = true;
-        Value = value;
+        ArgumentNullException.ThrowIfNull(value, nameof(value));
+
+        _value = value;
     }
 
-    private Result(List<string> errors)
-    {
-        IsSuccess = false;
-        Errors = errors;
-    }
+    private Result(Error error)
+        : base(error) { }
 
-    public static Result<T> Success(T value) => new Result<T>(value);
-
-    public static Result<T> Failure(string error) => new Result<T>(new List<string>() { error });
-
-    public static Result<T> Failure(List<string> errors) => new Result<T>(errors);
+    private Result(List<Error> errors)
+        : base(errors) { }
 }

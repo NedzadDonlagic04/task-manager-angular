@@ -20,4 +20,19 @@ public sealed class TaskEntity : ITimeStampedEntity
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
+
+    public void Update(
+        string title,
+        string description,
+        DateTimeOffset? deadline,
+        List<TagEntity> tags
+    )
+    {
+        Title = title;
+        Description = description;
+        Deadline = deadline;
+
+        Tags.Clear();
+        Tags.AddRange(tags);
+    }
 }

@@ -29,8 +29,6 @@ public sealed class TagController(ITagService tagService) : ControllerBase
     {
         var tag = await tagService.GetTagByIdAsync(id, cancellationToken);
 
-        return tag.IsFailure
-            ? (ActionResult<TagDTO>)NotFound()
-            : (ActionResult<TagDTO>)Ok(tag.Value);
+        return tag.IsFailure ? NotFound() : Ok(tag.Value);
     }
 }

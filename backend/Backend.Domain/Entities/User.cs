@@ -5,8 +5,8 @@ namespace Backend.Domain.Entities;
 public sealed class User : ITimeStampedEntity
 {
     public Guid Id { get; set; }
-    public string Username { get; set; } = null!;
-    public string HashedPassword { get; set; } = null!;
+    public string Username { get; set; } = "";
+    public string HashedPassword { get; set; } = "";
 
     public Guid UserProfileId { get; set; }
     public UserProfile UserProfile { get; set; } = null!;

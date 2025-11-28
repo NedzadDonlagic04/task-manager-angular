@@ -5,7 +5,7 @@ namespace Backend.Domain.Entities;
 public sealed class Tag : ITimeStampedEntity
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
+    public string Name { get; set; } = "";
 
     public List<Task> Tasks { get; set; } = [];
 

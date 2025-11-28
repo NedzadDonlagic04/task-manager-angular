@@ -5,7 +5,7 @@ namespace Backend.Domain.Entities;
 public sealed class TaskState : ITimeStampedEntity
 {
     public int Id { get; set; }
-    public string Name { get; set; } = null!;
+    public string Name { get; set; } = "";
 
     public List<Task> Tasks { get; set; } = [];
 

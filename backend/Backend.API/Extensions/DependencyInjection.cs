@@ -5,22 +5,14 @@ namespace Backend.API.Extensions;
 
 public static class DependencyInjection
 {
+    private static CorsOptions? s_corsOptions;
+
     public static IServiceCollection AddAPI(
         this IServiceCollection services,
         IConfiguration configuration
     )
     {
         services.AddControllers();
-
-        var corsOptions = configuration.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
-
-        services.AddCors(options =>
-            options.AddPolicy(
-                corsOptions.PolicyName,
-                policy =>
-                    policy.WithOrigins(corsOptions.AllowedOrigins).AllowAnyMethod().AllowAnyHeader()
-            )
-        );
 
         services.AddSwaggerGen(swaggerGenOptions =>
         {
@@ -39,6 +31,38 @@ public static class DependencyInjection
             );
         });
 
+        s_corsOptions = configuration.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
+
+        services.AddCors(options =>
+            options.AddPolicy(
+                s_corsOptions.PolicyName,
+                policy =>
+                    policy
+                        .WithOrigins(s_corsOptions.AllowedOrigins)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+            )
+        );
+
+        services.AddProblemDetails();
+
         return services;
+    }
+
+    public static IApplicationBuilder UseAPI(this IApplicationBuilder app)
+    {
+        if (s_corsOptions is null)
+        {
+            throw new InvalidOperationException(
+                $"{nameof(AddAPI)} must be called before {nameof(UseAPI)}"
+            );
+        }
+
+        app.UseCors(s_corsOptions.PolicyName);
+
+        app.UseExceptionHandler();
+        app.UseStatusCodePages();
+
+        return app;
     }
 }

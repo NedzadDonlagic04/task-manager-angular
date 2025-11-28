@@ -3,14 +3,11 @@ using Backend.Infastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infastructure.Configurations;
+namespace Backend.Infastructure.Configurations.Tasks;
 
-internal sealed class TaskConfiguration
-    : EntityTypeConfigurationAndSeeding<Domain.Entities.Tasks.TaskEntity>
+internal sealed class TaskConfiguration : EntityTypeConfigurationAndSeeding<TaskEntity>
 {
-    protected override void ConfigureEntity(
-        EntityTypeBuilder<Domain.Entities.Tasks.TaskEntity> builder
-    )
+    protected override void ConfigureEntity(EntityTypeBuilder<TaskEntity> builder)
     {
         builder.HasKey(task => task.Id);
         builder.Property(task => task.Id).ValueGeneratedOnAdd();

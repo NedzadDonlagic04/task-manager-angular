@@ -3,7 +3,7 @@ using Backend.Infastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infastructure.Configurations;
+namespace Backend.Infastructure.Configurations.Users;
 
 internal sealed class UserProfileConfiguration
     : EntityTypeConfigurationAndSeeding<UserProfileEntity>

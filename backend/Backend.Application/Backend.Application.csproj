@@ -16,4 +16,9 @@
     <ProjectReference Include="..\Backend.Domain\Backend.Domain.csproj" />
     <ProjectReference Include="..\Backend.Shared\Backend.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Errors\Users\" />
+    <Folder Include="Interfaces\Users\" />
+    <Folder Include="Services\Users\" />
+  </ItemGroup>
 </Project>

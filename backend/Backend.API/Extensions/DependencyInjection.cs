@@ -1,6 +1,6 @@
 ﻿namespace Backend.API.Extensions;
 
-public static class ApiDependencyInjection
+public static class DependencyInjection
 {
     public static IServiceCollection AddAPI(
         this IServiceCollection services,

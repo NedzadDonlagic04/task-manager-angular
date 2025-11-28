@@ -1,4 +1,5 @@
 using Backend.Application.DTOs;
+using Backend.Application.Errors.Tasks;
 using Backend.Application.Interfaces;
 using Backend.Application.Interfaces.Tasks;
 using Backend.Domain.Entities.Tasks;
@@ -33,6 +34,6 @@ public sealed class TagService(IAppDbContext context) : ITagService
             .Select(tag => new TagDTO { Id = tag.Id, Name = tag.Name })
             .FirstOrDefaultAsync(tag => tag.Id == id, cancellationToken);
 
-        return tag is null ? Result<TagDTO>.Failure("Tag not found") : Result<TagDTO>.Success(tag);
+        return tag is null ? TagError.NotFound : Result<TagDTO>.Success(tag);
     }
 }

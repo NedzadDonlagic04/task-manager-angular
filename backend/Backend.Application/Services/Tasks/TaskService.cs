@@ -1,4 +1,5 @@
 using Backend.Application.DTOs.TaskDTO;
+using Backend.Application.Errors.Tasks;
 using Backend.Application.Interfaces;
 using Backend.Application.Interfaces.Tasks;
 using Backend.Domain.Entities.Tasks;
@@ -52,9 +53,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             })
             .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
-        return task is null
-            ? Result<TaskReadDTO>.Failure("Task not found")
-            : Result<TaskReadDTO>.Success(task);
+        return task is null ? TaskError.NotFound : Result<TaskReadDTO>.Success(task);
     }
 
     public async Task<Result<TaskReadDTO>> CreateTaskAsync(
@@ -69,7 +68,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
         if (tags.Count != taskCreateDTO.TagIds.Count)
         {
-            return Result<TaskReadDTO>.Failure("One or more tags do not exist");
+            return TagError.NotFound;
         }
 
         var newTask = new TaskEntity
@@ -110,7 +109,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
         if (taskToUpdate is null)
         {
-            return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
+            return TaskError.NotFound;
         }
 
         var tags = await context
@@ -120,7 +119,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
         if (tags.Count != taskUpdateDTO.TagIds.Count)
         {
-            return Result<TaskReadDTO>.Failure("One or more tags do not exist");
+            return TagError.NotFound;
         }
 
         taskToUpdate.Title = taskUpdateDTO.Title;
@@ -158,7 +157,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
         if (task is null)
         {
-            return Result.Failure("Task to delete doesn't exist");
+            return TaskError.NotFound;
         }
 
         context.Set<TaskEntity>().Remove(task);
@@ -174,7 +173,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     {
         if (ids.Count == 0)
         {
-            return Result.Failure("No task IDs provided");
+            return TaskError.IdsMissing;
         }
 
         var tasks = await context
@@ -184,7 +183,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
         if (tasks.Count == 0)
         {
-            return Result.Failure("No tasks found for given list of ids");
+            return TaskError.NotFound;
         }
 
         context.Set<TaskEntity>().RemoveRange(tasks);

@@ -1,4 +1,5 @@
 using Backend.Application.DTOs;
+using Backend.Application.Errors.Tasks;
 using Backend.Application.Interfaces;
 using Backend.Application.Interfaces.Tasks;
 using Backend.Domain.Entities.Tasks;
@@ -34,7 +35,7 @@ public sealed class TaskStateService(IAppDbContext context) : ITaskStateService
             .FirstOrDefaultAsync(taskState => taskState.Id == id, cancellationToken);
 
         return taskState is null
-            ? Result<TaskStateDTO>.Failure("Task state not found")
+            ? TaskStateError.NotFound
             : Result<TaskStateDTO>.Success(taskState);
     }
 }

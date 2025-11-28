@@ -78,23 +78,33 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             Deadline = taskCreateDTO.Deadline?.ToUniversalTime(),
             TaskStateId = (int)TaskStateEnum.Pending,
             Tags = tags,
+            /*
+             *  NOTE TO FUTURE SELF
+             *
+             *  Remove the hard coded guid below, this was added because at the time
+             *  there was no way to get the user id
+             */
+            UserId = Guid.Parse("9d07ca30-d8f9-40b7-b922-82f567ec6704"),
         };
 
         context.Set<TaskEntity>().Add(newTask);
         await context.SaveChangesAsync(cancellationToken);
 
-        var result = new TaskReadDTO
-        {
-            Id = newTask.Id,
-            Title = newTask.Title,
-            Description = newTask.Description,
-            Deadline = newTask.Deadline,
-            CreatedAt = newTask.CreatedAt,
-            TaskStateName = newTask.TaskState.Name,
-            TagNames = [.. newTask.Tags.Select(tag => tag.Name)],
-        };
+        var resultTask = await context
+            .Set<TaskEntity>()
+            .Select(task => new TaskReadDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Deadline = task.Deadline,
+                CreatedAt = task.CreatedAt,
+                TaskStateName = task.TaskState.Name,
+                TagNames = task.Tags.Select(tag => tag.Name).ToList(),
+            })
+            .FirstAsync(task => task.Id == newTask.Id, cancellationToken);
 
-        return Result<TaskReadDTO>.Success(result);
+        return Result<TaskReadDTO>.Success(resultTask);
     }
 
     public async Task<Result<TaskReadDTO>> UpdateTaskAsync(
@@ -105,6 +115,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     {
         var taskToUpdate = await context
             .Set<TaskEntity>()
+            .Include(task => task.Tags)
             .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
         if (taskToUpdate is null)
@@ -122,28 +133,27 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             return TagError.NotFound;
         }
 
-        taskToUpdate.Title = taskUpdateDTO.Title;
-        taskToUpdate.Description = taskUpdateDTO.Description;
-        taskToUpdate.Deadline = taskUpdateDTO.Deadline;
-
-        taskToUpdate.Tags.Clear();
-        foreach (TagEntity tag in tags)
-        {
-            taskToUpdate.Tags.Add(tag);
-        }
-
+        taskToUpdate.Update(
+            taskUpdateDTO.Title,
+            taskUpdateDTO.Description,
+            taskUpdateDTO.Deadline,
+            tags
+        );
         await context.SaveChangesAsync(cancellationToken);
 
-        var updatedTask = new TaskReadDTO()
-        {
-            Id = taskToUpdate.Id,
-            Title = taskToUpdate.Title,
-            Description = taskToUpdate.Description,
-            Deadline = taskToUpdate.Deadline,
-            CreatedAt = taskToUpdate.CreatedAt,
-            TaskStateName = taskToUpdate.TaskState.Name,
-            TagNames = [.. taskToUpdate.Tags.Select(tag => tag.Name)],
-        };
+        var updatedTask = await context
+            .Set<TaskEntity>()
+            .Select(task => new TaskReadDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Deadline = task.Deadline,
+                CreatedAt = task.CreatedAt,
+                TaskStateName = task.TaskState.Name,
+                TagNames = task.Tags.Select(tag => tag.Name).ToList(),
+            })
+            .FirstAsync(task => task.Id == taskToUpdate.Id, cancellationToken);
 
         return Result<TaskReadDTO>.Success(updatedTask);
     }

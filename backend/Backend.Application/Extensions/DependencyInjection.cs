@@ -1,4 +1,5 @@
-﻿using Backend.Application.Services;
+﻿using Backend.Application.Interfaces;
+using Backend.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Backend.Application.Extensions;

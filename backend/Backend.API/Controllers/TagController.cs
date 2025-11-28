@@ -1,5 +1,5 @@
 using Backend.Application.DTOs;
-using Backend.Application.Services;
+using Backend.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers;

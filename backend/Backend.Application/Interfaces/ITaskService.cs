@@ -5,17 +5,20 @@ namespace Backend.Application.Interfaces;
 
 public interface ITaskService
 {
-    Task<IEnumerable<TaskReadDTO>> GetTasksAsync(CancellationToken cancellationToken);
-    Task<Result<TaskReadDTO>> GetTaskByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<IEnumerable<TaskReadDTO>> GetTasksAsync(CancellationToken cancellationToken = default);
+    Task<Result<TaskReadDTO>> GetTaskByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default
+    );
     Task<Result<TaskReadDTO>> CreateTaskAsync(
         TaskCreateUpdateDTO taskCreateDTO,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     );
     Task<Result<TaskReadDTO>> UpdateTaskAsync(
         Guid id,
         TaskCreateUpdateDTO taskUpdateDTO,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     );
-    Task<Result> DeleteTaskAsync(Guid id, CancellationToken cancellationToken);
-    Task<Result> DeleteTasksAsync(List<Guid> ids, CancellationToken cancellationToken);
+    Task<Result> DeleteTaskAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Result> DeleteTasksAsync(List<Guid> ids, CancellationToken cancellationToken = default);
 }

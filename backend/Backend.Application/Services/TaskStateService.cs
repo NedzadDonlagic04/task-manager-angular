@@ -9,7 +9,7 @@ namespace Backend.Application.Services;
 public sealed class TaskStateService(IAppDbContext context) : ITaskStateService
 {
     public async Task<IEnumerable<TaskStateDTO>> GetTaskStatesAsync(
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var results = await context
@@ -23,7 +23,7 @@ public sealed class TaskStateService(IAppDbContext context) : ITaskStateService
 
     public async Task<Result<TaskStateDTO>> GetTaskStateByIdAsync(
         int id,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var taskState = await context

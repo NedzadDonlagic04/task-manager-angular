@@ -5,6 +5,6 @@ namespace Backend.Application.Interfaces;
 
 public interface ITagService
 {
-    Task<IEnumerable<TagDTO>> GetTagsAsync(CancellationToken cancellationToken);
-    Task<Result<TagDTO>> GetTagByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<IEnumerable<TagDTO>> GetTagsAsync(CancellationToken cancellationToken = default);
+    Task<Result<TagDTO>> GetTagByIdAsync(Guid id, CancellationToken cancellationToken = default);
 }

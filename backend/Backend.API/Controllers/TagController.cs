@@ -11,7 +11,7 @@ public sealed class TagController(ITagService tagService) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TagDTO>>> GetTags(
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var tags = await tagService.GetTagsAsync(cancellationToken);
@@ -24,7 +24,7 @@ public sealed class TagController(ITagService tagService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TagDTO>> GetTagById(
         [FromRoute] Guid id,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var tag = await tagService.GetTagByIdAsync(id, cancellationToken);

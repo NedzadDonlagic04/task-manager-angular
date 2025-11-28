@@ -9,7 +9,9 @@ namespace Backend.Application.Services;
 
 public sealed class TaskService(IAppDbContext context) : ITaskService
 {
-    public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync(
+        CancellationToken cancellationToken = default
+    )
     {
         var results = await context
             .Set<Domain.Entities.Task>()
@@ -33,7 +35,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
     public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(
         Guid id,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var task = await context
@@ -60,7 +62,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
 
     public async Task<Result<TaskReadDTO>> CreateTaskAsync(
         TaskCreateUpdateDTO taskCreateDTO,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var tags = await context
@@ -112,7 +114,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     public async Task<Result<TaskReadDTO>> UpdateTaskAsync(
         Guid id,
         TaskCreateUpdateDTO taskUpdateDTO,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var taskToUpdate = await context
@@ -167,7 +169,10 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         return Result<TaskReadDTO>.Success(updatedTask);
     }
 
-    public async Task<Result> DeleteTaskAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Result> DeleteTaskAsync(
+        Guid id,
+        CancellationToken cancellationToken = default
+    )
     {
         var task = await context.Set<Domain.Entities.Task>().FindAsync([id], cancellationToken);
 
@@ -182,7 +187,10 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         return Result.Success();
     }
 
-    public async Task<Result> DeleteTasksAsync(List<Guid> ids, CancellationToken cancellationToken)
+    public async Task<Result> DeleteTasksAsync(
+        List<Guid> ids,
+        CancellationToken cancellationToken = default
+    )
     {
         if (ids.Count == 0)
         {

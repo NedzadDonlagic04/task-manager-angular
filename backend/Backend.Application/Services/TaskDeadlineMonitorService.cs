@@ -12,9 +12,9 @@ public sealed class TaskDeadlineMonitorService(
     ILogger<TaskDeadlineMonitorService> logger
 ) : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
@@ -25,7 +25,7 @@ public sealed class TaskDeadlineMonitorService(
                     task.Deadline < DateTime.UtcNow
                     && task.TaskStateId == (int)TaskStateEnum.Pending
                 )
-                .ToListAsync(stoppingToken);
+                .ToListAsync(cancellationToken);
 
             foreach (var expiredTask in expiredTasks)
             {
@@ -40,7 +40,7 @@ public sealed class TaskDeadlineMonitorService(
 
             if (expiredTasks.Count != 0)
             {
-                await context.SaveChangesAsync(stoppingToken);
+                await context.SaveChangesAsync(cancellationToken);
                 logger.LogInformation(
                     "Successfully updated {UpdatedTasksCount} expired tasks.",
                     expiredTasks.Count
@@ -52,7 +52,7 @@ public sealed class TaskDeadlineMonitorService(
             }
 
             logger.LogDebug("Waiting for one minute before next check...");
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
         }
         logger.LogInformation("Task deadline monitoring service is stopping.");
     }

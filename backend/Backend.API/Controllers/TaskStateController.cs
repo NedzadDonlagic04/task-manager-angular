@@ -11,7 +11,7 @@ public sealed class TaskStateController(ITaskStateService taskStateService) : Co
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TaskStateDTO>>> GetTaskStates(
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var taskStates = await taskStateService.GetTaskStatesAsync(cancellationToken);
@@ -24,7 +24,7 @@ public sealed class TaskStateController(ITaskStateService taskStateService) : Co
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskStateDTO>> GetTaskStateById(
         [FromRoute] int id,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
         var taskState = await taskStateService.GetTaskStateByIdAsync(id, cancellationToken);

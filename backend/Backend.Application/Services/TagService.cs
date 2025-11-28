@@ -8,7 +8,9 @@ namespace Backend.Application.Services;
 
 public sealed class TagService(IAppDbContext context) : ITagService
 {
-    public async Task<IEnumerable<TagDTO>> GetTagsAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<TagDTO>> GetTagsAsync(
+        CancellationToken cancellationToken = default
+    )
     {
         var results = await context
             .Set<Tag>()
@@ -19,7 +21,10 @@ public sealed class TagService(IAppDbContext context) : ITagService
         return results;
     }
 
-    public async Task<Result<TagDTO>> GetTagByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<TagDTO>> GetTagByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default
+    )
     {
         var tag = await context
             .Set<Tag>()

@@ -51,7 +51,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             })
             .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
-        return task == null
+        return task is null
             ? Result<TaskReadDTO>.Failure("Task not found")
             : Result<TaskReadDTO>.Success(task);
     }
@@ -117,7 +117,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             .Set<TaskEntity>()
             .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
-        if (taskToUpdate == null)
+        if (taskToUpdate is null)
         {
             return Result<TaskReadDTO>.Failure("Task to update doesn't exist");
         }
@@ -170,7 +170,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     {
         var task = await context.Set<TaskEntity>().FindAsync([id], cancellationToken);
 
-        if (task == null)
+        if (task is null)
         {
             return Result.Failure("Task to delete doesn't exist");
         }

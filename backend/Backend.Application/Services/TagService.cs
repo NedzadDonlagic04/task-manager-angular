@@ -32,6 +32,6 @@ public sealed class TagService(IAppDbContext context) : ITagService
             .Select(tag => new TagDTO { Id = tag.Id, Name = tag.Name })
             .FirstOrDefaultAsync(tag => tag.Id == id, cancellationToken);
 
-        return tag == null ? Result<TagDTO>.Failure("Tag not found") : Result<TagDTO>.Success(tag);
+        return tag is null ? Result<TagDTO>.Failure("Tag not found") : Result<TagDTO>.Success(tag);
     }
 }

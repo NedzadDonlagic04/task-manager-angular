@@ -14,7 +14,7 @@ public sealed class MinimumFutureOffsetAttribute : ValidationAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value == null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }

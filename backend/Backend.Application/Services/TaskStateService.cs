@@ -32,7 +32,7 @@ public sealed class TaskStateService(IAppDbContext context) : ITaskStateService
             .Select(taskState => new TaskStateDTO { Id = taskState.Id, Name = taskState.Name })
             .FirstOrDefaultAsync(taskState => taskState.Id == id, cancellationToken);
 
-        return taskState == null
+        return taskState is null
             ? Result<TaskStateDTO>.Failure("Task state not found")
             : Result<TaskStateDTO>.Success(taskState);
     }

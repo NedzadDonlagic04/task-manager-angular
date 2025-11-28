@@ -8,7 +8,7 @@ public sealed class EnumValidationAttribute : ValidationAttribute
 
     public EnumValidationAttribute(Type enumType)
     {
-        if (enumType == null || !enumType.IsEnum)
+        if (enumType is null || !enumType.IsEnum)
         {
             throw new ArgumentException("The provided type must be an enum.", nameof(enumType));
         }
@@ -21,7 +21,7 @@ public sealed class EnumValidationAttribute : ValidationAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value == null)
+        if (value is null)
         {
             return ValidationResult.Success;
         }

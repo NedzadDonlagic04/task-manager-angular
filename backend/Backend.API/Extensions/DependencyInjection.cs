@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Backend.API.Options;
+using Microsoft.OpenApi.Models;
 
 namespace Backend.API.Extensions;
 
@@ -11,12 +12,13 @@ public static class DependencyInjection
     {
         services.AddControllers();
 
-        var allowedOrigin = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+        var corsOptions = configuration.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
 
         services.AddCors(options =>
             options.AddPolicy(
-                "AllowFrontend",
-                policy => policy.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader()
+                corsOptions.PolicyName,
+                policy =>
+                    policy.WithOrigins(corsOptions.AllowedOrigins).AllowAnyMethod().AllowAnyHeader()
             )
         );
 

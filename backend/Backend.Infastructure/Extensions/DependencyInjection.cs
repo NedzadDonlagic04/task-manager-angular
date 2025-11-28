@@ -1,5 +1,6 @@
 ﻿using Backend.Application.Interfaces;
 using Backend.Infastructure.Database;
+using Backend.Infastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +14,13 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
-        var connectionString =
-            configuration["Database:ConnectionString"]
-            ?? throw new Exception("Database:ConnectionString not set");
+        var databaseOptions = configuration.GetValidatedSection<DatabaseOptions>(
+            DatabaseOptions.SectionName
+        );
 
-        services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseNpgsql(databaseOptions.ConnectionString)
+        );
         services.AddScoped<IAppDbContext>(scope => scope.GetRequiredService<AppDbContext>());
 
         return services;

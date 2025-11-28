@@ -1,7 +1,7 @@
 using Backend.Application.DTOs.TaskDTO;
 using Backend.Shared.Classes;
 
-namespace Backend.Application.Interfaces;
+namespace Backend.Application.Interfaces.Tasks;
 
 public interface ITaskService
 {

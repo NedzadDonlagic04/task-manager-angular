@@ -1,5 +1,5 @@
-﻿using Backend.Application.Interfaces;
-using Backend.Application.Services;
+﻿using Backend.Application.Interfaces.Tasks;
+using Backend.Application.Services.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Backend.Application.Extensions;

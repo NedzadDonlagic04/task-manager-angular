@@ -1,5 +1,5 @@
 using Backend.Application.DTOs.TaskDTO;
-using Backend.Application.Interfaces;
+using Backend.Application.Interfaces.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers.Tasks;

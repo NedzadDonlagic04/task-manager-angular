@@ -1,4 +1,6 @@
-﻿namespace Backend.API.Extensions;
+﻿using Microsoft.OpenApi.Models;
+
+namespace Backend.API.Extensions;
 
 public static class DependencyInjection
 {
@@ -17,6 +19,23 @@ public static class DependencyInjection
                 policy => policy.WithOrigins(allowedOrigin).AllowAnyMethod().AllowAnyHeader()
             )
         );
+
+        services.AddSwaggerGen(swaggerGenOptions =>
+        {
+            swaggerGenOptions.SwaggerDoc(
+                "v1",
+                new OpenApiInfo
+                {
+                    Title = "Task Manager API",
+                    Version = "v1",
+                    License = new OpenApiLicense
+                    {
+                        Name = "MIT",
+                        Url = new Uri("https://opensource.org/licenses/MIT"),
+                    },
+                }
+            );
+        });
 
         return services;
     }

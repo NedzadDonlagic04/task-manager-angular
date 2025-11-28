@@ -1,6 +1,6 @@
 using Backend.Application.DTOs;
 using Backend.Application.Interfaces;
-using Backend.Domain.Entities;
+using Backend.Domain.Entities.Tasks;
 using Backend.Shared.Classes;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ public sealed class TaskStateService(IAppDbContext context) : ITaskStateService
     )
     {
         var results = await context
-            .Set<TaskState>()
+            .Set<TaskStateEntity>()
             .AsNoTracking()
             .Select(taskState => new TaskStateDTO { Id = taskState.Id, Name = taskState.Name })
             .ToListAsync(cancellationToken);
@@ -27,7 +27,7 @@ public sealed class TaskStateService(IAppDbContext context) : ITaskStateService
     )
     {
         var taskState = await context
-            .Set<TaskState>()
+            .Set<TaskStateEntity>()
             .AsNoTracking()
             .Select(taskState => new TaskStateDTO { Id = taskState.Id, Name = taskState.Name })
             .FirstOrDefaultAsync(taskState => taskState.Id == id, cancellationToken);

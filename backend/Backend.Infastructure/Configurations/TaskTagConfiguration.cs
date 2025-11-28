@@ -1,13 +1,13 @@
-﻿using Backend.Domain.Entities;
+﻿using Backend.Domain.Entities.Tasks;
 using Backend.Infastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Backend.Infastructure.Configurations;
 
-internal sealed class TaskTagConfiguration : EntityTypeConfigurationAndSeeding<TaskTag>
+internal sealed class TaskTagConfiguration : EntityTypeConfigurationAndSeeding<TaskTagEntity>
 {
-    protected override void ConfigureEntity(EntityTypeBuilder<TaskTag> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<TaskTagEntity> builder)
     {
         builder.HasKey(taskTag => new { taskTag.TaskId, taskTag.TagId });
 

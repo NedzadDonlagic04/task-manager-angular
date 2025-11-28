@@ -1,8 +1,9 @@
+using Backend.Domain.Entities.Users;
 using Backend.Shared.Interfaces;
 
-namespace Backend.Domain.Entities;
+namespace Backend.Domain.Entities.Tasks;
 
-public sealed class Task : ITimeStampedEntity
+public sealed class TaskEntity : ITimeStampedEntity
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = "";
@@ -10,12 +11,12 @@ public sealed class Task : ITimeStampedEntity
     public DateTimeOffset? Deadline { get; set; }
 
     public int TaskStateId { get; set; }
-    public TaskState TaskState { get; set; } = null!;
+    public TaskStateEntity TaskState { get; set; } = null!;
 
-    public List<Tag> Tags { get; set; } = [];
+    public List<TagEntity> Tags { get; set; } = [];
 
     public Guid UserId { get; set; }
-    public User User { get; set; } = null!;
+    public UserEntity User { get; set; } = null!;
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }

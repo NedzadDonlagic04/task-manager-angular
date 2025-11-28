@@ -1,13 +1,16 @@
-﻿using Backend.Domain.Entities;
+﻿using Backend.Domain.Entities.Tasks;
 using Backend.Infastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Backend.Infastructure.Configurations;
 
-internal sealed class TaskConfiguration : EntityTypeConfigurationAndSeeding<Domain.Entities.Task>
+internal sealed class TaskConfiguration
+    : EntityTypeConfigurationAndSeeding<Domain.Entities.Tasks.TaskEntity>
 {
-    protected override void ConfigureEntity(EntityTypeBuilder<Domain.Entities.Task> builder)
+    protected override void ConfigureEntity(
+        EntityTypeBuilder<Domain.Entities.Tasks.TaskEntity> builder
+    )
     {
         builder.HasKey(task => task.Id);
         builder.Property(task => task.Id).ValueGeneratedOnAdd();
@@ -21,7 +24,10 @@ internal sealed class TaskConfiguration : EntityTypeConfigurationAndSeeding<Doma
         builder.Property(task => task.CreatedAt).IsRequired().ValueGeneratedOnAdd();
         builder.Property(task => task.UpdatedAt).IsRequired(false).ValueGeneratedOnAddOrUpdate();
 
-        builder.HasMany(task => task.Tags).WithMany(task => task.Tasks).UsingEntity<TaskTag>();
+        builder
+            .HasMany(task => task.Tags)
+            .WithMany(task => task.Tasks)
+            .UsingEntity<TaskTagEntity>();
 
         builder.ToTable("Task");
     }

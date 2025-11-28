@@ -1,6 +1,6 @@
 using Backend.Application.DTOs.TaskDTO;
 using Backend.Application.Interfaces;
-using Backend.Domain.Entities;
+using Backend.Domain.Entities.Tasks;
 using Backend.Domain.Enums;
 using Backend.Shared.Classes;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     )
     {
         var results = await context
-            .Set<Domain.Entities.Task>()
+            .Set<TaskEntity>()
             .AsNoTracking()
             .Select(task => new TaskReadDTO
             {
@@ -37,7 +37,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     )
     {
         var task = await context
-            .Set<Domain.Entities.Task>()
+            .Set<TaskEntity>()
             .AsNoTracking()
             .Select(task => new TaskReadDTO
             {
@@ -62,7 +62,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     )
     {
         var tags = await context
-            .Set<Tag>()
+            .Set<TagEntity>()
             .Where(tag => taskCreateDTO.TagIds.Contains(tag.Id))
             .ToListAsync(cancellationToken);
 
@@ -71,7 +71,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             return Result<TaskReadDTO>.Failure("One or more tags do not exist");
         }
 
-        var newTask = new Domain.Entities.Task
+        var newTask = new TaskEntity
         {
             Title = taskCreateDTO.Title,
             Description = taskCreateDTO.Description,
@@ -80,15 +80,15 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             Tags = tags,
         };
 
-        context.Set<Domain.Entities.Task>().Add(newTask);
+        context.Set<TaskEntity>().Add(newTask);
         await context.SaveChangesAsync(cancellationToken);
         await context
-            .Set<Domain.Entities.Task>()
+            .Set<TaskEntity>()
             .Entry(newTask)
             .Reference(task => task.TaskState)
             .LoadAsync(cancellationToken);
         await context
-            .Set<Domain.Entities.Task>()
+            .Set<TaskEntity>()
             .Entry(newTask)
             .Collection(task => task.Tags)
             .LoadAsync(cancellationToken);
@@ -114,7 +114,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     )
     {
         var taskToUpdate = await context
-            .Set<Domain.Entities.Task>()
+            .Set<TaskEntity>()
             .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
         if (taskToUpdate == null)
@@ -123,7 +123,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         }
 
         var tags = await context
-            .Set<Tag>()
+            .Set<TagEntity>()
             .Where(tag => taskUpdateDTO.TagIds.Contains(tag.Id))
             .ToListAsync(cancellationToken);
 
@@ -137,13 +137,13 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         taskToUpdate.Deadline = taskUpdateDTO.Deadline;
 
         taskToUpdate.Tags.Clear();
-        foreach (Tag tag in tags)
+        foreach (TagEntity tag in tags)
         {
             taskToUpdate.Tags.Add(tag);
         }
 
         await context
-            .Set<Domain.Entities.Task>()
+            .Set<TaskEntity>()
             .Entry(taskToUpdate)
             .Reference(task => task.TaskState)
             .LoadAsync(cancellationToken);
@@ -168,14 +168,14 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         CancellationToken cancellationToken = default
     )
     {
-        var task = await context.Set<Domain.Entities.Task>().FindAsync([id], cancellationToken);
+        var task = await context.Set<TaskEntity>().FindAsync([id], cancellationToken);
 
         if (task == null)
         {
             return Result.Failure("Task to delete doesn't exist");
         }
 
-        context.Set<Domain.Entities.Task>().Remove(task);
+        context.Set<TaskEntity>().Remove(task);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
@@ -192,7 +192,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         }
 
         var tasks = await context
-            .Set<Domain.Entities.Task>()
+            .Set<TaskEntity>()
             .Where(task => ids.Contains(task.Id))
             .ToListAsync(cancellationToken);
 
@@ -201,7 +201,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             return Result.Failure("No tasks found for given list of ids");
         }
 
-        context.Set<Domain.Entities.Task>().RemoveRange(tasks);
+        context.Set<TaskEntity>().RemoveRange(tasks);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

@@ -1,4 +1,5 @@
 using Backend.Application.Interfaces;
+using Backend.Domain.Entities.Tasks;
 using Backend.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ public sealed class TaskDeadlineMonitorService(
             var context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
 
             var expiredTasks = await context
-                .Set<Domain.Entities.Task>()
+                .Set<TaskEntity>()
                 .Where(task =>
                     task.Deadline < DateTime.UtcNow
                     && task.TaskStateId == (int)TaskStateEnum.Pending

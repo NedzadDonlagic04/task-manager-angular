@@ -1,13 +1,13 @@
 using Backend.Shared.Interfaces;
 
-namespace Backend.Domain.Entities;
+namespace Backend.Domain.Entities.Tasks;
 
-public sealed class Tag : ITimeStampedEntity
+public sealed class TaskStateEntity : ITimeStampedEntity
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; } = "";
 
-    public List<Task> Tasks { get; set; } = [];
+    public List<TaskEntity> Tasks { get; set; } = [];
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }

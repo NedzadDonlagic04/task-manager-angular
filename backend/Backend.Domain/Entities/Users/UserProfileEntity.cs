@@ -1,11 +1,11 @@
 ﻿using Backend.Shared.Interfaces;
 
-namespace Backend.Domain.Entities;
+namespace Backend.Domain.Entities.Users;
 
-public sealed class UserProfile : ITimeStampedEntity
+public sealed class UserProfileEntity : ITimeStampedEntity
 {
     public Guid UserId { get; set; }
-    public User User { get; set; } = null!;
+    public UserEntity User { get; set; } = null!;
 
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";

@@ -1,13 +1,14 @@
-﻿using Backend.Domain.Entities;
+﻿using Backend.Domain.Entities.Users;
 using Backend.Infastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Backend.Infastructure.Configurations;
 
-internal sealed class UserProfileConfiguration : EntityTypeConfigurationAndSeeding<UserProfile>
+internal sealed class UserProfileConfiguration
+    : EntityTypeConfigurationAndSeeding<UserProfileEntity>
 {
-    protected override void ConfigureEntity(EntityTypeBuilder<UserProfile> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<UserProfileEntity> builder)
     {
         builder.HasKey(userProfile => userProfile.UserId);
 
@@ -37,12 +38,12 @@ internal sealed class UserProfileConfiguration : EntityTypeConfigurationAndSeedi
         builder.ToTable("UserProfile");
     }
 
-    protected override void SeedData(EntityTypeBuilder<UserProfile> builder)
+    protected override void SeedData(EntityTypeBuilder<UserProfileEntity> builder)
     {
         var mockUserId = Guid.Parse("9d07ca30-d8f9-40b7-b922-82f567ec6704");
         var fixedSeedTime = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
-        var mockUserProfile = new UserProfile
+        var mockUserProfile = new UserProfileEntity
         {
             UserId = mockUserId,
             FirstName = "Mock",

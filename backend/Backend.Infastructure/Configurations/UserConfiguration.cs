@@ -1,13 +1,13 @@
-﻿using Backend.Domain.Entities;
+﻿using Backend.Domain.Entities.Users;
 using Backend.Infastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Backend.Infastructure.Configurations;
 
-internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User>
+internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<UserEntity>
 {
-    protected override void ConfigureEntity(EntityTypeBuilder<User> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<UserEntity> builder)
     {
         builder.HasKey(user => user.Id);
 
@@ -19,7 +19,7 @@ internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User
         builder
             .HasOne(user => user.UserProfile)
             .WithOne(userProfile => userProfile.User)
-            .HasForeignKey<UserProfile>(up => up.UserId)
+            .HasForeignKey<UserProfileEntity>(up => up.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
@@ -34,13 +34,13 @@ internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User
         builder.ToTable("User");
     }
 
-    protected override void SeedData(EntityTypeBuilder<User> builder)
+    protected override void SeedData(EntityTypeBuilder<UserEntity> builder)
     {
         Guid mockUserId = Guid.Parse("9d07ca30-d8f9-40b7-b922-82f567ec6704");
         string mockHashedPassword = "password";
         var fixedSeedTime = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
-        var mockUser = new User
+        var mockUser = new UserEntity
         {
             Id = mockUserId,
             Username = "mock_user",

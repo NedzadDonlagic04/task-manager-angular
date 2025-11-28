@@ -1,12 +1,12 @@
+using Backend.API.Abstracts;
 using Backend.Application.DTOs.TaskDTO;
 using Backend.Application.Interfaces.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers.Tasks;
 
-[ApiController]
 [Route("api/task")]
-public sealed class TaskController(ITaskService taskService) : ControllerBase
+public sealed class TaskController(ITaskService taskService) : ApiControllerBase
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     {
         var task = await taskService.GetTaskByIdAsync(id, cancellationToken);
 
-        return task.IsFailure ? NotFound() : Ok(task.Value);
+        return task.IsFailure ? Problem(task.Errors) : Ok(task.Value);
     }
 
     [HttpPost]
@@ -43,7 +43,7 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
         var createdTask = await taskService.CreateTaskAsync(taskCreateDTO, cancellationToken);
 
         return createdTask.IsFailure
-            ? BadRequest(createdTask.Errors)
+            ? Problem(createdTask.Errors)
             : CreatedAtAction(
                 nameof(CreateTask),
                 new { id = createdTask.Value.Id },
@@ -62,7 +62,7 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     {
         var updatedTask = await taskService.UpdateTaskAsync(id, taskUpdateDTO, cancellationToken);
 
-        return updatedTask.IsFailure ? BadRequest(updatedTask.Errors) : NoContent();
+        return updatedTask.IsFailure ? Problem(updatedTask.Errors) : NoContent();
     }
 
     [HttpDelete("{id:guid}")]
@@ -75,7 +75,7 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     {
         var result = await taskService.DeleteTaskAsync(id, cancellationToken);
 
-        return result.IsFailure ? BadRequest(result.Errors) : NoContent();
+        return result.IsFailure ? Problem(result.Errors) : NoContent();
     }
 
     [HttpPut]
@@ -88,6 +88,6 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     {
         var result = await taskService.DeleteTasksAsync(ids, cancellationToken);
 
-        return result.IsFailure ? BadRequest(result.Errors) : NoContent();
+        return result.IsFailure ? Problem(result.Errors) : NoContent();
     }
 }

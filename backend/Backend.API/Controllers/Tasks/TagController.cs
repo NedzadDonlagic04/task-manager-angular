@@ -1,12 +1,12 @@
+using Backend.API.Abstracts;
 using Backend.Application.DTOs;
 using Backend.Application.Interfaces.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers.Tasks;
 
-[ApiController]
 [Route("api/tag")]
-public sealed class TagController(ITagService tagService) : ControllerBase
+public sealed class TagController(ITagService tagService) : ApiControllerBase
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -29,6 +29,6 @@ public sealed class TagController(ITagService tagService) : ControllerBase
     {
         var tag = await tagService.GetTagByIdAsync(id, cancellationToken);
 
-        return tag.IsFailure ? NotFound() : Ok(tag.Value);
+        return tag.IsFailure ? Problem(tag.Errors) : Ok(tag.Value);
     }
 }

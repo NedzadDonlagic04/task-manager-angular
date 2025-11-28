@@ -1,12 +1,12 @@
+using Backend.API.Abstracts;
 using Backend.Application.DTOs;
 using Backend.Application.Interfaces.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.API.Controllers.Tasks;
 
-[ApiController]
 [Route("api/task-state")]
-public sealed class TaskStateController(ITaskStateService taskStateService) : ControllerBase
+public sealed class TaskStateController(ITaskStateService taskStateService) : ApiControllerBase
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -29,6 +29,6 @@ public sealed class TaskStateController(ITaskStateService taskStateService) : Co
     {
         var taskState = await taskStateService.GetTaskStateByIdAsync(id, cancellationToken);
 
-        return taskState.IsFailure ? NotFound() : Ok(taskState.Value);
+        return taskState.IsFailure ? Problem(taskState.Errors) : Ok(taskState.Value);
     }
 }

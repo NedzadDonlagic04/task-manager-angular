@@ -29,13 +29,11 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     {
         var task = await taskService.GetTaskByIdAsync(id, cancellationToken);
 
-        return task.IsFailure
-            ? (ActionResult<TaskReadDTO>)NotFound()
-            : (ActionResult<TaskReadDTO>)Ok(task.Value);
+        return task.IsFailure ? NotFound() : Ok(task.Value);
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TaskReadDTO>> CreateTask(
         [FromBody] TaskCreateUpdateDTO taskCreateDTO,
@@ -45,12 +43,16 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
         var createdTask = await taskService.CreateTaskAsync(taskCreateDTO, cancellationToken);
 
         return createdTask.IsFailure
-            ? (ActionResult<TaskReadDTO>)BadRequest(createdTask.Errors)
-            : (ActionResult<TaskReadDTO>)Ok(createdTask.Value);
+            ? BadRequest(createdTask.Errors)
+            : CreatedAtAction(
+                nameof(CreateTask),
+                new { id = createdTask.Value.Id },
+                createdTask.Value
+            );
     }
 
     [HttpPut("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> UpdateTask(
         [FromRoute] Guid id,
@@ -64,7 +66,7 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> DeleteTask(
         [FromRoute] Guid id,
@@ -77,7 +79,7 @@ public sealed class TaskController(ITaskService taskService) : ControllerBase
     }
 
     [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> DeleteMultipleTasks(
         [FromBody] List<Guid> ids,

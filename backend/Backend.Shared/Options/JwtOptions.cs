@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.API.Options;
+namespace Backend.Shared.Options;
 
 public sealed class JwtOptions
 {
@@ -16,8 +16,8 @@ public sealed class JwtOptions
     public required string Audience { get; init; }
 
     [Required]
-    public required string AccessTokenMinutes { get; init; }
+    public required int AccessTokenMinutes { get; init; }
 
     [Required]
-    public required string RefreshTokenDays { get; init; }
+    public required int RefreshTokenDays { get; init; }
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Infastructure.Options;
+namespace Backend.Shared.Options;
 
 public sealed class DatabaseOptions
 {

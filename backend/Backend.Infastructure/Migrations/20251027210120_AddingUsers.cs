@@ -287,50 +287,6 @@ namespace Backend.Infastructure.Migrations
                 )
             );
 
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "CreatedAt", "HashedPassword", "Username" },
-                values: new object[]
-                {
-                    new Guid("9d07ca30-d8f9-40b7-b922-82f567ec6704"),
-                    new DateTimeOffset(
-                        new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                        new TimeSpan(0, 0, 0, 0, 0)
-                    ),
-                    "password",
-                    "mock_user",
-                }
-            );
-
-            migrationBuilder.InsertData(
-                table: "UserProfile",
-                columns: new[]
-                {
-                    "UserId",
-                    "BannerUrl",
-                    "CreatedAt",
-                    "Description",
-                    "Email",
-                    "FirstName",
-                    "LastName",
-                    "PictureUrl",
-                },
-                values: new object[]
-                {
-                    new Guid("9d07ca30-d8f9-40b7-b922-82f567ec6704"),
-                    null,
-                    new DateTimeOffset(
-                        new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                        new TimeSpan(0, 0, 0, 0, 0)
-                    ),
-                    "",
-                    "mock@example.com",
-                    "Mock",
-                    "Mock",
-                    null,
-                }
-            );
-
             migrationBuilder.CreateIndex(
                 name: "IX_TaskState_Name",
                 table: "TaskState",

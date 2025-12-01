@@ -33,23 +33,4 @@ internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User
 
         builder.ToTable("User");
     }
-
-    protected override void SeedData(EntityTypeBuilder<UserEntity> builder)
-    {
-        Guid mockUserId = Guid.Parse("9d07ca30-d8f9-40b7-b922-82f567ec6704");
-        string mockHashedPassword = "password";
-        var fixedSeedTime = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
-
-        var mockUser = new UserEntity
-        {
-            Id = mockUserId,
-            Username = "mock_user",
-            HashedPassword = mockHashedPassword,
-            UserProfileId = mockUserId,
-            CreatedAt = fixedSeedTime,
-            UpdatedAt = null,
-        };
-
-        builder.HasData(mockUser);
-    }
 }

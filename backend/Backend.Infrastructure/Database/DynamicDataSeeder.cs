@@ -1,8 +1,10 @@
 ﻿using Backend.Domain.Entities.Users;
+using Backend.Infrastructure.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace Backend.Infastructure.Database;
+namespace Backend.Infrastructure.Database;
 
 public static class DynamicDataSeeder
 {

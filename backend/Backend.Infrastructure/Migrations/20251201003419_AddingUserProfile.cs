@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Backend.Infastructure.Migrations
+namespace Backend.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class AddingUserProfile : Migration

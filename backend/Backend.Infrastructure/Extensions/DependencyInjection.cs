@@ -1,13 +1,16 @@
 ﻿using Backend.Application.Interfaces;
+using Backend.Application.Interfaces.Auth;
 using Backend.Domain.Entities.Users;
-using Backend.Infastructure.Database;
-using Backend.Infastructure.Options;
+using Backend.Infrastructure.Database;
+using Backend.Infrastructure.Extensions;
+using Backend.Infrastructure.Services;
+using Backend.Shared.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Backend.Infastructure.Extensions;
+namespace Backend.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {
@@ -26,6 +29,8 @@ public static class DependencyInjection
         services.AddScoped<IAppDbContext>(scope => scope.GetRequiredService<AppDbContext>());
 
         services.AddSingleton<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+
+        services.AddSingleton<IJwtService, JwtService>();
 
         return services;
     }

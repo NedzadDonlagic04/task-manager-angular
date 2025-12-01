@@ -1,9 +1,9 @@
 ﻿using Backend.Domain.Entities.Tasks;
-using Backend.Infastructure.Abstracts;
+using Backend.Infrastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infastructure.Configurations.Tasks;
+namespace Backend.Infrastructure.Configurations.Tasks;
 
 internal sealed class TaskConfiguration : EntityTypeConfigurationAndSeeding<TaskEntity>
 {

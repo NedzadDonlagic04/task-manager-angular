@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infastructure.Abstracts;
+namespace Backend.Infrastructure.Abstracts;
 
 internal abstract class EntityTypeConfigurationAndSeeding<TEntity>
     : IEntityTypeConfiguration<TEntity>

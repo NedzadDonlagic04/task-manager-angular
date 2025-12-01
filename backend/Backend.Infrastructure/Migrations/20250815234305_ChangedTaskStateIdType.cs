@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Backend.Infastructure.Migrations
+namespace Backend.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class ChangedTaskStateIdType : Migration

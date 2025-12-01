@@ -5,7 +5,7 @@ using Backend.Domain.Entities.Users;
 using Backend.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Infastructure.Database;
+namespace Backend.Infrastructure.Database;
 
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options),

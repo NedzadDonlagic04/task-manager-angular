@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 
-namespace Backend.Infastructure.Extensions;
+namespace Backend.Infrastructure.Extensions;
 
 public static class IConfigurationExtensions
 {

@@ -1,7 +1,5 @@
 ﻿using System.Text;
-using Backend.API.Options;
-using Backend.API.Services;
-using Backend.Application.Interfaces.Auth;
+using Backend.Shared.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +30,26 @@ public static class DependencyInjection
                     },
                 }
             );
+
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Name = "JWT Authentication",
+                Description = "Enter JWT: ",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer",
+                },
+            };
+
+            var securityRequirement = new OpenApiSecurityRequirement { { securityScheme, [] } };
+
+            swaggerGenOptions.AddSecurityDefinition("Bearer", securityScheme);
+            swaggerGenOptions.AddSecurityRequirement(securityRequirement);
         });
 
         s_corsOptions = config.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
@@ -83,8 +101,6 @@ public static class DependencyInjection
         services
             .AddAuthorizationBuilder()
             .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
-
-        services.AddSingleton<IJwtService, JwtService>();
 
         return services;
     }

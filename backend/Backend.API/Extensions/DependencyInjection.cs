@@ -1,4 +1,10 @@
-﻿using Backend.API.Options;
+﻿using System.Text;
+using Backend.API.Options;
+using Backend.API.Services;
+using Backend.Application.Interfaces.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Backend.API.Extensions;
@@ -7,10 +13,7 @@ public static class DependencyInjection
 {
     private static CorsOptions? s_corsOptions;
 
-    public static IServiceCollection AddAPI(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    public static IServiceCollection AddAPI(this IServiceCollection services, IConfiguration config)
     {
         services.AddControllers();
 
@@ -31,7 +34,7 @@ public static class DependencyInjection
             );
         });
 
-        s_corsOptions = configuration.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
+        s_corsOptions = config.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
 
         services.AddCors(options =>
             options.AddPolicy(
@@ -45,6 +48,43 @@ public static class DependencyInjection
         );
 
         services.AddProblemDetails();
+
+        services
+            .AddOptions<JwtOptions>()
+            .Bind(config.GetSection(JwtOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services
+            .AddAuthentication(authOptions =>
+            {
+                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwtBearerOptions =>
+            {
+                var jwtOptions = config.GetValidatedSection<JwtOptions>(JwtOptions.SectionName);
+
+                jwtBearerOptions.TokenValidationParameters = new()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtOptions.Audience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtOptions.Key)
+                    ),
+                };
+            });
+
+        services
+            .AddAuthorizationBuilder()
+            .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+
+        services.AddSingleton<IJwtService, JwtService>();
 
         return services;
     }

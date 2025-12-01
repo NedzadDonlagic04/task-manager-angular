@@ -1,6 +1,8 @@
 ﻿using Backend.Application.Interfaces;
+using Backend.Domain.Entities.Users;
 using Backend.Infastructure.Database;
 using Backend.Infastructure.Options;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,8 @@ public static class DependencyInjection
             options.UseNpgsql(databaseOptions.ConnectionString)
         );
         services.AddScoped<IAppDbContext>(scope => scope.GetRequiredService<AppDbContext>());
+
+        services.AddSingleton<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
 
         return services;
     }

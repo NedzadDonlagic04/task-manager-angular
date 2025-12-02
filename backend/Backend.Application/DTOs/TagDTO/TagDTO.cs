@@ -1,4 +1,4 @@
-namespace Backend.Application.DTOs;
+namespace Backend.Application.DTOs.TagDTO;
 
 public sealed record TagDTO
 {

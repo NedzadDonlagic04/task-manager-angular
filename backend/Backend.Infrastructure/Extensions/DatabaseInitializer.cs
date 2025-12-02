@@ -1,11 +1,9 @@
 ﻿using Backend.Domain.Entities.Users;
 using Backend.Infrastructure.Database;
-using Backend.Infrastructure.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Backend.Infrastructure.Extensions;
 

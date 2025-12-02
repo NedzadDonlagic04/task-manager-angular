@@ -1,6 +1,6 @@
 using Backend.API.Extensions;
 using Backend.Application.Extensions;
-using Backend.Infastructure.Extensions;
+using Backend.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +17,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-await app.Services.InitializeDatabaseAsync(app.Environment, lifetime.ApplicationStopped);
+await app.Services.InitializeDatabaseAsync(app.Environment);
 
 app.UseHttpsRedirection();
 app.UseAPI();

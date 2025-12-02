@@ -28,6 +28,12 @@ internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User
             .HasForeignKey(task => task.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder
+            .HasMany(user => user.RefreshTokens)
+            .WithOne(refreshToken => refreshToken.User)
+            .HasForeignKey(refreshToken => refreshToken.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Property(user => user.CreatedAt).IsRequired().ValueGeneratedOnAdd();
         builder.Property(user => user.UpdatedAt).IsRequired(false).ValueGeneratedOnAddOrUpdate();
 

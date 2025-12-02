@@ -3,7 +3,7 @@ using Backend.Application.Interfaces.Auth;
 using Backend.Domain.Entities.Users;
 using Backend.Infrastructure.Database;
 using Backend.Infrastructure.Extensions;
-using Backend.Infrastructure.Services;
+using Backend.Infrastructure.Services.Auth;
 using Backend.Shared.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +31,8 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
 
         services.AddSingleton<IJwtService, JwtService>();
+
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }

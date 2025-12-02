@@ -1,4 +1,5 @@
-﻿using Backend.Domain.Entities.Tasks;
+﻿using Backend.Domain.Entities.Auth;
+using Backend.Domain.Entities.Tasks;
 using Backend.Domain.Interfaces;
 
 namespace Backend.Domain.Entities.Users;
@@ -13,6 +14,8 @@ public sealed class UserEntity : ITimeStampedEntity
     public UserProfileEntity UserProfile { get; set; } = null!;
 
     public List<TaskEntity> Tasks { get; set; } = [];
+
+    public List<RefreshTokenEntity> RefreshTokens { get; set; } = [];
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }

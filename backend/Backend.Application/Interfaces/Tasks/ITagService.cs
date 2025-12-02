@@ -1,4 +1,4 @@
-using Backend.Application.DTOs;
+using Backend.Application.DTOs.TagDTO;
 using Backend.Shared.Classes;
 
 namespace Backend.Application.Interfaces.Tasks;

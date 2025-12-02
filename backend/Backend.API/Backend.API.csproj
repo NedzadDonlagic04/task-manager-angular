@@ -15,4 +15,7 @@
     <ProjectReference Include="..\Backend.Infrastructure\Backend.Infrastructure.csproj" />
     <ProjectReference Include="..\Backend.Shared\Backend.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\Users\" />
+  </ItemGroup>
 </Project>

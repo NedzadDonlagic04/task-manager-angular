@@ -1,4 +1,4 @@
-using Backend.Application.Interfaces;
+using Backend.Application.Interfaces.Database;
 using Backend.Domain.Entities.Tasks;
 using Backend.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +13,25 @@ public sealed class TaskDeadlineMonitorService(
     ILogger<TaskDeadlineMonitorService> logger
 ) : BackgroundService
 {
+    private static readonly TimeSpan CheckExpiredDeadlineInterval = TimeSpan.FromMinutes(1);
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        while (!cancellationToken.IsCancellationRequested)
+        var timer = new PeriodicTimer(CheckExpiredDeadlineInterval);
+
+        await SetExpiredTasksToFailed(cancellationToken);
+
+        while (await timer.WaitForNextTickAsync(cancellationToken))
         {
-            using var scope = serviceProvider.CreateScope();
+            await SetExpiredTasksToFailed(cancellationToken);
+        }
+    }
+
+    private async Task SetExpiredTasksToFailed(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await using var scope = serviceProvider.CreateAsyncScope();
             var context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
 
             var expiredTasks = await context
@@ -47,14 +61,17 @@ public sealed class TaskDeadlineMonitorService(
                     expiredTasks.Count
                 );
             }
-            else
-            {
-                logger.LogInformation("No expired tasks found to update.");
-            }
-
-            logger.LogDebug("Waiting for one minute before next check...");
-            await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
         }
-        logger.LogInformation("Task deadline monitoring service is stopping.");
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("TaskDeadlineMonitorService stopping...");
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Unexpected error occurred while setting expired tasks to failed"
+            );
+        }
     }
 }

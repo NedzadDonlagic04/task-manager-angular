@@ -18,7 +18,8 @@ namespace Backend.Infrastructure.Migrations
                 maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "text");
+                oldType: "text"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "HashedPassword",
@@ -27,17 +28,27 @@ namespace Backend.Infrastructure.Migrations
                 maxLength: 256,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "text");
+                oldType: "text"
+            );
 
             migrationBuilder.CreateTable(
                 name: "RefreshTokens",
                 columns: table => new
                 {
                     TokenHash = table.Column<string>(type: "text", nullable: false),
-                    ExpiresAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ExpiresAt = table.Column<DateTimeOffset>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                    CreatedAt = table.Column<DateTimeOffset>(
+                        type: "timestamp with time zone",
+                        nullable: false
+                    ),
+                    UpdatedAt = table.Column<DateTimeOffset>(
+                        type: "timestamp with time zone",
+                        nullable: true
+                    ),
                 },
                 constraints: table =>
                 {
@@ -47,30 +58,31 @@ namespace Backend.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Username",
                 table: "User",
                 column: "Username",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_UserId",
                 table: "RefreshTokens",
-                column: "UserId");
+                column: "UserId"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "RefreshTokens");
+            migrationBuilder.DropTable(name: "RefreshTokens");
 
-            migrationBuilder.DropIndex(
-                name: "IX_User_Username",
-                table: "User");
+            migrationBuilder.DropIndex(name: "IX_User_Username", table: "User");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Username",
@@ -79,7 +91,8 @@ namespace Backend.Infrastructure.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "character varying(50)",
-                oldMaxLength: 50);
+                oldMaxLength: 50
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "HashedPassword",
@@ -88,7 +101,8 @@ namespace Backend.Infrastructure.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "character varying(256)",
-                oldMaxLength: 256);
+                oldMaxLength: 256
+            );
         }
     }
 }

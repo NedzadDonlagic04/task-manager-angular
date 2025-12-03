@@ -34,4 +34,20 @@ public class AuthController(IAuthService authService) : ApiControllerBase
 
         return logoutResult.IsFailure ? Problem(logoutResult.Errors) : ResetContent();
     }
+
+    [AllowAnonymous]
+    [HttpPost("register")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<LoginResultDTO>> Register(
+        [FromBody] RegisterAccountDTO registerAccountDTO,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var registerAccountResult = await authService.Register(
+            registerAccountDTO,
+            cancellationToken
+        );
+
+        return registerAccountResult.IsFailure ? Problem(registerAccountResult.Errors) : Ok();
+    }
 }

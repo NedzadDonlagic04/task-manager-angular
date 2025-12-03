@@ -12,6 +12,7 @@ public static class DynamicDataSeeder
         CancellationToken cancellationToken = default
     )
     {
+        await context.Database.EnsureDeletedAsync(cancellationToken);
         await context.Database.EnsureCreatedAsync(cancellationToken);
 
         await SeedUserData(context, passwordHasher, cancellationToken);

@@ -1,8 +1,7 @@
-﻿using Backend.Application.Interfaces;
-using Backend.Application.Interfaces.Auth;
+﻿using Backend.Application.Interfaces.Auth;
+using Backend.Application.Interfaces.Database;
 using Backend.Domain.Entities.Users;
 using Backend.Infrastructure.Database;
-using Backend.Infrastructure.Extensions;
 using Backend.Infrastructure.Services.Auth;
 using Backend.Shared.Options;
 using Microsoft.AspNetCore.Identity;
@@ -16,10 +15,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfastructure(
         this IServiceCollection services,
-        IConfiguration configuration
+        IConfiguration config
     )
     {
-        var databaseOptions = configuration.GetValidatedSection<DatabaseOptions>(
+        var databaseOptions = config.GetValidatedSection<DatabaseOptions>(
             DatabaseOptions.SectionName
         );
 
@@ -29,10 +28,15 @@ public static class DependencyInjection
         services.AddScoped<IAppDbContext>(scope => scope.GetRequiredService<AppDbContext>());
 
         services.AddSingleton<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
-
         services.AddSingleton<IJwtService, JwtService>();
-
         services.AddScoped<IAuthService, AuthService>();
+
+        services
+            .AddOptions<RefreshTokenCleanupOptions>()
+            .Bind(config.GetSection(RefreshTokenCleanupOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddHostedService<RefreshTokenCleanupService>();
 
         return services;
     }

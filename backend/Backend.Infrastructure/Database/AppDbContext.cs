@@ -1,5 +1,5 @@
 using System.Reflection;
-using Backend.Application.Interfaces;
+using Backend.Application.Interfaces.Database;
 using Backend.Domain.Entities.Tasks;
 using Backend.Domain.Entities.Users;
 using Backend.Domain.Interfaces;
@@ -17,6 +17,15 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<TaskTagEntity> TaskTag { get; private set; } = null!;
     public DbSet<UserEntity> User { get; private set; } = null!;
     public DbSet<UserProfileEntity> UserProfile { get; private set; } = null!;
+
+    public async Task<ITransaction> BeginTransactionAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        var transaction = await Database.BeginTransactionAsync(cancellationToken);
+
+        return new EfCoreTransaction(transaction);
+    }
 
     public override int SaveChanges()
     {

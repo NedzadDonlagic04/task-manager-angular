@@ -14,4 +14,9 @@ public interface IAuthService
         RevokeRefreshTokenDTO revokeRefreshTokenDTO,
         CancellationToken cancellationToken = default
     );
+
+    Task<Result> Register(
+        RegisterAccountDTO registerAccountDTO,
+        CancellationToken cancellationToken = default
+    );
 }

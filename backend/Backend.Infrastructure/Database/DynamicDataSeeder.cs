@@ -1,8 +1,6 @@
 ﻿using Backend.Domain.Entities.Users;
-using Backend.Infrastructure.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Backend.Infrastructure.Database;
 
@@ -31,22 +29,58 @@ public static class DynamicDataSeeder
             return;
         }
 
-        var fixedSeedTime = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
-        Guid stringUserId = Guid.NewGuid();
+        await using var transaction = await context.Database.BeginTransactionAsync(
+            cancellationToken
+        );
 
-        var stringUser = new UserEntity
+        var stringUser = CreateUserEntity("string", "string", passwordHasher);
+        await context.User.AddAsync(stringUser, cancellationToken);
+
+        var stringUserProfile = CreateUserProfileEntity(
+            stringUser,
+            "String",
+            "String",
+            "string@example.com"
+        );
+        await context.UserProfile.AddAsync(stringUserProfile, cancellationToken);
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
+    }
+
+    private static UserEntity CreateUserEntity(
+        string username,
+        string password,
+        IPasswordHasher<UserEntity> passwordHasher
+    )
+    {
+        var userEntity = new UserEntity { Username = username };
+
+        string mockHashedPassword = passwordHasher.HashPassword(userEntity, password);
+        userEntity.HashedPassword = mockHashedPassword;
+
+        return userEntity;
+    }
+
+    private static UserProfileEntity CreateUserProfileEntity(
+        UserEntity userEntity,
+        string firstName,
+        string lastName,
+        string email
+    )
+    {
+        var stringUserProfile = new UserProfileEntity
         {
-            Id = stringUserId,
-            Username = "string",
-            UserProfileId = stringUserId,
-            CreatedAt = fixedSeedTime,
-            UpdatedAt = null,
+            UserId = userEntity.Id,
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            Description = "",
+            PictureUrl = null,
+            BannerUrl = null,
         };
 
-        string mockHashedPassword = passwordHasher.HashPassword(stringUser, "string");
-        stringUser.HashedPassword = mockHashedPassword;
-
-        await context.User.AddAsync(stringUser, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        return stringUserProfile;
     }
 }

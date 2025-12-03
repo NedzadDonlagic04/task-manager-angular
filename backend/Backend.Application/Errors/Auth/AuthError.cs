@@ -9,4 +9,16 @@ public sealed class AuthError
         "Username or password incorrect",
         ErrorType.Unauthorized
     );
+
+    public static readonly Error UsernameAlreadyExists = new(
+        "AuthError.UsernameAlreadyExists",
+        "Username already exists",
+        ErrorType.Conflict
+    );
+
+    public static readonly Error EmailAlreadyExists = new(
+        "AuthError.EmailAlreadyExists",
+        "Email already exists",
+        ErrorType.Conflict
+    );
 }

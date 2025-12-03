@@ -10,11 +10,9 @@ public sealed class UserEntity : ITimeStampedEntity
     public string Username { get; set; } = "";
     public string HashedPassword { get; set; } = "";
 
-    public Guid UserProfileId { get; set; }
     public UserProfileEntity UserProfile { get; set; } = null!;
 
     public List<TaskEntity> Tasks { get; set; } = [];
-
     public List<RefreshTokenEntity> RefreshTokens { get; set; } = [];
 
     public DateTimeOffset CreatedAt { get; set; }

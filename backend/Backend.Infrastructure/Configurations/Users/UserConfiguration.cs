@@ -2,6 +2,7 @@
 using Backend.Infrastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Backend.Infrastructure.Configurations.Users;
 
@@ -10,6 +11,10 @@ internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User
     protected override void ConfigureEntity(EntityTypeBuilder<UserEntity> builder)
     {
         builder.HasKey(user => user.Id);
+        builder
+            .Property(user => user.Id)
+            .HasValueGenerator<GuidValueGenerator>()
+            .ValueGeneratedOnAdd();
 
         builder.Property(user => user.Username).IsRequired().HasMaxLength(50);
         builder.HasIndex(user => user.Username).IsUnique();
@@ -19,7 +24,7 @@ internal sealed class UserConfiguration : EntityTypeConfigurationAndSeeding<User
         builder
             .HasOne(user => user.UserProfile)
             .WithOne(userProfile => userProfile.User)
-            .HasForeignKey<UserProfileEntity>(up => up.UserId)
+            .HasForeignKey<UserProfileEntity>(userProfile => userProfile.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder

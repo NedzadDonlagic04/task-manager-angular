@@ -2,6 +2,7 @@
 using Backend.Infrastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Backend.Infrastructure.Configurations.Tasks;
 
@@ -10,7 +11,10 @@ internal sealed class TagConfiguration : EntityTypeConfigurationAndSeeding<TagEn
     protected override void ConfigureEntity(EntityTypeBuilder<TagEntity> builder)
     {
         builder.HasKey(tag => tag.Id);
-        builder.Property(tag => tag.Id).ValueGeneratedOnAdd();
+        builder
+            .Property(tag => tag.Id)
+            .HasValueGenerator<GuidValueGenerator>()
+            .ValueGeneratedOnAdd();
 
         builder.Property(tag => tag.Name).IsRequired().HasMaxLength(30);
         builder.HasIndex(tag => tag.Name).IsUnique();

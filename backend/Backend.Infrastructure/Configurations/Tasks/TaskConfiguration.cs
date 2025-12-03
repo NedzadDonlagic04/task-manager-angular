@@ -2,6 +2,7 @@
 using Backend.Infrastructure.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Backend.Infrastructure.Configurations.Tasks;
 
@@ -10,7 +11,10 @@ internal sealed class TaskConfiguration : EntityTypeConfigurationAndSeeding<Task
     protected override void ConfigureEntity(EntityTypeBuilder<TaskEntity> builder)
     {
         builder.HasKey(task => task.Id);
-        builder.Property(task => task.Id).ValueGeneratedOnAdd();
+        builder
+            .Property(task => task.Id)
+            .HasValueGenerator<GuidValueGenerator>()
+            .ValueGeneratedOnAdd();
 
         builder.Property(task => task.Title).IsRequired().HasMaxLength(50);
 

@@ -11,6 +11,7 @@ internal sealed class UserProfileConfiguration
     protected override void ConfigureEntity(EntityTypeBuilder<UserProfileEntity> builder)
     {
         builder.HasKey(userProfile => userProfile.UserId);
+        builder.Property(userProfile => userProfile.UserId).ValueGeneratedNever();
 
         builder.Property(userProfile => userProfile.FirstName).IsRequired().HasMaxLength(100);
 
@@ -36,26 +37,5 @@ internal sealed class UserProfileConfiguration
             .ValueGeneratedOnAddOrUpdate();
 
         builder.ToTable("UserProfile");
-    }
-
-    protected override void SeedData(EntityTypeBuilder<UserProfileEntity> builder)
-    {
-        var mockUserId = Guid.Parse("9d07ca30-d8f9-40b7-b922-82f567ec6704");
-        var fixedSeedTime = new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero);
-
-        var mockUserProfile = new UserProfileEntity
-        {
-            UserId = mockUserId,
-            FirstName = "Mock",
-            LastName = "Mock",
-            Email = "mock@example.com",
-            Description = "",
-            PictureUrl = null,
-            BannerUrl = null,
-            CreatedAt = fixedSeedTime,
-            UpdatedAt = null,
-        };
-
-        builder.HasData(mockUserProfile);
     }
 }

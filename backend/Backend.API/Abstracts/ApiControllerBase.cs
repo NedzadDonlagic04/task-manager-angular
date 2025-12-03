@@ -8,6 +8,8 @@ namespace Backend.API.Abstracts;
 [ApiController]
 public abstract class ApiControllerBase : ControllerBase
 {
+    protected StatusCodeResult ResetContent() => StatusCode(StatusCodes.Status205ResetContent);
+
     protected ObjectResult Problem(Error error)
     {
         var problemDetails = CreateProblemDetails(error);

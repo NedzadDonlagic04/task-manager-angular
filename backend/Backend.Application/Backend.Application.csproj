@@ -11,14 +11,17 @@
       Version="8.0.2"
     />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+    <PackageReference
+      Include="Microsoft.Extensions.Options.ConfigurationExtensions"
+      Version="8.0.0"
+    />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Backend.Domain\Backend.Domain.csproj" />
     <ProjectReference Include="..\Backend.Shared\Backend.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Errors\Users\" />
-    <Folder Include="Interfaces\Users\" />
-    <Folder Include="Services\Users\" />
+    <Folder Include="DTOs\UserDTO\" />
   </ItemGroup>
 </Project>

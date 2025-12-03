@@ -1,26 +1,30 @@
 using Backend.API.Extensions;
 using Backend.Application.Extensions;
-using Backend.Infastructure.Extensions;
+using Backend.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder
     .Services.AddAPI(builder.Configuration)
     .AddInfastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication(builder.Configuration);
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapSwagger();
+    app.MapSwagger().AllowAnonymous();
     app.UseSwaggerUI();
 }
 
-await app.Services.InitializeDatabaseAsync();
+await app.Services.InitializeDatabaseAsync(app.Environment);
 
-app.UseAPI();
 app.UseHttpsRedirection();
+app.UseAPI();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

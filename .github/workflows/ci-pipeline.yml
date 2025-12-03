@@ -36,8 +36,8 @@ jobs:
             - name: Format check for Backend.Domain
               run: csharpier check ./Backend.Domain
 
-            - name: Format check for Backend.Infastructure
-              run: csharpier check Backend.Infastructure
+            - name: Format check for Backend.Infrastructure
+              run: csharpier check Backend.Infrastructure
 
             - name: Format check for Backend.Shared
               run: csharpier check ./Backend.Shared

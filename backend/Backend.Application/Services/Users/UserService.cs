@@ -1,4 +1,4 @@
-﻿using Backend.Application.Interfaces;
+﻿using Backend.Application.Interfaces.Database;
 using Backend.Application.Interfaces.Users;
 
 namespace Backend.Application.Services.Users;

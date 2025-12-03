@@ -1,6 +1,6 @@
 using Backend.Application.DTOs.TagDTO;
 using Backend.Application.Errors.Tasks;
-using Backend.Application.Interfaces;
+using Backend.Application.Interfaces.Database;
 using Backend.Application.Interfaces.Tasks;
 using Backend.Domain.Entities.Tasks;
 using Backend.Shared.Classes;

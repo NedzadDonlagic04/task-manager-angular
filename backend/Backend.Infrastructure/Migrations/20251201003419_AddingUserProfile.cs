@@ -13,12 +13,6 @@ namespace Backend.Infrastructure.Migrations
         {
             migrationBuilder.DropIndex(name: "IX_User_Username", table: "User");
 
-            migrationBuilder.DeleteData(
-                table: "User",
-                keyColumn: "Id",
-                keyValue: new Guid("9d07ca30-d8f9-40b7-b922-82f567ec6704")
-            );
-
             migrationBuilder.AlterColumn<string>(
                 name: "Username",
                 table: "User",

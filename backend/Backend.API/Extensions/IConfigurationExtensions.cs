@@ -23,7 +23,7 @@ public static class IConfigurationExtensions
         var validationResults = new List<ValidationResult>();
         var validationContext = new ValidationContext(options);
 
-        if (!Validator.TryValidateObject(options, validationContext, validationResults))
+        if (!Validator.TryValidateObject(options, validationContext, validationResults, true))
         {
             string errorMessages = string.Join(
                 ", ",

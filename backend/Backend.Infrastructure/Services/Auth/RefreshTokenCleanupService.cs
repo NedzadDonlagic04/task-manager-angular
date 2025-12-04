@@ -1,24 +1,35 @@
 ﻿using Backend.Application.Interfaces.Database;
 using Backend.Domain.Entities.Auth;
+using Backend.Shared.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Backend.Infrastructure.Services.Auth;
 
 public sealed class RefreshTokenCleanupService(
     IServiceProvider serviceProvider,
-    ILogger<RefreshTokenCleanupService> logger
+    ILogger<RefreshTokenCleanupService> logger,
+    IOptions<RefreshTokenCleanupOptions> refreshTokenCleanupOptions
 ) : BackgroundService
 {
-    private static readonly TimeSpan CleanupInterval = TimeSpan.FromHours(6);
+    private readonly RefreshTokenCleanupOptions _refreshTokenCleanupOptions =
+        refreshTokenCleanupOptions.Value;
+
+    private readonly TimeSpan _cleanupInterval = TimeSpan.FromHours(
+        refreshTokenCleanupOptions.Value.CleanupHours
+    );
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var timer = new PeriodicTimer(CleanupInterval);
+        var timer = new PeriodicTimer(_cleanupInterval);
 
-        await CleanupExpiredRefreshTokens(cancellationToken);
+        if (_refreshTokenCleanupOptions.RunOnStart)
+        {
+            await CleanupExpiredRefreshTokens(cancellationToken);
+        }
 
         while (await timer.WaitForNextTickAsync(cancellationToken))
         {
@@ -39,13 +50,13 @@ public sealed class RefreshTokenCleanupService(
                 .ExecuteDeleteAsync(cancellationToken);
 
             logger.LogInformation(
-                "RefreshTokenCleanupService removed {Count} expired refresh tokens",
+                "Expired refresh token cleanup completed, {Count} token(s) removed",
                 deletedRefreshTokenCount
             );
         }
         catch (OperationCanceledException)
         {
-            logger.LogInformation("RefreshTokenCleanupService stopping...");
+            logger.LogInformation("Stopping service...");
         }
         catch (Exception exception)
         {

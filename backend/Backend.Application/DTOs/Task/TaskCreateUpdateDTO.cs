@@ -5,7 +5,6 @@ namespace Backend.Application.DTOs.Task;
 
 public sealed record TaskCreateUpdateDTO
 {
-    [Required]
     [StringLength(
         50,
         MinimumLength = 3,
@@ -19,6 +18,5 @@ public sealed record TaskCreateUpdateDTO
     [MinimumFutureOffset(1)]
     public DateTimeOffset? Deadline { get; init; }
 
-    [Required]
     public required IReadOnlyList<Guid> TagIds { get; init; }
 }

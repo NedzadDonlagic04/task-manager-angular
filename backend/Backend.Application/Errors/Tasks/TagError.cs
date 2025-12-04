@@ -2,7 +2,7 @@
 
 namespace Backend.Application.Errors.Tasks;
 
-public sealed class TagError
+public static class TagError
 {
     public static readonly Error NotFound = new(
         "TagError.NotFound",

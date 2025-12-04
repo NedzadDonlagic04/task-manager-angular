@@ -2,7 +2,7 @@
 
 namespace Backend.Application.Errors.Tasks;
 
-public sealed class TaskStateError
+public static class TaskStateError
 {
     public static readonly Error NotFound = new(
         "TaskState.NotFound",

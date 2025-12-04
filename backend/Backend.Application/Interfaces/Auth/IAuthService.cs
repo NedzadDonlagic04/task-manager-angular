@@ -1,4 +1,4 @@
-﻿using Backend.Application.DTOs.AuthDTO;
+﻿using Backend.Application.DTOs.Auth;
 using Backend.Shared.Classes;
 
 namespace Backend.Application.Interfaces.Auth;

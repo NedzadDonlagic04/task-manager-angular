@@ -1,4 +1,4 @@
-namespace Backend.Application.DTOs;
+namespace Backend.Application.DTOs.TaskState;
 
 public sealed record TaskStateDTO
 {

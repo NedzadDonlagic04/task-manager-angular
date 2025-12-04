@@ -1,4 +1,4 @@
-namespace Backend.Application.DTOs.TaskDTO;
+namespace Backend.Application.DTOs.Task;
 
 public sealed record TaskReadDTO
 {

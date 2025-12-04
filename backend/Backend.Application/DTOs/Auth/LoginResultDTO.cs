@@ -1,4 +1,4 @@
-﻿namespace Backend.Application.DTOs.AuthDTO;
+﻿namespace Backend.Application.DTOs.Auth;
 
 public sealed class LoginResultDTO
 {

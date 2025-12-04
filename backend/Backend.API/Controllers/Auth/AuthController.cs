@@ -1,6 +1,6 @@
 ﻿using Backend.API.Abstracts;
 using Backend.API.Extensions;
-using Backend.Application.DTOs.AuthDTO;
+using Backend.Application.DTOs.Auth;
 using Backend.Application.Interfaces.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

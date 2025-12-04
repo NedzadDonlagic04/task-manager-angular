@@ -1,4 +1,4 @@
-using Backend.Application.DTOs.TaskDTO;
+using Backend.Application.DTOs.Task;
 using Backend.Shared.Classes;
 
 namespace Backend.Application.Interfaces.Tasks;

@@ -1,4 +1,4 @@
-using Backend.Application.DTOs.TaskDTO;
+using Backend.Application.DTOs.Task;
 using Backend.Application.Errors.Tasks;
 using Backend.Application.Interfaces.Database;
 using Backend.Application.Interfaces.Tasks;

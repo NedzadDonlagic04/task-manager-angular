@@ -1,5 +1,5 @@
 using Backend.API.Abstracts;
-using Backend.Application.DTOs.TagDTO;
+using Backend.Application.DTOs.Tag;
 using Backend.Application.Interfaces.Tasks;
 using Microsoft.AspNetCore.Mvc;
 

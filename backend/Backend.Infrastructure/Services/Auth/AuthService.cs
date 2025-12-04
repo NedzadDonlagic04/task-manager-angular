@@ -1,4 +1,4 @@
-﻿using Backend.Application.DTOs.AuthDTO;
+﻿using Backend.Application.DTOs.Auth;
 using Backend.Application.Errors.Auth;
 using Backend.Application.Interfaces.Auth;
 using Backend.Application.Interfaces.Database;

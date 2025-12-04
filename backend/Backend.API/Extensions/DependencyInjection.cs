@@ -115,10 +115,16 @@ public static class DependencyInjection
             );
         }
 
+        app.UseHttpsRedirection();
+        app.UseSerilogRequestLogging();
+
         app.UseCors(s_corsOptions.PolicyName);
 
         app.UseExceptionHandler();
         app.UseStatusCodePages();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         return app;
     }

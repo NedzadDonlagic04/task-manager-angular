@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Backend.Infrastructure.Extensions;
 
@@ -22,20 +23,25 @@ public static class DependencyInjection
             DatabaseOptions.SectionName
         );
 
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(databaseOptions.ConnectionString)
-        );
-        services.AddScoped<IAppDbContext>(scope => scope.GetRequiredService<AppDbContext>());
-
-        services.AddSingleton<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
-        services.AddSingleton<IJwtService, JwtService>();
-        services.AddScoped<IAuthService, AuthService>();
-
         services
             .AddOptions<RefreshTokenCleanupOptions>()
             .Bind(config.GetSection(RefreshTokenCleanupOptions.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+
+        services.AddDbContext<AppDbContext>(options =>
+            options
+                .UseNpgsql(databaseOptions.ConnectionString)
+                .EnableSensitiveDataLogging(databaseOptions.EnableSensitiveDataLogging)
+                .EnableDetailedErrors(databaseOptions.EnableDetailedErrors)
+        );
+
+        services.AddScoped<IAppDbContext>(scope => scope.GetRequiredService<AppDbContext>());
+        services.AddScoped<IAuthService, AuthService>();
+
+        services.AddSingleton<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+        services.AddSingleton<IJwtService, JwtService>();
+
         services.AddHostedService<RefreshTokenCleanupService>();
 
         return services;

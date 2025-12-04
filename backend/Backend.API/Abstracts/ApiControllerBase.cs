@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using Backend.API.Extensions;
 using Backend.Shared.Records;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,8 @@ public abstract class ApiControllerBase : ControllerBase
 
         return new ObjectResult(problemDetails) { StatusCode = problemDetails.Status };
     }
+
+    protected IPAddress? ClientIPAddress => HttpContext.Connection.RemoteIpAddress;
 
     private ProblemDetails CreateProblemDetails(Error error)
     {

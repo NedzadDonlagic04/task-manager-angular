@@ -8,4 +8,10 @@ public sealed class DatabaseOptions
 
     [Required]
     public required string ConnectionString { get; init; }
+
+    [Required]
+    public required bool EnableSensitiveDataLogging { get; init; }
+
+    [Required]
+    public required bool EnableDetailedErrors { get; init; }
 }

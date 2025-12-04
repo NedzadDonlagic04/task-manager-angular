@@ -15,18 +15,18 @@ public static class DependencyInjection
         IConfiguration config
     )
     {
-        services.AddScoped<ITagService, TagService>();
-        services.AddScoped<ITaskService, TaskService>();
-        services.AddScoped<ITaskStateService, TaskStateService>();
-
         services
             .AddOptions<TaskDeadlineMonitorOptions>()
             .Bind(config.GetSection(TaskDeadlineMonitorOptions.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();
-        services.AddHostedService<TaskDeadlineMonitorService>();
 
+        services.AddScoped<ITagService, TagService>();
+        services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<ITaskStateService, TaskStateService>();
         services.AddScoped<IUserService, UserService>();
+
+        services.AddHostedService<TaskDeadlineMonitorService>();
 
         return services;
     }

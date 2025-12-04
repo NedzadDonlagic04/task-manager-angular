@@ -1,5 +1,3 @@
-﻿using Backend.Shared.Records;
+﻿namespace Backend.Application.Errors.Users;
 
-namespace Backend.Application.Errors.Users;
-
-public sealed class UserError { }
+public static class UserError { }

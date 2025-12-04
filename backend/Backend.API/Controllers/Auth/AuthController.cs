@@ -1,4 +1,5 @@
 ﻿using Backend.API.Abstracts;
+using Backend.API.Extensions;
 using Backend.Application.DTOs.AuthDTO;
 using Backend.Application.Interfaces.Auth;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend.API.Controllers.Auth;
 
 [Route("api/auth")]
-public class AuthController(IAuthService authService) : ApiControllerBase
+public class AuthController(IAuthService authService, ILogger<AuthController> logger)
+    : ApiControllerBase
 {
     [AllowAnonymous]
     [HttpPost("login")]
@@ -20,6 +22,13 @@ public class AuthController(IAuthService authService) : ApiControllerBase
     {
         var loginResult = await authService.Login(loginCredentialsDTO, cancellationToken);
 
+        logger.LogInformation(
+            "Login {Result}: Username='{Username}', IP={IP}",
+            loginResult.IsFailure ? "Failure" : "Success",
+            loginCredentialsDTO.Username,
+            ClientIPAddress?.ToString()
+        );
+
         return loginResult.IsFailure ? Problem(loginResult.Errors) : Ok(loginResult.Value);
     }
 
@@ -30,7 +39,23 @@ public class AuthController(IAuthService authService) : ApiControllerBase
         CancellationToken cancellationToken = default
     )
     {
+        var userIdResult = User.GetUserId();
+
+        if (userIdResult.IsFailure)
+        {
+            return Problem(userIdResult.Errors);
+        }
+
+        Guid userId = userIdResult.Value;
+
         var logoutResult = await authService.Logout(revokeRefreshTokenDTO, cancellationToken);
+
+        logger.LogInformation(
+            "Logout {Result}: UserId='{UserId}', IP={IP}",
+            logoutResult.IsFailure ? "Failure" : "Success",
+            userId,
+            ClientIPAddress?.ToString()
+        );
 
         return logoutResult.IsFailure ? Problem(logoutResult.Errors) : ResetContent();
     }
@@ -48,6 +73,17 @@ public class AuthController(IAuthService authService) : ApiControllerBase
             cancellationToken
         );
 
-        return registerAccountResult.IsFailure ? Problem(registerAccountResult.Errors) : Ok();
+        if (registerAccountResult.IsFailure)
+        {
+            return Problem(registerAccountResult.Errors);
+        }
+
+        logger.LogInformation(
+            "User registration Success: Username='{Username}', IP={IP}",
+            registerAccountDTO.Username,
+            ClientIPAddress?.ToString()
+        );
+
+        return Ok();
     }
 }

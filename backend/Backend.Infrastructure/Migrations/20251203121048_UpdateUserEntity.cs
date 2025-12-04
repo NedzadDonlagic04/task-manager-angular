@@ -30,35 +30,6 @@ namespace Backend.Infrastructure.Migrations
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000")
             );
-
-            migrationBuilder.InsertData(
-                table: "UserProfile",
-                columns: new[]
-                {
-                    "UserId",
-                    "BannerUrl",
-                    "CreatedAt",
-                    "Description",
-                    "Email",
-                    "FirstName",
-                    "LastName",
-                    "PictureUrl",
-                },
-                values: new object[]
-                {
-                    new Guid("9d07ca30-d8f9-40b7-b922-82f567ec6704"),
-                    null,
-                    new DateTimeOffset(
-                        new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                        new TimeSpan(0, 0, 0, 0, 0)
-                    ),
-                    "",
-                    "mock@example.com",
-                    "Mock",
-                    "Mock",
-                    null,
-                }
-            );
         }
     }
 }

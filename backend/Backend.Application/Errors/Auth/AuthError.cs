@@ -2,7 +2,7 @@
 
 namespace Backend.Application.Errors.Auth;
 
-public sealed class AuthError
+public static class AuthError
 {
     public static readonly Error LoginFailed = new(
         "AuthError.LoginFailed",

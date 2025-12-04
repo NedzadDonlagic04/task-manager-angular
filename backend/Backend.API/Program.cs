@@ -51,6 +51,7 @@ try
         "Configuring middleware pipeline (HTTPS redirection, routing, authentication, authorization)..."
     );
     app.UseHttpsRedirection();
+    app.UseSerilogRequestLogging();
     app.UseAPI();
     app.UseAuthentication();
     app.UseAuthorization();

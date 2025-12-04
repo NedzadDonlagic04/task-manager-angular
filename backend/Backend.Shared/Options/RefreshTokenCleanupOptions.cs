@@ -10,5 +10,5 @@ public sealed class RefreshTokenCleanupOptions
     public required bool RunOnStart { get; init; }
 
     [Required]
-    public required int CleaupHours { get; init; }
+    public required int CleanupHours { get; init; }
 }

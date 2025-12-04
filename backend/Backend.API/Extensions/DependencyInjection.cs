@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace Backend.API.Extensions;
 
@@ -13,6 +14,14 @@ public static class DependencyInjection
 
     public static IServiceCollection AddAPI(this IServiceCollection services, IConfiguration config)
     {
+        s_corsOptions = config.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
+
+        services
+            .AddOptions<JwtOptions>()
+            .Bind(config.GetSection(JwtOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
         services.AddControllers();
 
         services.AddSwaggerGen(swaggerGenOptions =>
@@ -52,8 +61,6 @@ public static class DependencyInjection
             swaggerGenOptions.AddSecurityRequirement(securityRequirement);
         });
 
-        s_corsOptions = config.GetValidatedSection<CorsOptions>(CorsOptions.SectionName);
-
         services.AddCors(options =>
             options.AddPolicy(
                 s_corsOptions.PolicyName,
@@ -66,12 +73,6 @@ public static class DependencyInjection
         );
 
         services.AddProblemDetails();
-
-        services
-            .AddOptions<JwtOptions>()
-            .Bind(config.GetSection(JwtOptions.SectionName))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
 
         services
             .AddAuthentication(authOptions =>

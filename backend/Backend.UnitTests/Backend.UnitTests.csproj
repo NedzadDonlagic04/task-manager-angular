@@ -17,5 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Backend.API\Backend.API.csproj" />
+    <ProjectReference Include="..\Backend.Application\Backend.Application.csproj" />
   </ItemGroup>
 </Project>

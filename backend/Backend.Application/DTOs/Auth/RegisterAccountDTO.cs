@@ -1,6 +1,6 @@
 ﻿namespace Backend.Application.DTOs.Auth;
 
-public sealed class RegisterAccountDTO
+public sealed record RegisterAccountDTO
 {
     public required string Username { get; init; }
     public required string Password { get; init; }

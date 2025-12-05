@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Application.Validation;
+namespace Backend.Application.Attributes;
 
 public sealed class MinimumFutureOffsetAttribute : ValidationAttribute
 {

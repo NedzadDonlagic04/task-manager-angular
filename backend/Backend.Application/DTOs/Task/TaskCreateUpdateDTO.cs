@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Backend.Application.Validation;
+using Backend.Application.Attributes;
 
 namespace Backend.Application.DTOs.Task;
 

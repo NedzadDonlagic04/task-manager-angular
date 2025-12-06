@@ -9,8 +9,10 @@ public sealed class MinimumFutureOffsetAttribute : ValidationAttribute
     public MinimumFutureOffsetAttribute(double hours)
     {
         _hours = hours;
-        ErrorMessage = $"The date must be at least {_hours} hours in the future.";
+        ErrorMessage = $"The date must be at least {_hours} hours in the future";
     }
+
+    public override string FormatErrorMessage(string name) => ErrorMessage!;
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
@@ -27,8 +29,6 @@ public sealed class MinimumFutureOffsetAttribute : ValidationAttribute
                 : new ValidationResult(ErrorMessage);
         }
 
-        return new ValidationResult("Property must be a valid date.");
+        return new ValidationResult("Property must be a valid date");
     }
-
-    public override string FormatErrorMessage(string name) => ErrorMessage!;
 }

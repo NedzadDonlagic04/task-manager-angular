@@ -10,14 +10,16 @@ public sealed class EnumValidationAttribute : ValidationAttribute
     {
         if (enumType is null || !enumType.IsEnum)
         {
-            throw new ArgumentException("The provided type must be an enum.", nameof(enumType));
+            throw new ArgumentException("The provided type must be an enum", nameof(enumType));
         }
 
         _enumType = enumType;
 
         ErrorMessage =
-            $"Invalid value for the enum '{_enumType.Name}'. Valid enum values: {string.Join(", ", Enum.GetNames(_enumType))}";
+            $"Invalid value for the enum '{_enumType.Name}', valid enum values: {string.Join(", ", Enum.GetNames(_enumType))}";
     }
+
+    public override string FormatErrorMessage(string name) => ErrorMessage!;
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
@@ -32,6 +34,4 @@ public sealed class EnumValidationAttribute : ValidationAttribute
 
         return new ValidationResult(ErrorMessage);
     }
-
-    public override string FormatErrorMessage(string name) => ErrorMessage!;
 }

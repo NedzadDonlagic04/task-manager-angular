@@ -72,7 +72,7 @@ public sealed class AuthService(
 
         if (registrationValidationResult.IsFailure)
         {
-            return registrationValidationResult.Errors;
+            return registrationValidationResult;
         }
 
         await CreateUserWithProfile(registerAccountDTO, cancellationToken);

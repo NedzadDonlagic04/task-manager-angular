@@ -1,8 +1,10 @@
 ﻿using Backend.Application.Interfaces.Auth;
 using Backend.Application.Interfaces.Database;
+using Backend.Application.Interfaces.Validators;
 using Backend.Domain.Entities.Users;
 using Backend.Infrastructure.Database;
 using Backend.Infrastructure.Services.Auth;
+using Backend.Infrastructure.Validators;
 using Backend.Shared.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +43,7 @@ public static class DependencyInjection
 
         services.AddSingleton<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
         services.AddSingleton<IJwtService, JwtService>();
+        services.AddSingleton<IEmailValidator, EmailValidator>();
 
         services.AddHostedService<RefreshTokenCleanupService>();
 

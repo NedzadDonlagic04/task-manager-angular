@@ -39,21 +39,12 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
         CancellationToken cancellationToken = default
     )
     {
-        var userIdResult = User.GetUserId();
-
-        if (userIdResult.IsFailure)
-        {
-            return Problem(userIdResult.Errors);
-        }
-
-        Guid userId = userIdResult.Value;
-
         var logoutResult = await authService.Logout(revokeRefreshTokenDTO, cancellationToken);
 
         logger.LogInformation(
             "Logout {Result}: UserId='{UserId}', IP={IP}",
             logoutResult.IsFailure ? "Failure" : "Success",
-            userId,
+            User.GetUserId(),
             ClientIPAddress?.ToString()
         );
 

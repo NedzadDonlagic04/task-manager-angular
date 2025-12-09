@@ -1,6 +1,4 @@
 ﻿using System.Security.Claims;
-using Backend.API.Errors;
-using Backend.Shared.Classes;
 
 namespace Backend.API.Extensions;
 

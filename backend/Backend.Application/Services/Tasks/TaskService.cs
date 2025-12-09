@@ -1,8 +1,10 @@
 using Backend.Application.DTOs.Task;
 using Backend.Application.Errors.Tasks;
+using Backend.Application.Errors.Users;
 using Backend.Application.Interfaces.Database;
 using Backend.Application.Interfaces.Tasks;
 using Backend.Domain.Entities.Tasks;
+using Backend.Domain.Entities.Users;
 using Backend.Domain.Enums;
 using Backend.Shared.Classes;
 using Microsoft.EntityFrameworkCore;
@@ -12,12 +14,14 @@ namespace Backend.Application.Services.Tasks;
 public sealed class TaskService(IAppDbContext context) : ITaskService
 {
     public async Task<IEnumerable<TaskReadDTO>> GetTasksAsync(
+        Guid ownerId,
         CancellationToken cancellationToken = default
     )
     {
         var results = await context
             .Set<TaskEntity>()
             .AsNoTracking()
+            .Where(task => task.UserId == ownerId)
             .Select(task => new TaskReadDTO
             {
                 Id = task.Id,
@@ -34,13 +38,16 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     }
 
     public async Task<Result<TaskReadDTO>> GetTaskByIdAsync(
-        Guid id,
+        TaskGetByIdDTO taskGetByIdDTO,
         CancellationToken cancellationToken = default
     )
     {
         var task = await context
             .Set<TaskEntity>()
             .AsNoTracking()
+            .Where(task =>
+                task.UserId == taskGetByIdDTO.OwnerId && task.Id == taskGetByIdDTO.TaskId
+            )
             .Select(task => new TaskReadDTO
             {
                 Id = task.Id,
@@ -51,7 +58,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
                 TaskStateName = task.TaskState.Name,
                 TagNames = task.Tags.Select(tag => tag.Name).ToList(),
             })
-            .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
         return task is null ? TaskError.NotFound : Result<TaskReadDTO>.Success(task);
     }
@@ -71,6 +78,15 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             return TagError.NotFound;
         }
 
+        var doesUserExist = await context
+            .Set<UserEntity>()
+            .AnyAsync(user => user.Id == taskCreateDTO.OwnerId, cancellationToken);
+
+        if (!doesUserExist)
+        {
+            return UserError.NotFound;
+        }
+
         var newTask = new TaskEntity
         {
             Title = taskCreateDTO.Title,
@@ -78,13 +94,7 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
             Deadline = taskCreateDTO.Deadline?.ToUniversalTime(),
             TaskStateId = (int)TaskStateEnum.Pending,
             Tags = tags,
-            /*
-             *  NOTE TO FUTURE SELF
-             *
-             *  Remove the hard coded guid below, this was added because at the time
-             *  there was no way to get the user id
-             */
-            UserId = Guid.Parse("9d07ca30-d8f9-40b7-b922-82f567ec6704"),
+            UserId = taskCreateDTO.OwnerId,
         };
 
         context.Set<TaskEntity>().Add(newTask);
@@ -116,7 +126,8 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
         var taskToUpdate = await context
             .Set<TaskEntity>()
             .Include(task => task.Tags)
-            .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
+            .Where(task => task.UserId == taskUpdateDTO.OwnerId && task.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (taskToUpdate is null)
         {
@@ -159,11 +170,17 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     }
 
     public async Task<Result> DeleteTaskAsync(
-        Guid id,
+        TaskDeleteByIdDTO taskDeleteByIdDTO,
         CancellationToken cancellationToken = default
     )
     {
-        var task = await context.Set<TaskEntity>().FindAsync([id], cancellationToken);
+        var task = await context
+            .Set<TaskEntity>()
+            .FirstOrDefaultAsync(
+                task =>
+                    task.UserId == taskDeleteByIdDTO.OwnerId && task.Id == taskDeleteByIdDTO.TaskId,
+                cancellationToken
+            );
 
         if (task is null)
         {
@@ -177,18 +194,21 @@ public sealed class TaskService(IAppDbContext context) : ITaskService
     }
 
     public async Task<Result> DeleteTasksAsync(
-        List<Guid> ids,
+        TaskBulkDeleteDTO taskBulkDeleteDTO,
         CancellationToken cancellationToken = default
     )
     {
-        if (ids.Count == 0)
+        if (taskBulkDeleteDTO.TaskIds.Count == 0)
         {
             return TaskError.IdsMissing;
         }
 
         var tasks = await context
             .Set<TaskEntity>()
-            .Where(task => ids.Contains(task.Id))
+            .Where(task =>
+                task.UserId == taskBulkDeleteDTO.OwnerId
+                && taskBulkDeleteDTO.TaskIds.Contains(task.Id)
+            )
             .ToListAsync(cancellationToken);
 
         if (tasks.Count == 0)

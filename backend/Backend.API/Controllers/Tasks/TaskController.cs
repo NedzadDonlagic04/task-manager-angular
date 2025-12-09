@@ -1,4 +1,5 @@
 using Backend.API.Abstracts;
+using Backend.API.Extensions;
 using Backend.Application.DTOs.Task;
 using Backend.Application.Interfaces.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ public sealed class TaskController(ITaskService taskService) : ApiControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        var tasks = await taskService.GetTasksAsync(cancellationToken);
+        var tasks = await taskService.GetTasksAsync(User.GetUserId(), cancellationToken);
 
         return Ok(tasks);
     }
@@ -27,7 +28,9 @@ public sealed class TaskController(ITaskService taskService) : ApiControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        var task = await taskService.GetTaskByIdAsync(id, cancellationToken);
+        var taskGetByIdDTO = new TaskGetByIdDTO { TaskId = id, OwnerId = User.GetUserId() };
+
+        var task = await taskService.GetTaskByIdAsync(taskGetByIdDTO, cancellationToken);
 
         return task.IsFailure ? Problem(task.Errors) : Ok(task.Value);
     }
@@ -40,6 +43,8 @@ public sealed class TaskController(ITaskService taskService) : ApiControllerBase
         CancellationToken cancellationToken = default
     )
     {
+        taskCreateDTO.OwnerId = User.GetUserId();
+
         var createdTask = await taskService.CreateTaskAsync(taskCreateDTO, cancellationToken);
 
         return createdTask.IsFailure
@@ -60,6 +65,8 @@ public sealed class TaskController(ITaskService taskService) : ApiControllerBase
         CancellationToken cancellationToken = default
     )
     {
+        taskUpdateDTO.OwnerId = User.GetUserId();
+
         var updatedTask = await taskService.UpdateTaskAsync(id, taskUpdateDTO, cancellationToken);
 
         return updatedTask.IsFailure ? Problem(updatedTask.Errors) : NoContent();
@@ -73,7 +80,9 @@ public sealed class TaskController(ITaskService taskService) : ApiControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        var result = await taskService.DeleteTaskAsync(id, cancellationToken);
+        var taskDeleteByIdDTO = new TaskDeleteByIdDTO { TaskId = id, OwnerId = User.GetUserId() };
+
+        var result = await taskService.DeleteTaskAsync(taskDeleteByIdDTO, cancellationToken);
 
         return result.IsFailure ? Problem(result.Errors) : NoContent();
     }
@@ -86,7 +95,9 @@ public sealed class TaskController(ITaskService taskService) : ApiControllerBase
         CancellationToken cancellationToken = default
     )
     {
-        var result = await taskService.DeleteTasksAsync(ids, cancellationToken);
+        var taskBulkDeleteDTO = new TaskBulkDeleteDTO { OwnerId = User.GetUserId(), TaskIds = ids };
+
+        var result = await taskService.DeleteTasksAsync(taskBulkDeleteDTO, cancellationToken);
 
         return result.IsFailure ? Problem(result.Errors) : NoContent();
     }

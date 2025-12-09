@@ -1,3 +1,12 @@
-﻿namespace Backend.Application.Errors.Users;
+﻿using Backend.Shared.Records;
 
-public static class UserError { }
+namespace Backend.Application.Errors.Users;
+
+public static class UserError
+{
+    public static readonly Error NotFound = new(
+        "UserError.NotFound",
+        "User not found",
+        ErrorType.NotFound
+    );
+}

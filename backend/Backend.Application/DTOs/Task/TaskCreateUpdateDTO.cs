@@ -1,10 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Backend.Application.Attributes;
 
 namespace Backend.Application.DTOs.Task;
 
 public sealed record TaskCreateUpdateDTO
 {
+    [JsonIgnore]
+    public required Guid OwnerId { get; set; }
+
     [StringLength(
         50,
         MinimumLength = 3,

@@ -6,12 +6,12 @@ namespace Backend.API.Extensions;
 
 public static class ClaimsPrincipalExtension
 {
-    public static Result<Guid> GetUserId(this ClaimsPrincipal claimsPrincipal)
+    public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal)
     {
-        string? userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        string userId =
+            claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? throw new UnauthorizedAccessException("Missing NameIdentifier claim");
 
-        return userId is null
-            ? ClaimsErrors.UserIdMissing
-            : Result<Guid>.Success(Guid.Parse(userId));
+        return Guid.Parse(userId);
     }
 }
